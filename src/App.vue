@@ -1,32 +1,33 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <!-- <router-link to="/DataCleaner">Data Cleaner</router-link>| -->
+    <!-- <router-link to="/about">About</router-link> -->
+    <router-view></router-view>
   </div>
 </template>
 
 <style>
+:root {
+  font-family: menlo;
+  font-size: 0.9rem;
+  font-style: normal;
+  --background: #fffffe;
+  --headline: #272343;
+  --paragraph: #2d334a;
+  --button: #ffd803;
+  --button-text: #272343;
+  --stroke: #272343;
+  --highlight: #ffd803;
+  --secondary: #e3f6f5;
+  --teritary: #bae8e8;
+  --field-grey: #eef2f8;
+  --field-label: #546778;
+}
+
+html,
+body,
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+  margin: 0px;
+  height: 100%;
 }
 </style>
