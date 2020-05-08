@@ -4,6 +4,7 @@
       <h4>Data Cleaners</h4>
       <label for="rule_name">Select Option:</label>
       <select v-model="rule_name">
+        <option value="Capitalise">Capitalise</option>
         <option value="ChangeValue">Change Value</option>
       </select>
     </fieldset>
@@ -18,26 +19,26 @@
 export default {
   name: "RuleSelector",
   components: {
-    ChangeValue: () => import("@/components/change-value.vue")
+    Capitalise: () => import("@/components/capitalise.vue"),
+    ChangeValue: () => import("@/components/change-value.vue"),
   },
   props: {
     rule: {
       type: String,
-      default: "THE DEFAULT STRING"
-    }
+      default: "THE DEFAULT STRING",
+    },
   },
   data() {
     return {
-      rule_name: ""
+      rule_name: "",
     };
   },
   computed: {
     currentRule() {
       return this.rule_name;
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>
