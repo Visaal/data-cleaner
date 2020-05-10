@@ -6,7 +6,9 @@
       <RuleSelector />
     </div>
 
-    <div class="content"></div>
+    <div class="content">
+      <DataView />
+    </div>
 
     <div class="footer">This is the footer</div>
   </div>
@@ -15,11 +17,13 @@
 <script>
 // @ is an alias to /src
 import RuleSelector from "@/components/rule-selector.vue";
+import DataView from "@/components/data-view.vue";
 
 export default {
   name: "DataCleaner",
   components: {
-    RuleSelector
+    RuleSelector,
+    DataView
   }
 };
 </script>

@@ -45,6 +45,9 @@ const actions = {
     }
     commit(UPDATE_DATA_ROWS, clonedDataRows);
   },
+  getDataSourceData() {
+    return state.dataRows;
+  },
 };
 
 const getters = {};
