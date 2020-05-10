@@ -102,7 +102,68 @@ fieldset {
   margin-bottom: 10px;
 }
 
-h4 {
+fieldset > h4 {
   margin-top: 0px;
+}
+
+table {
+  border-collapse: collapse;
+  color: var(--field-label);
+  font-size: 0.8rem;
+}
+
+thead {
+  display: table-header-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+
+tr {
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+}
+
+tbody {
+  display: table-row-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+
+table td,
+table th {
+  vertical-align: top;
+  border: 1px solid var(--table-border);
+  /* line-height: 15px; */
+  padding: 5px;
+}
+
+button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: var(--button);
+  border: 1px solid var(--button);
+  color: var(--button-text);
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  padding: 0.65rem 2rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  z-index: 1;
+}
+
+button:hover {
+  filter: brightness(107%);
 }
 </style>
