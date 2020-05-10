@@ -22,6 +22,7 @@
   --teritary: #bae8e8;
   --field-grey: #eef2f8;
   --field-label: #546778;
+  --table-border: #ccc;
 }
 
 html,
