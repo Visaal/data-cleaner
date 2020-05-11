@@ -3,7 +3,9 @@
     <div class="file-selector">
       <fieldset>
         <label for="fileItem">Please select your file</label>
-        <input id="fileItem" type="file" />
+        <input id="fileItem" type="file" @change="getFile($event)" />
+        <span>{{ message }}</span>
+        <button @click="showContents">Process File</button>
         <div>
           <router-link to="/DataCleaner">Data Cleaner</router-link>
         </div>
@@ -14,7 +16,38 @@
 
 <script>
 export default {
-  name: "Home"
+  name: "Home",
+  data() {
+    return {
+      fileItem: "",
+      message: ""
+    };
+  },
+  methods: {
+    getFile(event) {
+      this.fileData = event.target.files[0];
+      this.fileItem = this.fileData;
+    },
+    showContents() {
+      if (this.fileItem) {
+        this.message = "";
+        console.log(this.fileItem);
+        let reader = new FileReader();
+
+        reader.readAsText(this.fileItem);
+
+        reader.onload = function() {
+          console.log(reader.result);
+        };
+
+        reader.onerror = function() {
+          console.log(reader.error);
+        };
+      } else {
+        this.message = "please select a file";
+      }
+    }
+  }
 };
 </script>
 
