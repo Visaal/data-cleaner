@@ -5,7 +5,7 @@
         <label for="fileItem">Please select your file</label>
         <input id="fileItem" type="file" @change="getFile($event)" />
         <span>{{ message }}</span>
-        <button @click="showContents">Process File</button>
+        <button @click="processFile">Process File</button>
         <div>
           <router-link to="/DataCleaner">Data Cleaner</router-link>
         </div>
@@ -15,39 +15,46 @@
 </template>
 
 <script>
+import Papa from "papaparse";
+import { mapActions } from "vuex";
+
 export default {
   name: "Home",
   data() {
     return {
       fileItem: "",
-      message: ""
+      message: "",
+      data: [1, 2, 3],
+      fieldNames: [],
     };
   },
   methods: {
+    ...mapActions(["setFieldNamesAction", "setDataAction"]),
     getFile(event) {
-      this.fileData = event.target.files[0];
-      this.fileItem = this.fileData;
+      this.fileItem = event.target.files[0];
     },
-    showContents() {
+    processFile() {
       if (this.fileItem) {
-        this.message = "";
-        console.log(this.fileItem);
         let reader = new FileReader();
-
         reader.readAsText(this.fileItem);
 
-        reader.onload = function() {
-          console.log(reader.result);
+        // Use arrow function or bind rather than 'reader.onload = function(event) {}' as that would have it's own context
+        //https://stackoverflow.com/questions/54113762/filereader-method-does-not-update-data-property-vue-js
+        reader.onload = () => {
+          this.fieldNames = Papa.parse(reader.result).data[0];
+          this.data = Papa.parse(reader.result, { header: true }).data;
+          this.setFieldNamesAction(this.fieldNames);
+          this.setDataAction(this.data);
         };
 
-        reader.onerror = function() {
+        reader.onerror = () => {
           console.log(reader.error);
         };
       } else {
         this.message = "please select a file";
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -9,7 +9,9 @@
       <tbody>
         <tr v-for="(row, index) in dataRows" :key="row.id">
           <td>{{ index + 1 }}</td>
-          <td v-for="field in distinctFieldNames" :key="field.id">{{ row[field] }}</td>
+          <td v-for="field in distinctFieldNames" :key="field.id">
+            {{ row[field] }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -29,13 +31,12 @@ export default {
     ...mapActions(["getDataSourceData"]),
     async getData() {
       await this.getDataSourceData();
-    }
+    },
   },
   computed: {
-    ...mapState(["dataRows", "distinctFieldNames"]) // can be used as variable and state are both named 'rows'
-  }
+    ...mapState(["dataRows", "distinctFieldNames"]), // can be used as variable and state are both named 'rows'
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

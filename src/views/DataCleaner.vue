@@ -23,8 +23,8 @@ export default {
   name: "DataCleaner",
   components: {
     RuleSelector,
-    DataView
-  }
+    DataView,
+  },
 };
 </script>
 
@@ -52,6 +52,7 @@ export default {
 
 .content {
   grid-column: 3 / -1;
+  overflow-x: auto;
 }
 
 .footer {

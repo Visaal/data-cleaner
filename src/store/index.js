@@ -2,34 +2,21 @@ import Vue from "vue";
 import Vuex from "vuex";
 import { cloneDeep } from "lodash";
 
-import { UPDATE_DATA_ROWS } from "./mutation-types";
+import { UPDATE_DATA_ROWS, UPDATE_FIELD_NAMES } from "./mutation-types";
 
 Vue.use(Vuex);
 
 const state = {
-  distinctFieldNames: ["album", "year", "US_peak_chart_post"],
-  dataRows: [
-    {
-      album: "The White Stripes",
-      year: 1999,
-      US_peak_chart_post: "-",
-    },
-    {
-      album: "De Stijl",
-      year: 2000,
-      US_peak_chart_post: "-",
-    },
-    {
-      album: "White Blood Cells",
-      year: 2001,
-      US_peak_chart_post: 61,
-    },
-  ],
+  distinctFieldNames: [],
+  dataRows: [],
 };
 
 const mutations = {
   [UPDATE_DATA_ROWS](state, updatedDataRows) {
     state.dataRows = updatedDataRows;
+  },
+  [UPDATE_FIELD_NAMES](state, fieldNames) {
+    state.distinctFieldNames = fieldNames;
   },
 };
 
@@ -44,6 +31,12 @@ const actions = {
       }
     }
     commit(UPDATE_DATA_ROWS, clonedDataRows);
+  },
+  setFieldNamesAction({ commit }, fieldNames) {
+    commit(UPDATE_FIELD_NAMES, fieldNames);
+  },
+  setDataAction({ commit }, fileData) {
+    commit(UPDATE_DATA_ROWS, fileData);
   },
   getDataSourceData() {
     return state.dataRows;
