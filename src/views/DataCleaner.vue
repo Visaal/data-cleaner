@@ -23,8 +23,8 @@ export default {
   name: "DataCleaner",
   components: {
     RuleSelector,
-    DataView,
-  },
+    DataView
+  }
 };
 </script>
 

@@ -2,16 +2,10 @@
   <div class="landing-page-form">
     <fieldset>
       <h2>Data Cleaner</h2>
-      <label for="fileItem" class="custom-file-input-label"
-        >Select a file</label
-      >
-      <input
-        id="fileItem"
-        type="file"
-        class="custom-file-input"
-        @change="getFile($event)"
-      />
+      <label for="fileItem" class="custom-file-input-label">Select a file</label>
+      <input id="fileItem" type="file" class="custom-file-input" @change="getFile($event)" />
       <span>{{ message }}</span>
+      <span>{{ fileName }}</span>
       <button @click="processFile">Process File</button>
       <div>
         <router-link to="/DataCleaner">Data Cleaner</router-link>
@@ -22,7 +16,7 @@
 
 <script>
 import Papa from "papaparse";
-import { mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "Home",
@@ -32,15 +26,18 @@ export default {
       message: "",
       data: [1, 2, 3],
       fieldNames: [],
+      fileName: ""
     };
   },
   methods: {
     ...mapActions(["setFieldNamesAction", "setDataAction"]),
     getFile(event) {
       this.fileItem = event.target.files[0];
+      this.fileName = this.fileItem["name"];
     },
     processFile() {
       if (this.fileItem) {
+        console.log(this.fileItem);
         let reader = new FileReader();
         reader.readAsText(this.fileItem);
 
@@ -51,6 +48,7 @@ export default {
           this.data = Papa.parse(reader.result, { header: true }).data;
           this.setFieldNamesAction(this.fieldNames);
           this.setDataAction(this.data);
+          console.log(this.data.length);
         };
 
         reader.onerror = () => {
@@ -59,8 +57,14 @@ export default {
       } else {
         this.message = "please select a file";
       }
-    },
+    }
   },
+  computed: {
+    ...mapState(["dataRows", "distinctFieldNames"]), // can be used as variable and state are both named 'rows'
+    totalSize: function() {
+      return this.dataRows.length;
+    }
+  }
 };
 </script>
 
@@ -126,5 +130,21 @@ export default {
 .custom-file-input:focus,
 .custom-file-input-label:hover {
   filter: brightness(107%);
+}
+
+progress {
+  border-radius: 1px;
+  width: 100%;
+  height: 15px;
+}
+progress::-webkit-progress-bar {
+  background-color: var(--field-grey);
+}
+progress::-webkit-progress-value {
+  transition: width 2s ease-out;
+  background-color: var(--field-label);
+}
+progress::-moz-progress-bar {
+  background-color: var(--field-grey);
 }
 </style>

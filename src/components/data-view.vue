@@ -1,20 +1,20 @@
 <template>
   <div>
     <h1>Data</h1>
+    <button @click="loadMoreData()">LOAD MORE DATA</button>
     <table>
       <thead>
         <td>Row #</td>
         <td v-for="field in distinctFieldNames" :key="field.id">{{ field }}</td>
       </thead>
       <tbody>
-        <tr v-for="(row, index) in dataRows" :key="row.id">
+        <tr v-for="(row, index) in dataRows.slice(dataRowStart, dataLimit)" :key="index">
           <td>{{ index + 1 }}</td>
-          <td v-for="field in distinctFieldNames" :key="field.id">
-            {{ row[field] }}
-          </td>
+          <td v-for="field in distinctFieldNames" :key="field.id">{{ row[field] }}</td>
         </tr>
       </tbody>
     </table>
+    <button @click="loadMoreData()">LOAD MORE DATA</button>
   </div>
 </template>
 
@@ -23,6 +23,12 @@ import { mapState, mapActions } from "vuex";
 
 export default {
   name: "DataView",
+  data() {
+    return {
+      dataRowStart: 0,
+      dataLimit: 10
+    };
+  },
   created() {
     this.getData();
   },
@@ -32,10 +38,14 @@ export default {
     async getData() {
       await this.getDataSourceData();
     },
+    loadMoreData() {
+      this.dataRowStart += 10;
+      this.dataLimit += 10;
+    }
   },
   computed: {
-    ...mapState(["dataRows", "distinctFieldNames"]), // can be used as variable and state are both named 'rows'
-  },
+    ...mapState(["dataRows", "distinctFieldNames"]) // can be used as variable and state are both named 'rows'
+  }
 };
 </script>
 
