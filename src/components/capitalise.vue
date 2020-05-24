@@ -3,13 +3,13 @@
     <fieldset>
       <label for="fieldName">Select Field:</label>
       <select v-model="fieldName">
-        <option v-for="field in distinctFieldNames" :key="field.id">{{
+        <option v-for="field in dataFieldNames" :key="field.id">
+          {{
           field
-        }}</option>
+          }}
+        </option>
       </select>
-      <button v-on:click="capitaliseValues" type="button">
-        Apply
-      </button>
+      <button v-on:click="capitaliseValues" type="button">Apply</button>
     </fieldset>
   </div>
 </template>
@@ -21,7 +21,7 @@ export default {
   name: "Capitalise",
   data() {
     return {
-      fieldName: "",
+      fieldName: ""
     };
   },
   created() {},
@@ -30,11 +30,11 @@ export default {
     ...mapActions(["capitaliseValuesAction"]),
     capitaliseValues() {
       this.capitaliseValuesAction(this.fieldName);
-    },
+    }
   },
   computed: {
-    ...mapState(["dataRows", "distinctFieldNames"]), // can be used as variable and state are both named 'rows'
-  },
+    ...mapState(["dataRows", "dataFieldNames"]) // can be used as variable and state are both named 'rows'
+  }
 };
 </script>
 
