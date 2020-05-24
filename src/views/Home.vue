@@ -6,7 +6,6 @@
       <input id="fileItem" type="file" class="custom-file-input" @change="getFile($event)" />
       <span>{{ message }}</span>
       <span>{{ fileName }}</span>
-      <button @click="processFile">Process File</button>
       <div>
         <router-link :to="{ name: 'DataCleaner', params: { fileName: fileName }}">Data Cleaner</router-link>
       </div>
@@ -22,48 +21,55 @@ export default {
   name: "Home",
   data() {
     return {
+      VALID_FILE_TYPES: ["text/csv"],
       fileItem: "",
-      message: "",
-      data: [1, 2, 3],
+      fileName: "",
+      fileType: "",
+      fileSize: 0,
+      data: [],
       fieldNames: [],
-      fileName: ""
+      message: ""
     };
   },
+  watch: {
+    data: function() {
+      this.updateState();
+    }
+  },
   methods: {
-    ...mapActions(["setFieldNamesAction", "setDataAction"]),
+    ...mapActions(["setFieldNamesAction", "setDataAction", "updateDataAction"]),
     getFile(event) {
       this.fileItem = event.target.files[0];
       this.fileName = this.fileItem["name"];
-    },
-    processFile() {
-      if (this.fileItem) {
-        console.log(this.fileItem);
-        let reader = new FileReader();
-        reader.readAsText(this.fileItem);
-
-        // Use arrow function or bind rather than 'reader.onload = function(event) {}' as that would have it's own context
-        //https://stackoverflow.com/questions/54113762/filereader-method-does-not-update-data-property-vue-js
-        reader.onload = () => {
-          this.fieldNames = Papa.parse(reader.result).data[0];
-          this.data = Papa.parse(reader.result, { header: true }).data;
-          this.setFieldNamesAction(this.fieldNames);
-          this.setDataAction(this.data);
-          console.log(this.data.length);
-        };
-
-        reader.onerror = () => {
-          console.log(reader.error);
-        };
-      } else {
-        this.message = "please select a file";
+      this.fileType = this.fileItem["type"];
+      this.fileSize = this.fileItem["size"];
+      if (this.VALID_FILE_TYPES.includes(this.fileType)) {
+        this.convertFileToData();
       }
+    },
+    convertFileToData() {
+      let reader = new FileReader();
+      reader.readAsText(this.fileItem);
+      // Use arrow function or bind rather than 'reader.onload = function(event) {}' as that would have it's own context
+      //https://stackoverflow.com/questions/54113762/filereader-method-does-not-update-data-property-vue-js
+      reader.onload = () => {
+        this.data = Papa.parse(reader.result, { header: true }).data;
+        this.fieldNames = Object.keys(this.data[0]);
+      };
+      reader.onerror = () => {
+        console.log(reader.error);
+      };
+    },
+    updateState() {
+      this.updateDataAction({
+        fileName: this.fileName,
+        data: this.data,
+        fieldNames: this.fieldNames
+      });
     }
   },
   computed: {
-    ...mapState(["dataRows", "distinctFieldNames"]), // can be used as variable and state are both named 'rows'
-    totalSize: function() {
-      return this.dataRows.length;
-    }
+    ...mapState(["dataRows", "dataFieldNames", "dataFileName"]) // can be used as variable and state are both named 'dataRows'
   }
 };
 </script>

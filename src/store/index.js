@@ -2,13 +2,18 @@ import Vue from "vue";
 import Vuex from "vuex";
 import { cloneDeep } from "lodash";
 
-import { UPDATE_DATA_ROWS, UPDATE_FIELD_NAMES } from "./mutation-types";
+import {
+  UPDATE_DATA_ROWS,
+  UPDATE_FIELD_NAMES,
+  UPDATE_FILE_NAME,
+} from "./mutation-types";
 
 Vue.use(Vuex);
 
 const state = {
-  distinctFieldNames: [],
+  dataFieldNames: [],
   dataRows: [],
+  dataFileName: "",
 };
 
 const mutations = {
@@ -16,7 +21,10 @@ const mutations = {
     state.dataRows = updatedDataRows;
   },
   [UPDATE_FIELD_NAMES](state, fieldNames) {
-    state.distinctFieldNames = fieldNames;
+    state.dataFieldNames = fieldNames;
+  },
+  [UPDATE_FILE_NAME](state, fileName) {
+    state.dataFileName = fileName;
   },
 };
 
@@ -40,6 +48,11 @@ const actions = {
   },
   getDataSourceData() {
     return state.dataRows;
+  },
+  updateDataAction({ commit }, dataObject) {
+    commit(UPDATE_FILE_NAME, dataObject["fileName"]);
+    commit(UPDATE_DATA_ROWS, dataObject["data"]);
+    commit(UPDATE_FIELD_NAMES, dataObject["fieldNames"]);
   },
 };
 
