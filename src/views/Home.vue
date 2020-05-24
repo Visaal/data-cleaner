@@ -7,7 +7,7 @@
       <span>{{ message }}</span>
       <span>{{ fileName }}</span>
       <div>
-        <router-link :to="{ name: 'DataCleaner', params: { fileName: fileName }}">Data Cleaner</router-link>
+        <router-link to="/DataCleaner">Data Cleaner</router-link>
       </div>
     </fieldset>
   </div>

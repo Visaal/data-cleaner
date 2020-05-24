@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="header">{{ fileName }}</div>
+    <div class="header">{{ dataFileName }}</div>
 
     <div class="side-panel">
       <RuleSelector />
@@ -18,6 +18,7 @@
 // @ is an alias to /src
 import RuleSelector from "@/components/rule-selector.vue";
 import DataView from "@/components/data-view.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "DataCleaner",
@@ -25,13 +26,8 @@ export default {
     RuleSelector,
     DataView
   },
-  created() {
-    this.fileName = this.$route.params.fileName;
-  },
-  data() {
-    return {
-      fileName: ""
-    };
+  computed: {
+    ...mapState(["dataFileName"])
   }
 };
 </script>
