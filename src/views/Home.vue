@@ -2,7 +2,7 @@
   <div class="landing-page-form">
     <fieldset>
       <h2>Data Cleaner</h2>
-      <label for="fileItem" class="custom-file-input-label">Select a file</label>
+      <label for="fileItem" class="custom-file-input-label">Select File To Clean</label>
       <input id="fileItem" type="file" class="custom-file-input" @change="getFile($event)" />
       <span>{{ message }}</span>
       <span>{{ fileName }}</span>
