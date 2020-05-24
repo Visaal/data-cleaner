@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "DataView",
@@ -29,15 +29,7 @@ export default {
       dataLimit: 10
     };
   },
-  created() {
-    this.getData();
-  },
   methods: {
-    // use helper function from vuex to get the actions defined
-    ...mapActions(["getDataSourceData"]),
-    async getData() {
-      await this.getDataSourceData();
-    },
     loadMoreData() {
       this.dataRowStart += 10;
       this.dataLimit += 10;
