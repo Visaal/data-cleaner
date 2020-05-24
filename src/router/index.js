@@ -13,6 +13,7 @@ const routes = [
   },
   {
     path: "/DataCleaner",
+    name: "DataCleaner",
     component: DataCleaner,
   },
   {

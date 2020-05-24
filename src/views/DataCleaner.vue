@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="header">This is the header</div>
+    <div class="header">{{ fileName }}</div>
 
     <div class="side-panel">
       <RuleSelector />
@@ -24,6 +24,14 @@ export default {
   components: {
     RuleSelector,
     DataView
+  },
+  created() {
+    this.fileName = this.$route.params.fileName;
+  },
+  data() {
+    return {
+      fileName: ""
+    };
   }
 };
 </script>
@@ -42,6 +50,11 @@ export default {
   color: var(--headline);
   grid-column: 1 / -1;
   background-color: var(--teritary);
+  line-height: 40px;
+  vertical-align: middle;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-weight: bolder;
 }
 
 .side-panel {

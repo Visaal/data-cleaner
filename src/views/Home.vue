@@ -8,7 +8,7 @@
       <span>{{ fileName }}</span>
       <button @click="processFile">Process File</button>
       <div>
-        <router-link to="/DataCleaner">Data Cleaner</router-link>
+        <router-link :to="{ name: 'DataCleaner', params: { fileName: fileName }}">Data Cleaner</router-link>
       </div>
     </fieldset>
   </div>
