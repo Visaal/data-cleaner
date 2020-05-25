@@ -51,6 +51,9 @@ export default {
   },
   watch: {
     data: function() {
+      this.fieldNames = Object.keys(this.data[0]);
+      // Select all fields by default
+      this.selectedFieldIndexes = [...Array(this.fieldNames.length).keys()];
       this.updateState();
     }
   },
@@ -77,15 +80,10 @@ export default {
       //https://stackoverflow.com/questions/54113762/filereader-method-does-not-update-data-property-vue-js
       reader.onload = () => {
         this.data = Papa.parse(reader.result, { header: true }).data;
-        this.fieldNames = Object.keys(this.data[0]);
-        this.selectFieldsByDefault(this.fieldNames.length);
       };
       reader.onerror = () => {
         console.log(reader.error);
       };
-    },
-    selectFieldsByDefault(numberOfFields) {
-      this.selectedFieldIndexes = [...Array(numberOfFields).keys()];
     },
     updateState() {
       this.updateDataAction({
