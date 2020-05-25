@@ -3,7 +3,7 @@
     <fieldset>
       <label for="fieldName">Select Field:</label>
       <select v-model="fieldName">
-        <option v-for="field in dataFieldNames" :key="field.id">
+        <option v-for="field in dataSelectedFieldNames" :key="field.id">
           {{
           field
           }}
@@ -33,7 +33,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["dataRows", "dataFieldNames"]) // can be used as variable and state are both named 'rows'
+    ...mapState(["dataRows", "dataFieldNames", "dataSelectedFieldNames"]) // can be used as variable and state are both named 'rows'
   }
 };
 </script>

@@ -5,12 +5,12 @@
     <table>
       <thead>
         <td>Row #</td>
-        <td v-for="field in dataFieldNames" :key="field.id">{{ field }}</td>
+        <td v-for="field in dataSelectedFieldNames" :key="field.id">{{ field }}</td>
       </thead>
       <tbody>
         <tr v-for="(row, index) in dataRows.slice(dataRowStart, dataLimit)" :key="index">
           <td>{{ index + 1 }}</td>
-          <td v-for="field in dataFieldNames" :key="field.id">{{ row[field] }}</td>
+          <td v-for="field in dataSelectedFieldNames" :key="field.id">{{ row[field] }}</td>
         </tr>
       </tbody>
     </table>
@@ -36,7 +36,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(["dataRows", "dataFieldNames", "dataFileName"]) // can be used as variable and state are both named 'dataRows'
+    ...mapState([
+      "dataRows",
+      "dataFieldNames",
+      "dataFileName",
+      "dataSelectedFieldNames"
+    ]) // can be used as variable and state are both named 'dataRows'
   }
 };
 </script>

@@ -1,15 +1,32 @@
 <template>
-  <div class="landing-page-form">
-    <fieldset>
-      <h2>Data Cleaner</h2>
-      <label for="fileItem" class="custom-file-input-label">Select File To Clean</label>
-      <input id="fileItem" type="file" class="custom-file-input" @change="getFile($event)" />
-      <span>{{ message }}</span>
-      <span>{{ fileName }}</span>
-      <div>
-        <router-link to="/DataCleaner">Data Cleaner</router-link>
+  <div>
+    <div v-if="fieldNames.length > 0">
+      <h6>Please Select Fields</h6>
+      <div v-for="(field,index) in fieldNames" :key="index">
+        <input
+          type="checkbox"
+          :id="index"
+          :name="field"
+          :value="index"
+          v-model="selectedFieldIndexes"
+        />
+        <label for="id">{{ field }}</label>
       </div>
-    </fieldset>
+      <button @click="setSelectedFields()">Confirm</button>
+    </div>
+
+    <div class="landing-page-form">
+      <fieldset>
+        <h2>Data Cleaner</h2>
+        <label for="fileItem" class="custom-file-input-label">Select File To Clean</label>
+        <input id="fileItem" type="file" class="custom-file-input" @change="getFile($event)" />
+        <span>{{ message }}</span>
+        <span>{{ fileName }}</span>
+        <div>
+          <router-link to="/DataCleaner">Data Cleaner</router-link>
+        </div>
+      </fieldset>
+    </div>
   </div>
 </template>
 
@@ -28,6 +45,7 @@ export default {
       fileSize: 0,
       data: [],
       fieldNames: [],
+      selectedFieldIndexes: [],
       message: ""
     };
   },
@@ -37,7 +55,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["setFieldNamesAction", "setDataAction", "updateDataAction"]),
+    ...mapActions([
+      "setFieldNamesAction",
+      "setDataAction",
+      "updateDataAction",
+      "setSelectedFieldsAction"
+    ]),
     getFile(event) {
       this.fileItem = event.target.files[0];
       this.fileName = this.fileItem["name"];
@@ -55,10 +78,14 @@ export default {
       reader.onload = () => {
         this.data = Papa.parse(reader.result, { header: true }).data;
         this.fieldNames = Object.keys(this.data[0]);
+        this.selectFieldsByDefault(this.fieldNames.length);
       };
       reader.onerror = () => {
         console.log(reader.error);
       };
+    },
+    selectFieldsByDefault(numberOfFields) {
+      this.selectedFieldIndexes = [...Array(numberOfFields).keys()];
     },
     updateState() {
       this.updateDataAction({
@@ -66,10 +93,23 @@ export default {
         data: this.data,
         fieldNames: this.fieldNames
       });
+    },
+    setSelectedFields() {
+      this.setSelectedFieldsAction(this.selectedFieldNames);
     }
   },
   computed: {
-    ...mapState(["dataRows", "dataFieldNames", "dataFileName"]) // can be used as variable and state are both named 'dataRows'
+    ...mapState(["dataRows", "dataFieldNames", "dataFileName"]), // can be used as variable and state are both named 'dataRows'
+    selectedFieldNames: function() {
+      let fieldNamesInOrder = [];
+      let sortedSelectedFieldIndexes = this.selectedFieldIndexes
+        .slice()
+        .sort((a, b) => a - b);
+      for (let i = 0; i < sortedSelectedFieldIndexes.length; i++) {
+        fieldNamesInOrder.push(this.fieldNames[sortedSelectedFieldIndexes[i]]);
+      }
+      return fieldNamesInOrder;
+    }
   }
 };
 </script>
