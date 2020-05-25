@@ -1,7 +1,8 @@
 <template>
   <div>
-    <div v-if="fieldNames.length > 0">
+    <div :class="{ moved: fileName }" class="stay">
       <h6>Please Select Fields</h6>
+      <button @click="setSelectedFieldsAction(selectedFieldNames)">Confirm</button>
       <div v-for="(field,index) in fieldNames" :key="index">
         <input
           type="checkbox"
@@ -12,7 +13,6 @@
         />
         <label for="id">{{ field }}</label>
       </div>
-      <button @click="setSelectedFields()">Confirm</button>
     </div>
 
     <div class="landing-page-form">
@@ -91,9 +91,6 @@ export default {
         data: this.data,
         fieldNames: this.fieldNames
       });
-    },
-    setSelectedFields() {
-      this.setSelectedFieldsAction(this.selectedFieldNames);
     }
   },
   computed: {
@@ -190,5 +187,15 @@ progress::-webkit-progress-value {
 }
 progress::-moz-progress-bar {
   background-color: var(--field-grey);
+}
+
+.stay {
+  position: absolute;
+  left: -200px;
+  transition: 5s ease-in-out;
+}
+
+.moved {
+  transform: translateX(200px);
 }
 </style>
