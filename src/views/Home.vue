@@ -1,19 +1,26 @@
 <template>
   <div>
-    <div :class="{ moved: fileName }" class="stay">
-      <h6>Please Select Fields</h6>
-      <button @click="setSelectedFieldsAction(selectedFieldNames)">Confirm</button>
-      <div v-for="(field,index) in fieldNames" :key="index">
-        <input
-          type="checkbox"
-          :id="index"
-          :name="field"
-          :value="index"
-          v-model="selectedFieldIndexes"
-        />
-        <label for="id">{{ field }}</label>
+    <fieldset :class="{ moved: fileName }" class="stay field-list-fieldset">
+      <div class="field-list-action">
+        <h6>Please Select Fields</h6>
+        <button @click="setSelectedFieldsAction(selectedFieldNames)">Confirm</button>
       </div>
-    </div>
+      <div class="field-list">
+        <div v-for="(field,index) in fieldNames" :key="index">
+          <label class="custom-checkbox">
+            {{ field }}
+            <input
+              type="checkbox"
+              :id="index"
+              :name="field"
+              :value="index"
+              v-model="selectedFieldIndexes"
+            />
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+    </fieldset>
 
     <div class="landing-page-form">
       <fieldset>
@@ -192,10 +199,99 @@ progress::-moz-progress-bar {
 .stay {
   position: absolute;
   left: -200px;
-  transition: 5s ease-in-out;
+  transition: 1.5s ease-in-out;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
 }
 
 .moved {
   transform: translateX(200px);
+  margin-left: 3vh;
+}
+
+field-list-fieldset {
+  height: 90vh;
+}
+
+.field-list-action {
+  height: 15vh;
+}
+
+.field-list {
+  height: 75vh;
+  overflow: auto;
+}
+
+/* CUSTOM CHECKBOX STYLING */
+/* The container */
+.custom-checkbox {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  padding-top: 5px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding-bottom: 9px;
+  width: 80%;
+}
+
+/* Hide the browser's default checkbox */
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: var(--field-grey);
+  border-radius: 4px;
+}
+
+/* On mouse-over, add a grey background color */
+.custom-checkbox:hover input ~ .checkmark {
+  background-color: var(--field-grey);
+}
+
+/* When the checkbox is checked */
+.custom-checkbox input:checked ~ .checkmark {
+  background-color: var(--field-grey);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  opacity: 0;
+}
+
+/* Show the checkmark when checked */
+.custom-checkbox input:checked ~ .checkmark:after {
+  display: block;
+  opacity: 1;
+  transition: all 0.3s;
+}
+
+/* Style the checkmark/indicator */
+.custom-checkbox .checkmark:after {
+  left: 9px;
+  top: 3px;
+  width: 5px;
+  height: 12px;
+  border: solid var(--paragraph);
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 </style>
