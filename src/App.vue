@@ -23,6 +23,7 @@
   --field-grey: #eef2f8;
   --field-label: #546778;
   --table-border: #ccc;
+  color: var(--stroke);
 }
 
 html,

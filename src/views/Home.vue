@@ -1,9 +1,12 @@
 <template>
   <div>
-    <fieldset :class="{ moved: fileName }" class="stay field-list-fieldset">
+    <fieldset :class="{ 'display-from-left': fileName }" class="hidden-left field-list-fieldset">
       <div class="field-list-action">
-        <h6>Please Select Fields</h6>
-        <button @click="setSelectedFieldsAction(selectedFieldNames)">Confirm</button>
+        <h3>Please Select Fields</h3>
+        <div class="action-button-container">
+          <button @click="setSelectedFieldsAction(selectedFieldNames)">Confirm</button>
+          <button class="secondary">Cancel</button>
+        </div>
       </div>
       <div class="field-list">
         <div v-for="(field,index) in fieldNames" :key="index">
@@ -196,30 +199,55 @@ progress::-moz-progress-bar {
   background-color: var(--field-grey);
 }
 
-.stay {
+/* FIELD LIST STYLING */
+.hidden-left {
   position: absolute;
-  left: -200px;
+  left: -23vw;
   transition: 1.5s ease-in-out;
   margin-top: 3vh;
   margin-bottom: 3vh;
 }
 
-.moved {
-  transform: translateX(200px);
+.display-from-left {
+  transform: translateX(23vw);
   margin-left: 3vh;
 }
 
-field-list-fieldset {
-  height: 90vh;
+.field-list-fieldset {
+  width: 20vw;
 }
 
 .field-list-action {
-  height: 15vh;
+  height: 100px;
 }
 
 .field-list {
   height: 75vh;
   overflow: auto;
+}
+
+.field-list-fieldset h3 {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.action-button-container {
+  width: 100%;
+  border-bottom: 2px solid var(--field-grey);
+}
+
+.action-button-container > button {
+  margin-right: 2%;
+  width: 48%;
+}
+
+.secondary {
+  background-color: var(--field-grey);
+  border-color: var(--field-grey);
+}
+
+.secondary:hover {
+  filter: brightness(93%);
 }
 
 /* CUSTOM CHECKBOX STYLING */
@@ -235,7 +263,7 @@ field-list-fieldset {
   -ms-user-select: none;
   user-select: none;
   padding-bottom: 9px;
-  width: 80%;
+  width: 100%;
 }
 
 /* Hide the browser's default checkbox */
