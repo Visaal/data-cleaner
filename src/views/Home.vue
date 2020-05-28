@@ -4,7 +4,7 @@
       <div class="field-list-action">
         <h3>Please Select Fields</h3>
         <div class="action-button-container">
-          <button @click="setSelectedFieldsAction(selectedFieldNames)">Confirm</button>
+          <button @click="updateState(),navigate()">Confirm</button>
           <button class="secondary">Cancel</button>
         </div>
       </div>
@@ -32,9 +32,6 @@
         <input id="fileItem" type="file" class="custom-file-input" @change="getFile($event)" />
         <span>{{ message }}</span>
         <span>{{ fileName }}</span>
-        <div>
-          <router-link to="/DataCleaner">Data Cleaner</router-link>
-        </div>
       </fieldset>
     </div>
   </div>
@@ -43,6 +40,7 @@
 <script>
 import Papa from "papaparse";
 import { mapState, mapActions } from "vuex";
+import router from "../router";
 
 export default {
   name: "Home",
@@ -64,7 +62,6 @@ export default {
       this.fieldNames = Object.keys(this.data[0]);
       // Select all fields by default
       this.selectedFieldIndexes = [...Array(this.fieldNames.length).keys()];
-      this.updateState();
     }
   },
   methods: {
@@ -101,6 +98,10 @@ export default {
         data: this.data,
         fieldNames: this.fieldNames
       });
+      this.setSelectedFieldsAction(this.selectedFieldNames);
+    },
+    navigate() {
+      router.push({ path: "/DataCleaner" });
     }
   },
   computed: {
