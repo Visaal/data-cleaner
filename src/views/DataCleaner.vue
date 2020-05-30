@@ -6,6 +6,10 @@
       <RuleSelector />
     </div>
 
+    <div class="content-action-menu">
+      <ContentActionMenu />
+    </div>
+
     <div class="content">
       <DataView />
     </div>
@@ -18,13 +22,15 @@
 // @ is an alias to /src
 import RuleSelector from "@/components/rule-selector.vue";
 import DataView from "@/components/data-view.vue";
+import ContentActionMenu from "@/components/content-action-menu.vue";
 import { mapState } from "vuex";
 
 export default {
   name: "DataCleaner",
   components: {
     RuleSelector,
-    DataView
+    DataView,
+    ContentActionMenu
   },
   computed: {
     ...mapState(["dataFileName"])
@@ -38,7 +44,7 @@ export default {
   display: grid;
   grid-gap: 0px;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 40px auto 40px;
+  grid-template-rows: 40px 80px auto 40px;
   background-color: var(--background);
 }
 
@@ -57,6 +63,11 @@ export default {
   grid-column: 1 / 3;
   color: var(--paragraph);
   margin: 10px;
+}
+
+.content-action-menu {
+  grid-column: 3/-1;
+  border-bottom: 2px solid var(--field-grey);
 }
 
 .content {

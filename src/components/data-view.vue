@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Data</h1>
     <button @click="loadMoreData()">LOAD MORE DATA</button>
     <table>
       <thead>
