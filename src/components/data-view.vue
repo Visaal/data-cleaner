@@ -1,46 +1,43 @@
 <template>
   <div>
-    <button @click="loadMoreData()">LOAD MORE DATA</button>
+    <p>Showing from {{ rowStartSliceIndex }} until {{ rowEndSliceIndex }}</p>
     <table>
       <thead>
         <td>Row #</td>
         <td v-for="field in dataSelectedFieldNames" :key="field.id">{{ field }}</td>
       </thead>
       <tbody>
-        <tr v-for="(row, index) in dataRows.slice(dataRowStart, dataLimit)" :key="index">
+        <tr
+          v-for="(row, index) in dataRows.slice(rowStartSliceIndex, rowEndSliceIndex)"
+          :key="index"
+        >
           <td>{{ index + 1 }}</td>
           <td v-for="field in dataSelectedFieldNames" :key="field.id">{{ row[field] }}</td>
         </tr>
       </tbody>
     </table>
-    <button @click="loadMoreData()">LOAD MORE DATA</button>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   name: "DataView",
   data() {
-    return {
-      dataRowStart: 0,
-      dataLimit: 10
-    };
+    return {};
   },
-  methods: {
-    loadMoreData() {
-      this.dataRowStart += 10;
-      this.dataLimit += 10;
-    }
-  },
+  methods: {},
   computed: {
     ...mapState([
       "dataRows",
       "dataFieldNames",
       "dataFileName",
-      "dataSelectedFieldNames"
-    ]) // can be used as variable and state are both named 'dataRows'
+      "dataSelectedFieldNames",
+      "numberOfRowsToDisplay",
+      "rowStartSliceIndex"
+    ]),
+    ...mapGetters(["rowEndSliceIndex"])
   }
 };
 </script>

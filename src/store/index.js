@@ -7,6 +7,9 @@ import {
   UPDATE_FIELD_NAMES,
   UPDATE_FILE_NAME,
   SET_SELECTED_FIELD_NAMES,
+  SET_NUMBER_OF_DISPLAYED_ROWS,
+  SET_ROW_START_SLICE_INDEX_NEXT_PAGE,
+  SET_ROW_START_SLICE_INDEX_PREVIOUS_PAGE,
 } from "./mutation-types";
 
 Vue.use(Vuex);
@@ -16,6 +19,8 @@ const state = {
   dataRows: [],
   dataFileName: "",
   dataSelectedFieldNames: "",
+  numberOfRowsToDisplay: 100,
+  rowStartSliceIndex: 0,
 };
 
 const mutations = {
@@ -30,6 +35,15 @@ const mutations = {
   },
   [SET_SELECTED_FIELD_NAMES](state, selectedFieldNames) {
     state.dataSelectedFieldNames = selectedFieldNames;
+  },
+  [SET_NUMBER_OF_DISPLAYED_ROWS](state, numberSelected) {
+    state.numberOfRowsToDisplay = numberSelected;
+  },
+  [SET_ROW_START_SLICE_INDEX_NEXT_PAGE](state) {
+    state.rowStartSliceIndex += state.numberOfRowsToDisplay;
+  },
+  [SET_ROW_START_SLICE_INDEX_PREVIOUS_PAGE](state) {
+    state.rowStartSliceIndex -= state.numberOfRowsToDisplay;
   },
 };
 
@@ -62,9 +76,23 @@ const actions = {
   setSelectedFieldsAction({ commit }, selectedFieldNames) {
     commit(SET_SELECTED_FIELD_NAMES, selectedFieldNames);
   },
+  setNumberOfRowsToDisplayAction({ commit }, numberSelected) {
+    let convertedSelectedNumber = Number(numberSelected);
+    commit(SET_NUMBER_OF_DISPLAYED_ROWS, convertedSelectedNumber);
+  },
+  setStartIndexNextPageAction({ commit }) {
+    commit(SET_ROW_START_SLICE_INDEX_NEXT_PAGE);
+  },
+  setStartIndexPreviousPageAction({ commit }) {
+    commit(SET_ROW_START_SLICE_INDEX_PREVIOUS_PAGE);
+  },
 };
 
-const getters = {};
+const getters = {
+  rowEndSliceIndex: (state) => {
+    return state.rowStartSliceIndex + state.numberOfRowsToDisplay;
+  },
+};
 
 export default new Vuex.Store({
   strict: true,
