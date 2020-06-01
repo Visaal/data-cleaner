@@ -163,6 +163,10 @@ table th {
   padding: 5px;
 }
 
+tbody td {
+  white-space: nowrap;
+}
+
 button {
   margin-top: 10px;
   margin-bottom: 10px;
