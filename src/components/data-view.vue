@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>Showing from {{ rowStartSliceIndex }} until {{ rowEndSliceIndex }}</p>
     <table>
       <thead>
         <td>Row #</td>

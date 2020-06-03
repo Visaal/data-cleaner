@@ -21,7 +21,7 @@
             <select v-model="rowsToDisplay" @change="setRowPerPage(rowsToDisplay)">
               <option>10</option>
               <option>50</option>
-              <option>100</option>
+              <option :value="rowsToDisplay">100</option>
               <option>250</option>
               <option>500</option>
             </select>
@@ -30,6 +30,7 @@
         <span class="action-bar-element">records per page</span>
       </div>
     </div>
+    <div>Showing from {{ rowStartSliceIndex }} until {{ rowEndSliceIndex }}</div>
   </div>
   <!-- <h1>DATA</h1> -->
   <!-- <button @click="previousPage()">&lt;</button>
@@ -99,6 +100,7 @@ export default {
 .action-bar {
   border-bottom: 2px solid var(--field-grey);
   height: 40px;
+  margin-bottom: 5px;
 }
 
 .action-bar-section {
