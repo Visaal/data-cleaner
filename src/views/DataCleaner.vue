@@ -67,7 +67,7 @@ export default {
 
 .content-action-menu {
   grid-column: 3/-1;
-  border-bottom: 2px solid var(--field-grey);
+  /* border-bottom: 2px solid var(--field-grey); */
 }
 
 .content {
