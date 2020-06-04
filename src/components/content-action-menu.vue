@@ -14,37 +14,30 @@
         </div>
       </div>
 
+      <div class="action-bar-divider"></div>
+
       <div class="action-bar-section">
         <span class="action-bar-element">show</span>
         <div class="action-bar-element">
-          <div class="selectWrapper">
-            <select v-model="rowsToDisplay" @change="setRowPerPage(rowsToDisplay)">
-              <option>10</option>
-              <option>50</option>
-              <option :value="rowsToDisplay">100</option>
-              <option>250</option>
-              <option>500</option>
-            </select>
-          </div>
+          <select v-model="rowsToDisplay" @change="setRowPerPage(rowsToDisplay)">
+            <option>10</option>
+            <option>50</option>
+            <option>100</option>
+            <option>250</option>
+            <option>500</option>
+          </select>
         </div>
         <span class="action-bar-element">records per page</span>
       </div>
+      <div class="action-bar-divider"></div>
     </div>
-    <div>Showing from {{ rowStartSliceIndex }} until {{ rowEndSliceIndex }}</div>
+    <div class="data-row-info">
+      Showing from
+      <span class="data-stat">{{ rowStartSliceIndex }}</span> to
+      <span class="data-stat">{{ rowEndSliceIndex }}</span> of
+      <span class="data-stat">XXX</span>
+    </div>
   </div>
-  <!-- <h1>DATA</h1> -->
-  <!-- <button @click="previousPage()">&lt;</button>
-    <div class="selectWrapper">
-      <select v-model="rowsToDisplay" @change="setRowPerPage(rowsToDisplay)">
-        <option>10</option>
-        <option>50</option>
-        <option>100</option>
-        <option>250</option>
-        <option>500</option>
-      </select>
-  </div>-->
-  <!-- <button @click="setRowPerPage()">LOAD MORE DATA</button> -->
-  <!-- <button @click="nextPage()">&gt;</button> -->
 </template>
 
 <script>
@@ -109,11 +102,18 @@ export default {
   height: 30px;
   margin-top: 5px;
   margin-bottom: 5px;
-  border-right: 2px solid var(--field-grey);
 }
 
-.action-bar.action-bar-section :not(:first-child) {
-  /* margin-left: 5px; */
+.action-bar-divider {
+  display: inline-block;
+  position: relative;
+  height: 30px;
+  border-left: 2px solid var(--field-grey);
+  margin-top: 5px;
+  margin-bottom: 5px;
+  vertical-align: bottom; /* important to have this or other elements around it will be displaced */
+  margin-left: 8px;
+  margin-right: 8px;
 }
 
 .action-bar-element {
@@ -121,37 +121,15 @@ export default {
   height: 30px;
   line-height: 30px;
   text-align: center;
+  font-size: 0.8rem;
+  color: var(--field-label);
   margin-right: 5px;
-  background-color: var(--field-grey);
 }
 
-.action-bar-element :not(:first-child) {
-  /* margin-left: 5px; */
-}
-span.action-bar-element {
-  /* margin-left: */
+div.action-bar-element {
   background-color: var(--background);
 }
 /* ACTION BAR */
-
-/* .selectWrapper {
-  border-radius: 0px;
-  display: inline-block;
-  overflow: hidden;
-  background: var(--field-grey);
-  border: 1px solid var(--field-grey);
-  position: relative;
-  top: 17px;
-}
-select {
-  height: 40px;
-  line-height: 40px;
-  margin-bottom: 0px;
-}
-
-button {
-  height: 40px;
-} */
 
 /* DATA PAGINATION */
 .pagination {
@@ -159,22 +137,27 @@ button {
   padding-left: 10px;
   padding-right: 10px;
   box-sizing: border-box;
+  background-color: var(--field-grey);
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bolder;
+  color: var(--paragraph);
 }
 
 /* PAGINATION STYLING */
-
-div.pagination {
-  text-decoration: none;
-  transition: 0.3s;
-  cursor: pointer;
-}
-
 div.pagination > .forward {
   transition: 0.3s;
+  font-size: 1rem;
+  font-weight: bolder;
+  color: var(--paragraph);
 }
 
 div.pagination > .backward {
   transition: 0.3s;
+  font-size: 1rem;
+  font-weight: bolder;
+  color: var(--paragraph);
 }
 
 div:hover.pagination {
@@ -182,7 +165,6 @@ div:hover.pagination {
   text-decoration: none;
   cursor: pointer;
 }
-
 div:hover.pagination > .forward {
   transform: translateX(3px);
   -webkit-transform: translateX(3px);
@@ -193,5 +175,15 @@ div:hover.pagination > .backward {
   transform: translateX(-3px);
   -webkit-transform: translateX(-3px);
   -ms-transform: translateX(-3px);
+}
+
+.data-row-info {
+  font-size: 0.8rem;
+  color: var(--field-label);
+}
+
+.data-stat {
+  font-size: 0.8rem;
+  font-weight: bold;
 }
 </style>
