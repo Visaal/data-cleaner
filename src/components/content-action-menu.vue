@@ -35,7 +35,7 @@
       Showing from
       <span class="data-stat">{{ rowStartSliceIndex }}</span> to
       <span class="data-stat">{{ rowEndSliceIndex }}</span> of
-      <span class="data-stat">XXX</span>
+      <span class="data-stat">{{ dataRows.length }}</span>
     </div>
   </div>
 </template>
