@@ -81,7 +81,12 @@ const actions = {
     commit(SET_NUMBER_OF_DISPLAYED_ROWS, convertedSelectedNumber);
   },
   setStartIndexNextPageAction({ commit }) {
-    commit(SET_ROW_START_SLICE_INDEX_NEXT_PAGE);
+    if (
+      state.rowStartSliceIndex + state.numberOfRowsToDisplay <
+      state.dataRows.length
+    ) {
+      commit(SET_ROW_START_SLICE_INDEX_NEXT_PAGE);
+    }
   },
   setStartIndexPreviousPageAction({ commit }) {
     commit(SET_ROW_START_SLICE_INDEX_PREVIOUS_PAGE);

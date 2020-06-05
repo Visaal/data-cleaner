@@ -29,7 +29,7 @@
     </div>
     <div class="data-row-info">
       Showing from
-      <span class="data-stat">{{ rowStartSliceIndex }}</span> to
+      <span class="data-stat">{{ rowStartSliceIndex + 1 }}</span> to
       <span class="data-stat">{{ rowEndSliceIndex }}</span> of
       <span class="data-stat">{{ dataRows.length }}</span>
     </div>
