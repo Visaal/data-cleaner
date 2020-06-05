@@ -20,11 +20,7 @@
         <span class="action-bar-element">show</span>
         <div class="action-bar-element">
           <select v-model="rowsToDisplay" @change="setRowPerPage(rowsToDisplay)">
-            <option>10</option>
-            <option>50</option>
-            <option>100</option>
-            <option>250</option>
-            <option>500</option>
+            <option v-for="rowOption in rowOptions" :key="rowOption">{{ rowOption }}</option>
           </select>
         </div>
         <span class="action-bar-element">records per page</span>
@@ -47,8 +43,11 @@ export default {
   name: "ContentActionMenu",
   data() {
     return {
-      rowsToDisplay: this.numberOfRowsToDisplay
+      rowOptions: [10, 50, 100, 250, 500]
     };
+  },
+  created() {
+    this.rowsToDisplay = this.numberOfRowsToDisplay;
   },
   methods: {
     ...mapActions([
