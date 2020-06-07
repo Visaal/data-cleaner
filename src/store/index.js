@@ -9,6 +9,7 @@ import {
   SET_SELECTED_FIELD_NAMES,
   SET_NUMBER_OF_DISPLAYED_ROWS,
   SET_NEW_ROW_START_SLICE_INDEX,
+  CREATE_SCHEMA,
 } from "./mutation-types";
 
 Vue.use(Vuex);
@@ -20,6 +21,7 @@ const state = {
   dataSelectedFieldNames: "",
   numberOfRowsToDisplay: 100,
   rowStartSliceIndex: 0,
+  dataSchema: {},
 };
 
 const mutations = {
@@ -40,6 +42,9 @@ const mutations = {
   },
   [SET_NEW_ROW_START_SLICE_INDEX](state, newStartIndex) {
     state.rowStartSliceIndex = newStartIndex;
+  },
+  [CREATE_SCHEMA](state, schema) {
+    state.dataSchema = schema;
   },
 };
 
@@ -64,13 +69,50 @@ const actions = {
   getDataSourceData() {
     return state.dataRows;
   },
-  updateDataAction({ commit }, dataObject) {
+  updateDataAction({ commit, dispatch }, dataObject) {
     commit(UPDATE_FILE_NAME, dataObject["fileName"]);
     commit(UPDATE_DATA_ROWS, dataObject["data"]);
     commit(UPDATE_FIELD_NAMES, dataObject["fieldNames"]);
+    dispatch("_createSchema");
   },
   setSelectedFieldsAction({ commit }, selectedFieldNames) {
     commit(SET_SELECTED_FIELD_NAMES, selectedFieldNames);
+  },
+  _createSchema({ commit }, schema) {
+    //TODO: Refactor to smaller helper functions
+    schema = {};
+    // create skeleton schema conataining all fields
+    for (let i = 0; i < state.dataFieldNames.length; i++) {
+      schema[state.dataFieldNames[i]] = {
+        number: 0,
+        text: 0,
+        date: 0,
+        likelyDataType: "text",
+      };
+    }
+
+    // create count of the data type for each field value
+    for (let i = 0; i < state.dataRows.length; i++) {
+      for (let [fieldName, fieldValue] of Object.entries(state.dataRows[i])) {
+        if (!isNaN(+fieldValue)) {
+          schema[fieldName]["number"] += 1;
+        } else {
+          schema[fieldName]["text"] += 1;
+        }
+      }
+    }
+
+    // determine most likely data type for each field
+    for (let i = 0; i < state.dataFieldNames.length; i++) {
+      if (
+        schema[state.dataFieldNames[i]]["number"] / state.dataRows.length >
+        0.5
+      ) {
+        schema[state.dataFieldNames[i]]["likelyDataType"] = "number";
+      }
+    }
+    console.log(schema);
+    commit(CREATE_SCHEMA, schema);
   },
   setNumberOfRowsToDisplayAction({ commit }, numberSelected) {
     let convertedSelectedNumber = Number(numberSelected);

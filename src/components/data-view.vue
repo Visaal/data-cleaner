@@ -3,7 +3,18 @@
     <table>
       <thead>
         <td>Row #</td>
-        <td v-for="field in dataSelectedFieldNames" :key="field.id">{{ field }}</td>
+        <!-- <td v-for="field in dataSelectedFieldNames" :key="field.id">
+        {{ field }}-->
+        <!-- TODO: FIX amount - need to know highest for likely data type -->
+        <TableHeaderField
+          v-for="field in dataSelectedFieldNames"
+          :key="field.id"
+          :field="field"
+          :dataType="dataSchema[field]['likelyDataType']"
+          :numberOfRecords="dataRows.length"
+          :amount="dataSchema[field]['number']"
+        />
+        <!-- </td> -->
       </thead>
       <tbody>
         <tr
@@ -20,9 +31,13 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import TableHeaderField from "@/components/table-header-field.vue";
 
 export default {
   name: "DataView",
+  components: {
+    TableHeaderField
+  },
   data() {
     return {};
   },
@@ -34,7 +49,8 @@ export default {
       "dataFileName",
       "dataSelectedFieldNames",
       "numberOfRowsToDisplay",
-      "rowStartSliceIndex"
+      "rowStartSliceIndex",
+      "dataSchema"
     ]),
     ...mapGetters(["rowEndSliceIndex"])
   }

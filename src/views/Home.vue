@@ -184,7 +184,7 @@ export default {
   filter: brightness(107%);
 }
 
-progress {
+/* progress {
   border-radius: 1px;
   width: 100%;
   height: 15px;
@@ -198,7 +198,7 @@ progress::-webkit-progress-value {
 }
 progress::-moz-progress-bar {
   background-color: var(--field-grey);
-}
+} */
 
 /* FIELD LIST STYLING */
 .hidden-left {
