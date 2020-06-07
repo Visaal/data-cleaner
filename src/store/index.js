@@ -8,8 +8,7 @@ import {
   UPDATE_FILE_NAME,
   SET_SELECTED_FIELD_NAMES,
   SET_NUMBER_OF_DISPLAYED_ROWS,
-  SET_ROW_START_SLICE_INDEX_NEXT_PAGE,
-  SET_ROW_START_SLICE_INDEX_PREVIOUS_PAGE,
+  SET_NEW_ROW_START_SLICE_INDEX,
 } from "./mutation-types";
 
 Vue.use(Vuex);
@@ -39,11 +38,8 @@ const mutations = {
   [SET_NUMBER_OF_DISPLAYED_ROWS](state, numberSelected) {
     state.numberOfRowsToDisplay = numberSelected;
   },
-  [SET_ROW_START_SLICE_INDEX_NEXT_PAGE](state) {
-    state.rowStartSliceIndex += state.numberOfRowsToDisplay;
-  },
-  [SET_ROW_START_SLICE_INDEX_PREVIOUS_PAGE](state) {
-    state.rowStartSliceIndex -= state.numberOfRowsToDisplay;
+  [SET_NEW_ROW_START_SLICE_INDEX](state, newStartIndex) {
+    state.rowStartSliceIndex = newStartIndex;
   },
 };
 
@@ -85,17 +81,32 @@ const actions = {
       state.rowStartSliceIndex + state.numberOfRowsToDisplay <
       state.dataRows.length
     ) {
-      commit(SET_ROW_START_SLICE_INDEX_NEXT_PAGE);
+      let newStartIndex =
+        state.rowStartSliceIndex + state.numberOfRowsToDisplay;
+      commit(SET_NEW_ROW_START_SLICE_INDEX, newStartIndex);
     }
   },
   setStartIndexPreviousPageAction({ commit }) {
-    commit(SET_ROW_START_SLICE_INDEX_PREVIOUS_PAGE);
+    let newStartIndex = 0;
+    if (state.rowStartSliceIndex - state.numberOfRowsToDisplay >= 0) {
+      newStartIndex = state.rowStartSliceIndex - state.numberOfRowsToDisplay;
+    } else {
+      newStartIndex = 0;
+    }
+    commit(SET_NEW_ROW_START_SLICE_INDEX, newStartIndex);
   },
 };
 
 const getters = {
   rowEndSliceIndex: (state) => {
-    return state.rowStartSliceIndex + state.numberOfRowsToDisplay;
+    if (
+      state.rowStartSliceIndex + state.numberOfRowsToDisplay <
+      state.dataRows.length
+    ) {
+      return state.rowStartSliceIndex + state.numberOfRowsToDisplay;
+    } else {
+      return state.dataRows.length;
+    }
   },
 };
 
