@@ -12,7 +12,7 @@
           :field="field"
           :dataType="dataSchema[field]['likelyDataType']"
           :numberOfRecords="dataRows.length"
-          :amount="dataSchema[field]['number']"
+          :primaryTypeValue="getLikelyDataTypeCount(dataSchema[field])"
         />
         <!-- </td> -->
       </thead>
@@ -41,7 +41,12 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+    getLikelyDataTypeCount(fieldSchema) {
+      let likelyDataType = fieldSchema["likelyDataType"];
+      return fieldSchema[likelyDataType];
+    }
+  },
   computed: {
     ...mapState([
       "dataRows",

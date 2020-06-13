@@ -3,7 +3,7 @@
     <div class="field-name">{{ field }}</div>
     <div class="data-type">{{dataType}}</div>
     <div class="data-match">
-      <progress :value="amount" :max="numberOfRecords"></progress>
+      <progress :value="primaryTypeValue" :max="numberOfRecords"></progress>
     </div>
   </td>
 </template>
@@ -15,7 +15,7 @@ export default {
     field: String,
     dataType: String,
     numberOfRecords: Number,
-    amount: Number
+    primaryTypeValue: Number
   }
 };
 </script>
