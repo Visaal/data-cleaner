@@ -88,6 +88,11 @@ const actions = {
         text: 0,
         date: 0,
         likelyDataType: "text",
+        valueCounts: {
+          number: {},
+          text: {},
+          date: {},
+        },
       };
     }
 
@@ -96,8 +101,12 @@ const actions = {
       for (let [fieldName, fieldValue] of Object.entries(state.dataRows[i])) {
         if (!isNaN(+fieldValue)) {
           schema[fieldName]["number"] += 1;
+          schema[fieldName]["valueCounts"]["number"][fieldValue] =
+            1 + (schema[fieldName]["valueCounts"]["number"][fieldValue] || 0);
         } else {
           schema[fieldName]["text"] += 1;
+          schema[fieldName]["valueCounts"]["text"][fieldValue] =
+            1 + (schema[fieldName]["valueCounts"]["text"][fieldValue] || 0);
         }
       }
     }
@@ -136,6 +145,20 @@ const actions = {
       newStartIndex = 0;
     }
     commit(SET_NEW_ROW_START_SLICE_INDEX, newStartIndex);
+  },
+  setDataTypeAction({ commit, dispatch }, ruleParameters) {
+    console.log(commit);
+    console.log(ruleParameters);
+    let clonedDataRows = cloneDeep(state.dataRows);
+    let fieldName = ruleParameters["fieldName"];
+    for (let i = 0; i < clonedDataRows.length; i++) {
+      if (isNaN(clonedDataRows[i][fieldName])) {
+        clonedDataRows[i][fieldName] = ruleParameters["selectedOption"];
+        // console.log(clonedDataRows[fieldName]);
+      }
+    }
+    commit(UPDATE_DATA_ROWS, clonedDataRows);
+    dispatch("_createSchema");
   },
 };
 

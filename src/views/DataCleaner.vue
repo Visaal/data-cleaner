@@ -39,6 +39,10 @@ export default {
 </script>
 
 <style>
+.parent {
+  grid-template-rows: repeat(4, 1fr);
+}
+
 .container {
   height: 100%;
   display: grid;
@@ -63,6 +67,8 @@ export default {
   grid-column: 1 / 3;
   color: var(--paragraph);
   margin: 10px;
+  grid-row: 2/4;
+  overflow-y: scroll;
 }
 
 .content-action-menu {
@@ -82,6 +88,7 @@ export default {
 }
 
 input[type="text"],
+input[type="number"],
 select {
   display: inline-block;
   font-family: menlo;
