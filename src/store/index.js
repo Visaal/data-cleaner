@@ -147,10 +147,9 @@ const actions = {
     commit(SET_NEW_ROW_START_SLICE_INDEX, newStartIndex);
   },
   setDataTypeAction({ commit, dispatch }, ruleParameters) {
-    console.log(commit);
-    console.log(ruleParameters);
     let clonedDataRows = cloneDeep(state.dataRows);
     let fieldName = ruleParameters["fieldName"];
+
     for (let i = 0; i < clonedDataRows.length; i++) {
       if (isNaN(clonedDataRows[i][fieldName])) {
         clonedDataRows[i][fieldName] = ruleParameters["selectedOption"];

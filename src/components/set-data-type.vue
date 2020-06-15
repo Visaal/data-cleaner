@@ -52,7 +52,7 @@ export default {
       fieldName: "",
       dataTypeName: "",
       availableDataTypes: ["Date", "Number", "Text"],
-      selectedOption: "null"
+      selectedOption: null
     };
   },
   methods: {
@@ -66,7 +66,7 @@ export default {
       });
     },
     setToNull() {
-      this.selectedOption = "null";
+      this.selectedOption = null;
     },
     setDefaultNumber() {
       this.selectedOption = "0";
