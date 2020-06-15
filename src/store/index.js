@@ -120,7 +120,6 @@ const actions = {
         schema[state.dataFieldNames[i]]["likelyDataType"] = "number";
       }
     }
-    console.log(schema);
     commit(CREATE_SCHEMA, schema);
   },
   setNumberOfRowsToDisplayAction({ commit }, numberSelected) {
@@ -153,7 +152,6 @@ const actions = {
     for (let i = 0; i < clonedDataRows.length; i++) {
       if (isNaN(clonedDataRows[i][fieldName])) {
         clonedDataRows[i][fieldName] = ruleParameters["selectedOption"];
-        // console.log(clonedDataRows[fieldName]);
       }
     }
     commit(UPDATE_DATA_ROWS, clonedDataRows);

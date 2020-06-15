@@ -58,7 +58,6 @@ export default {
   methods: {
     ...mapActions(["setDataTypeAction"]),
     setDataType() {
-      console.log(this.dataSchema);
       this.setDataTypeAction({
         fieldName: this.fieldName,
         dataTypeName: this.dataTypeName,
