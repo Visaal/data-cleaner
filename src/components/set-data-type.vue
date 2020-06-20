@@ -21,15 +21,15 @@
 
       <div v-if="dataTypeName === 'Number'">
         <label>Set Non-Numeric Values to:</label>
-        <label class="custom-radio" name="radio">
-          <input type="radio" name="radio" v-model="selectedOption" />
+        <label class="custom-radio" name="dataTypeOption">
+          <input type="radio" name="dataTypeOption" v-model="selectedOption" />
           <label for="radio">null</label>
-          <span class="radiomark" name="radio" v-on:click="setToNull"></span>
+          <span class="radiomark" name="dataTypeOption" v-on:click="setToNull"></span>
         </label>
-        <label class="custom-radio" name="radio">
-          <input type="radio" name="radio" />
-          <span class="radiomark" name="radio" v-on:click="setDefaultNumber"></span>
-          <input type="number" name="radio" v-model="selectedOption" />
+        <label class="custom-radio" name="dataTypeOption">
+          <input type="radio" name="dataTypeOption" />
+          <span class="radiomark" name="dataTypeOption" v-on:click="setDefaultNumber"></span>
+          <input type="number" name="dataTypeOption" v-model="selectedOption" />
         </label>
         <div
           v-for="(value, key) in dataSchema[fieldName]['valueCounts']['text']"
