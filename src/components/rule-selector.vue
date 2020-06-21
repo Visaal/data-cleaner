@@ -5,7 +5,7 @@
       <label for="rule_name">Select Option:</label>
       <select v-model="rule_name">
         <option value="Capitalise">Capitalise</option>
-        <option value="SetDataType">Set Data Type</option>
+        <option value="FixDataType">Fix Inconsistent Data Type</option>
         <option value="ChangeValue">Change Value</option>
       </select>
     </fieldset>
@@ -22,7 +22,7 @@ export default {
   components: {
     Capitalise: () => import("@/components/capitalise.vue"),
     ChangeValue: () => import("@/components/change-value.vue"),
-    SetDataType: () => import("@/components/set-data-type.vue")
+    FixDataType: () => import("@/components/fix-data-type.vue")
   },
   props: {
     rule: {

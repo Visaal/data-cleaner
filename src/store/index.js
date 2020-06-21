@@ -87,6 +87,7 @@ const actions = {
         number: 0,
         text: 0,
         date: 0,
+        inconsistentDataTypes: false,
         likelyDataType: "text",
         valueCounts: {
           number: {},
@@ -120,6 +121,20 @@ const actions = {
         schema[state.dataFieldNames[i]]["likelyDataType"] = "number";
       }
     }
+
+    // determine if field values have inconsistent data types
+    for (let [fieldName, fieldSchema] of Object.entries(schema)) {
+      let fieldDataTypeCounts = [
+        fieldSchema["number"],
+        fieldSchema["text"],
+        fieldSchema["date"],
+      ].filter((count) => count > 0);
+
+      if (fieldDataTypeCounts.length > 1) {
+        schema[fieldName]["inconsistentDataTypes"] = true;
+      }
+    }
+
     commit(CREATE_SCHEMA, schema);
   },
   setNumberOfRowsToDisplayAction({ commit }, numberSelected) {

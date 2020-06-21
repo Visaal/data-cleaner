@@ -3,14 +3,14 @@
     <fieldset>
       <label for="fieldName">Select Field:</label>
       <select v-model="fieldName">
-        <option v-for="field in dataSelectedFieldNames" :key="field.id">
+        <option v-for="field in fieldsWithInconsistentDataTypes" :key="field.id">
           {{
           field
           }}
         </option>
       </select>
 
-      <label for="dataTypeName">Select Data Type:</label>
+      <label for="dataTypeName">Set Data Type:</label>
       <select v-model="dataTypeName">
         <option v-for="dataType in availableDataTypes" :key="dataType.id">
           {{
@@ -77,7 +77,12 @@ export default {
       "dataFieldNames",
       "dataSelectedFieldNames",
       "dataSchema"
-    ]) // can be used as variable and state are both named 'rows'
+    ]),
+    fieldsWithInconsistentDataTypes: function() {
+      return this.dataFieldNames.filter(
+        fieldName => this.dataSchema[fieldName]["inconsistentDataTypes"]
+      );
+    }
   }
 };
 </script>
