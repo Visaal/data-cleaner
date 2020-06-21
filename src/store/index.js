@@ -14,6 +14,80 @@ import {
 
 Vue.use(Vuex);
 
+// Helper functions
+function _createSchemaFieldSkeleton() {
+  let schema = {};
+  for (let i = 0; i < state.dataFieldNames.length; i++) {
+    schema[state.dataFieldNames[i]] = {
+      number: 0,
+      text: 0,
+      date: 0,
+      inconsistentDataTypes: false,
+      likelyDataType: "text",
+      valueCounts: {
+        number: {},
+        text: {},
+        date: {},
+      },
+    };
+  }
+  return schema;
+}
+
+function _countLikelyDataTypes(schema) {
+  // create count of the data type for each field value
+  for (let i = 0; i < state.dataRows.length; i++) {
+    for (let [fieldName, fieldValue] of Object.entries(state.dataRows[i])) {
+      if (!isNaN(+fieldValue)) {
+        schema[fieldName]["number"] += 1;
+      } else {
+        schema[fieldName]["text"] += 1;
+      }
+    }
+  }
+}
+
+function _determineLikelyFieldDataType(schema) {
+  // determine most likely data type for each field
+  for (let i = 0; i < state.dataFieldNames.length; i++) {
+    if (
+      schema[state.dataFieldNames[i]]["number"] / state.dataRows.length >
+      0.5
+    ) {
+      schema[state.dataFieldNames[i]]["likelyDataType"] = "number";
+    }
+  }
+}
+
+function _countUniqueFieldValues(schema) {
+  for (let i = 0; i < state.dataRows.length; i++) {
+    for (let [fieldName, fieldValue] of Object.entries(state.dataRows[i])) {
+      if (!isNaN(+fieldValue)) {
+        schema[fieldName]["valueCounts"]["number"][fieldValue] =
+          1 + (schema[fieldName]["valueCounts"]["number"][fieldValue] || 0);
+      } else {
+        schema[fieldName]["valueCounts"]["text"][fieldValue] =
+          1 + (schema[fieldName]["valueCounts"]["text"][fieldValue] || 0);
+      }
+    }
+  }
+}
+
+function _determineIfConsistentDataType(schema) {
+  // determine if field values have inconsistent data types
+  for (let [fieldName, fieldSchema] of Object.entries(schema)) {
+    let fieldDataTypeCounts = [
+      fieldSchema["number"],
+      fieldSchema["text"],
+      fieldSchema["date"],
+    ].filter((count) => count > 0);
+
+    if (fieldDataTypeCounts.length > 1) {
+      schema[fieldName]["inconsistentDataTypes"] = true;
+    }
+  }
+}
+
 const state = {
   dataFieldNames: [],
   dataRows: [],
@@ -78,63 +152,13 @@ const actions = {
   setSelectedFieldsAction({ commit }, selectedFieldNames) {
     commit(SET_SELECTED_FIELD_NAMES, selectedFieldNames);
   },
-  _createSchema({ commit }, schema) {
-    //TODO: Refactor to smaller helper functions
-    schema = {};
-    // create skeleton schema conataining all fields
-    for (let i = 0; i < state.dataFieldNames.length; i++) {
-      schema[state.dataFieldNames[i]] = {
-        number: 0,
-        text: 0,
-        date: 0,
-        inconsistentDataTypes: false,
-        likelyDataType: "text",
-        valueCounts: {
-          number: {},
-          text: {},
-          date: {},
-        },
-      };
-    }
-
-    // create count of the data type for each field value
-    for (let i = 0; i < state.dataRows.length; i++) {
-      for (let [fieldName, fieldValue] of Object.entries(state.dataRows[i])) {
-        if (!isNaN(+fieldValue)) {
-          schema[fieldName]["number"] += 1;
-          schema[fieldName]["valueCounts"]["number"][fieldValue] =
-            1 + (schema[fieldName]["valueCounts"]["number"][fieldValue] || 0);
-        } else {
-          schema[fieldName]["text"] += 1;
-          schema[fieldName]["valueCounts"]["text"][fieldValue] =
-            1 + (schema[fieldName]["valueCounts"]["text"][fieldValue] || 0);
-        }
-      }
-    }
-
-    // determine most likely data type for each field
-    for (let i = 0; i < state.dataFieldNames.length; i++) {
-      if (
-        schema[state.dataFieldNames[i]]["number"] / state.dataRows.length >
-        0.5
-      ) {
-        schema[state.dataFieldNames[i]]["likelyDataType"] = "number";
-      }
-    }
-
-    // determine if field values have inconsistent data types
-    for (let [fieldName, fieldSchema] of Object.entries(schema)) {
-      let fieldDataTypeCounts = [
-        fieldSchema["number"],
-        fieldSchema["text"],
-        fieldSchema["date"],
-      ].filter((count) => count > 0);
-
-      if (fieldDataTypeCounts.length > 1) {
-        schema[fieldName]["inconsistentDataTypes"] = true;
-      }
-    }
-
+  _createSchema({ commit }) {
+    //TODO: Remove helper functions to separate file
+    let schema = _createSchemaFieldSkeleton();
+    _countLikelyDataTypes(schema);
+    _determineLikelyFieldDataType(schema);
+    _countUniqueFieldValues(schema);
+    _determineIfConsistentDataType(schema);
     commit(CREATE_SCHEMA, schema);
   },
   setNumberOfRowsToDisplayAction({ commit }, numberSelected) {
