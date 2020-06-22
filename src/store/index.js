@@ -251,6 +251,49 @@ const actions = {
   undoLastAction({ commit }) {
     commit(UNDO_LAST_CHANGE);
   },
+  extractStringsAction({ commit }, ruleParameters) {
+    let fieldToAdd = ruleParameters["newField"];
+    let stringsToFind = ruleParameters["stringsToFind"];
+    let fieldToSearch = ruleParameters["fieldToSearch"];
+    let clonedDataRows = cloneDeep(state.dataRows);
+    let clonedDataFieldNames = cloneDeep(state.dataFieldNames);
+    let clonedSelectedFields = cloneDeep(state.dataSelectedFieldNames);
+    let clonedSchema = cloneDeep(state.dataSchema);
+    let fieldValueArray = [];
+
+    if (!clonedDataFieldNames.includes(fieldToAdd)) {
+      clonedDataFieldNames.push(fieldToAdd);
+      clonedSelectedFields.push(fieldToAdd);
+    }
+
+    // Loop through rows, if value in field to search matches a value in strings to find then output it in the new field or just add an empty string
+    for (let i = 0; i < clonedDataRows.length; i++) {
+      clonedDataRows[i][fieldToAdd] = "";
+      if (clonedDataRows[i][fieldToSearch].includes(stringsToFind)) {
+        clonedDataRows[i][fieldToAdd] = stringsToFind;
+        fieldValueArray.push(stringsToFind);
+      }
+    }
+
+    // Update schema values
+    clonedSchema[fieldToAdd] = {
+      number: 0,
+      text: clonedDataRows.length,
+      date: 0,
+      inconsistentDataTypes: false,
+      likelyDataType: "text",
+      valueCounts: {
+        number: {},
+        text: _distinctValuesInArray(fieldValueArray),
+        date: {},
+      },
+    };
+
+    commit(CREATE_SCHEMA, clonedSchema);
+    commit(UPDATE_FIELD_NAMES, clonedDataFieldNames);
+    commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
+    commit(UPDATE_DATA_ROWS, clonedDataRows);
+  },
 };
 
 const getters = {
