@@ -59,9 +59,9 @@ function _determineLikelyFieldDataType(schema) {
   }
 }
 
-function _countUniqueFieldValues(schema) {
-  for (let i = 0; i < state.dataRows.length; i++) {
-    for (let [fieldName, fieldValue] of Object.entries(state.dataRows[i])) {
+function _countUniqueFieldValues(schema, dataRows = state.dataRows) {
+  for (let i = 0; i < dataRows.length; i++) {
+    for (let [fieldName, fieldValue] of Object.entries(dataRows[i])) {
       if (!isNaN(+fieldValue)) {
         schema[fieldName]["valueCounts"]["number"][fieldValue] =
           1 + (schema[fieldName]["valueCounts"]["number"][fieldValue] || 0);
@@ -71,6 +71,15 @@ function _countUniqueFieldValues(schema) {
       }
     }
   }
+}
+
+function _distinctValuesInArray(inputArray) {
+  let valuesCountObject = {};
+  for (let i = 0; i < inputArray.length; i++) {
+    valuesCountObject[inputArray[i]] =
+      1 + valuesCountObject[inputArray[i]] || 1;
+  }
+  return valuesCountObject;
 }
 
 function _determineIfConsistentDataType(schema) {
@@ -184,17 +193,45 @@ const actions = {
     }
     commit(SET_NEW_ROW_START_SLICE_INDEX, newStartIndex);
   },
-  setDataTypeAction({ commit, dispatch }, ruleParameters) {
+  setDataTypeAction({ commit }, ruleParameters) {
     let clonedDataRows = cloneDeep(state.dataRows);
-    let fieldName = ruleParameters["fieldName"];
+    let clonedSchema = cloneDeep(state.dataSchema);
 
-    for (let i = 0; i < clonedDataRows.length; i++) {
-      if (isNaN(clonedDataRows[i][fieldName])) {
-        clonedDataRows[i][fieldName] = ruleParameters["selectedOption"];
+    let fieldName = ruleParameters["fieldName"];
+    let selectedDataType = ruleParameters["dataTypeName"].toLowerCase();
+    let selectedOption = ruleParameters["selectedOption"];
+
+    clonedSchema[fieldName]["likelyDataType"] = selectedDataType;
+    clonedSchema[fieldName][selectedDataType] = clonedDataRows.length;
+    clonedSchema[fieldName]["inconsistentDataTypes"] = false;
+
+    if (selectedDataType === "number") {
+      let fieldValueArray = [];
+      for (let i = 0; i < clonedDataRows.length; i++) {
+        if (isNaN(clonedDataRows[i][fieldName])) {
+          clonedDataRows[i][fieldName] = selectedOption;
+        }
+        fieldValueArray.push(clonedDataRows[i][fieldName]);
       }
+      clonedSchema[fieldName]["valueCounts"]["number"] = _distinctValuesInArray(
+        fieldValueArray
+      );
+      clonedSchema[fieldName]["valueCounts"]["text"] = {};
+      clonedSchema[fieldName]["valueCounts"]["date"] = {};
     }
+    if (selectedDataType === "text") {
+      let mergedValueCounts = {
+        ...clonedSchema[fieldName]["valueCounts"]["text"],
+        ...clonedSchema[fieldName]["valueCounts"]["number"],
+        ...clonedSchema[fieldName]["valueCounts"]["date"],
+      };
+      clonedSchema[fieldName]["valueCounts"]["text"] = mergedValueCounts;
+      clonedSchema[fieldName]["valueCounts"]["number"] = {};
+      clonedSchema[fieldName]["valueCounts"]["date"] = {};
+    }
+
     commit(UPDATE_DATA_ROWS, clonedDataRows);
-    dispatch("_createSchema");
+    commit(CREATE_SCHEMA, clonedSchema);
   },
 };
 
