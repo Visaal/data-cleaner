@@ -5,3 +5,4 @@ export const SET_SELECTED_FIELD_NAMES = "setSelectedFieldNames";
 export const SET_NUMBER_OF_DISPLAYED_ROWS = "setNumberofDisplayedRows";
 export const SET_NEW_ROW_START_SLICE_INDEX = "setNewStartRowIndex";
 export const CREATE_SCHEMA = "createSchema";
+export const UNDO_LAST_CHANGE = "undoLastAction";

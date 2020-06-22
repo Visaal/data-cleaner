@@ -26,7 +26,14 @@
         <span class="action-bar-element">records per page</span>
       </div>
       <div class="action-bar-divider"></div>
+
+      <div class="action-bar-section">
+        <div class="action-bar-element">
+          <div class="pagination" @click="undo()">undo</div>
+        </div>
+      </div>
     </div>
+
     <div class="data-row-info">
       Showing from
       <span class="data-stat">{{ rowStartSliceIndex + 1 }}</span> to
@@ -57,7 +64,8 @@ export default {
       "setSelectedFieldsAction",
       "setNumberOfRowsToDisplayAction",
       "setStartIndexNextPageAction",
-      "setStartIndexPreviousPageAction"
+      "setStartIndexPreviousPageAction",
+      "undoLastAction"
     ]),
     setRowPerPage(rowsToDisplay) {
       this.setNumberOfRowsToDisplayAction(rowsToDisplay);
@@ -67,6 +75,9 @@ export default {
     },
     previousPage() {
       this.setStartIndexPreviousPageAction();
+    },
+    undo() {
+      this.undoLastAction();
     }
   },
   computed: {

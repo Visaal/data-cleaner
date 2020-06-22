@@ -10,6 +10,7 @@ import {
   SET_NUMBER_OF_DISPLAYED_ROWS,
   SET_NEW_ROW_START_SLICE_INDEX,
   CREATE_SCHEMA,
+  UNDO_LAST_CHANGE,
 } from "./mutation-types";
 
 Vue.use(Vuex);
@@ -105,10 +106,16 @@ const state = {
   numberOfRowsToDisplay: 100,
   rowStartSliceIndex: 0,
   dataSchema: {},
+  previousDataRows: [],
+  previousDataSchema: {},
 };
 
 const mutations = {
   [UPDATE_DATA_ROWS](state, updatedDataRows) {
+    if (state.dataRows.length > 0) {
+      state.previousDataRows = state.dataRows;
+      state.previousDataSchema = state.dataSchema;
+    }
     state.dataRows = updatedDataRows;
   },
   [UPDATE_FIELD_NAMES](state, fieldNames) {
@@ -128,6 +135,14 @@ const mutations = {
   },
   [CREATE_SCHEMA](state, schema) {
     state.dataSchema = schema;
+  },
+  [UNDO_LAST_CHANGE](state) {
+    if (state.previousDataRows.length > 0) {
+      state.dataRows = state.previousDataRows;
+      state.dataSchema = state.previousDataSchema;
+      state.previousDataRows = [];
+      state.previousDataSchema = {};
+    }
   },
 };
 
@@ -232,6 +247,9 @@ const actions = {
 
     commit(UPDATE_DATA_ROWS, clonedDataRows);
     commit(CREATE_SCHEMA, clonedSchema);
+  },
+  undoLastAction({ commit }) {
+    commit(UNDO_LAST_CHANGE);
   },
 };
 
