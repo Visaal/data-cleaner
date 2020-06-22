@@ -71,6 +71,16 @@ export default {
       this.selectedOption = "0";
     }
   },
+  watch: {
+    fieldName: function(fieldValue) {
+      let selectedField = document.getElementById(fieldValue);
+      selectedField.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "center"
+      });
+    }
+  },
   computed: {
     ...mapState([
       "dataRows",

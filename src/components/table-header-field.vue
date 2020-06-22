@@ -1,5 +1,5 @@
 <template>
-  <td class="custom-field-header">
+  <td class="custom-field-header" :id="field">
     <div class="field-name">{{ field }}</div>
     <div class="data-type">{{dataType}}</div>
     <div class="data-match">
@@ -16,6 +16,11 @@ export default {
     dataType: String,
     numberOfRecords: Number,
     primaryTypeValue: Number
+  },
+  methods: {
+    test() {
+      console.log(this.$refs["td"]);
+    }
   }
 };
 </script>
