@@ -262,8 +262,11 @@ const actions = {
     let fieldValueArray = [];
 
     if (!clonedDataFieldNames.includes(fieldToAdd)) {
-      clonedDataFieldNames.push(fieldToAdd);
-      clonedSelectedFields.push(fieldToAdd);
+      // place new field new to the field being searched
+      let dataFieldIndex = clonedDataFieldNames.indexOf(fieldToSearch);
+      let selectedDataFieldIndex = clonedSelectedFields.indexOf(fieldToSearch);
+      clonedDataFieldNames.splice(dataFieldIndex + 1, 0, fieldToAdd);
+      clonedSelectedFields.splice(selectedDataFieldIndex + 1, 0, fieldToAdd);
     }
 
     // Loop through rows, if value in field to search matches a value in strings to find then output it in the new field or just add an empty string
