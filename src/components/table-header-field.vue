@@ -16,11 +16,6 @@ export default {
     dataType: String,
     numberOfRecords: Number,
     primaryTypeValue: Number
-  },
-  methods: {
-    test() {
-      console.log(this.$refs["td"]);
-    }
   }
 };
 </script>
