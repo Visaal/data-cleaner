@@ -11,7 +11,8 @@
       </select>
 
       <label for="stringsToFind">Text to Search For:</label>
-      <input type="text" v-model="stringsToFind" />
+      <!-- <input type="text" v-model="stringsToFind" /> -->
+      <InputChipContainer v-on:input-values="setSearchStrings" />
 
       <label for="newField">New Field Name:</label>
       <input type="text" v-model="newField" />
@@ -25,19 +26,26 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import InputChipContainer from "@/components/input-chip.vue";
 
 export default {
   name: "StringSearch",
   data() {
     return {
       newField: "",
-      stringsToFind: "",
+      stringsToFind: [],
       fieldToSearch: ""
     };
+  },
+  components: {
+    InputChipContainer
   },
   created() {},
   methods: {
     ...mapActions(["extractStringsAction"]),
+    setSearchStrings(chips) {
+      this.stringsToFind = chips;
+    },
     applyRule() {
       this.extractStringsAction({
         newField: this.newField,

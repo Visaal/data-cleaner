@@ -16,7 +16,7 @@
 <script>
 export default {
   name: "InputChipContainer",
-  data() {
+  data: function() {
     return {
       chips: [],
       currentInput: ""
@@ -39,6 +39,11 @@ export default {
       which === 8 &&
         this.currentInput === "" &&
         this.chips.splice(this.chips.length - 1);
+    }
+  },
+  watch: {
+    chips: function() {
+      this.$emit("input-values", this.chips);
     }
   }
 };
