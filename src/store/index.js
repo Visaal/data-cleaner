@@ -102,7 +102,7 @@ const state = {
   dataFieldNames: [],
   dataRows: [],
   dataFileName: "",
-  dataSelectedFieldNames: "",
+  dataSelectedFieldNames: [],
   numberOfRowsToDisplay: 100,
   rowStartSliceIndex: 0,
   dataSchema: {},
