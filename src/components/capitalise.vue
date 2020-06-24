@@ -32,6 +32,16 @@ export default {
       this.capitaliseValuesAction(this.fieldName);
     }
   },
+  watch: {
+    fieldName: function(fieldValue) {
+      let selectedField = document.getElementById(fieldValue);
+      selectedField.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "center"
+      });
+    }
+  },
   computed: {
     ...mapState([
       "dataRows",
