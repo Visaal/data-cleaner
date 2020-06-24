@@ -10,7 +10,7 @@
         </option>
       </select>
 
-      <label for="stringsToFind">Text to Search For:</label>
+      <label for="stringsToFind">Key Words to Search For:</label>
       <!-- <input type="text" v-model="stringsToFind" /> -->
       <InputChipContainer v-on:input-values="setSearchStrings" />
 
