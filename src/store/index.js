@@ -108,6 +108,8 @@ const state = {
   dataSchema: {},
   previousDataRows: [],
   previousDataSchema: {},
+  previousDataFieldNames: [],
+  previousDataSelectedFieldNames: [],
 };
 
 const mutations = {
@@ -119,12 +121,14 @@ const mutations = {
     state.dataRows = updatedDataRows;
   },
   [UPDATE_FIELD_NAMES](state, fieldNames) {
+    state.previousDataFieldNames = state.dataFieldNames;
     state.dataFieldNames = fieldNames;
   },
   [UPDATE_FILE_NAME](state, fileName) {
     state.dataFileName = fileName;
   },
   [SET_SELECTED_FIELD_NAMES](state, selectedFieldNames) {
+    state.previousDataSelectedFieldNames = state.dataSelectedFieldNames;
     state.dataSelectedFieldNames = selectedFieldNames;
   },
   [SET_NUMBER_OF_DISPLAYED_ROWS](state, numberSelected) {
@@ -140,8 +144,14 @@ const mutations = {
     if (state.previousDataRows.length > 0) {
       state.dataRows = state.previousDataRows;
       state.dataSchema = state.previousDataSchema;
+      state.dataFieldNames = state.previousDataFieldNames;
+      state.dataSelectedFieldNames = state.previousDataSelectedFieldNames;
       state.previousDataRows = [];
       state.previousDataSchema = {};
+    }
+    if (state.previousDataFieldNames.length > 0) {
+      state.previousDataFieldNames = [];
+      state.previousDataSelectedFieldNames = [];
     }
   },
 };
