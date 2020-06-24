@@ -144,12 +144,12 @@ const mutations = {
     if (state.previousDataRows.length > 0) {
       state.dataRows = state.previousDataRows;
       state.dataSchema = state.previousDataSchema;
-      state.dataFieldNames = state.previousDataFieldNames;
-      state.dataSelectedFieldNames = state.previousDataSelectedFieldNames;
       state.previousDataRows = [];
       state.previousDataSchema = {};
     }
     if (state.previousDataFieldNames.length > 0) {
+      state.dataFieldNames = state.previousDataFieldNames;
+      state.dataSelectedFieldNames = state.previousDataSelectedFieldNames;
       state.previousDataFieldNames = [];
       state.previousDataSelectedFieldNames = [];
     }
