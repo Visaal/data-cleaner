@@ -141,7 +141,7 @@ fieldset > h4 {
 table {
   border-collapse: collapse;
   color: var(--field-label);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
 }
 
 thead {
