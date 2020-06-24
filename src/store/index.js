@@ -271,8 +271,6 @@ const actions = {
 
     // Loop through rows, if value in field to search matches a value in strings to find then output it in the new field or just add an empty string
     for (let i = 0; i < clonedDataRows.length; i++) {
-      clonedDataRows[i][fieldToAdd] = "";
-
       let matches = stringsToFind.filter((string) =>
         clonedDataRows[i][fieldToSearch].includes(string)
       );
@@ -294,7 +292,7 @@ const actions = {
         date: {},
       },
     };
-    console.log(clonedSchema);
+
     commit(CREATE_SCHEMA, clonedSchema);
     commit(UPDATE_FIELD_NAMES, clonedDataFieldNames);
     commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
