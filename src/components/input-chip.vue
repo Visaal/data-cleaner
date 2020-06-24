@@ -58,6 +58,7 @@ export default {
   border-radius: 4px;
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 8px;
 }
 
 .chip-container .chip {
