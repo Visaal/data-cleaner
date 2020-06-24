@@ -276,7 +276,7 @@ const actions = {
       let matches = stringsToFind.filter((string) =>
         clonedDataRows[i][fieldToSearch].includes(string)
       );
-      clonedDataRows[i][fieldToAdd] = matches;
+      clonedDataRows[i][fieldToAdd] = matches.toString();
       // TODO - decide how to handle cases where multiple matches are found
       fieldValueArray.push(matches);
     }
@@ -294,7 +294,7 @@ const actions = {
         date: {},
       },
     };
-
+    console.log(clonedSchema);
     commit(CREATE_SCHEMA, clonedSchema);
     commit(UPDATE_FIELD_NAMES, clonedDataFieldNames);
     commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
