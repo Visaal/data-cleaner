@@ -3,7 +3,7 @@
     <fieldset>
       <label for="fieldName">Select Field:</label>
       <select v-model="fieldName">
-        <option v-for="field in dataSelectedFieldNames" :key="field.id">
+        <option v-for="field in textFields" :key="field.id">
           {{
           field
           }}
@@ -33,7 +33,17 @@ export default {
     }
   },
   computed: {
-    ...mapState(["dataRows", "dataFieldNames", "dataSelectedFieldNames"])
+    ...mapState([
+      "dataRows",
+      "dataFieldNames",
+      "dataSelectedFieldNames",
+      "dataSchema"
+    ]),
+    textFields: function() {
+      return this.dataSelectedFieldNames.filter(
+        field => this.dataSchema[field]["likelyDataType"] === "text"
+      );
+    }
   }
 };
 </script>
