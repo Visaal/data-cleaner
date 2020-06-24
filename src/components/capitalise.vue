@@ -33,7 +33,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["dataRows", "dataFieldNames", "dataSelectedFieldNames"]) // can be used as variable and state are both named 'rows'
+    ...mapState(["dataRows", "dataFieldNames", "dataSelectedFieldNames"])
   }
 };
 </script>
