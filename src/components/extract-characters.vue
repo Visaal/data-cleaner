@@ -107,6 +107,16 @@ export default {
       }
     }
   },
+  watch: {
+    fieldToExtractFrom: function(fieldValue) {
+      let selectedField = document.getElementById(fieldValue);
+      selectedField.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "center"
+      });
+    }
+  },
   computed: {
     ...mapState(["dataFieldNames", "dataSelectedFieldNames"])
   }
