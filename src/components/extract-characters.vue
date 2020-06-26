@@ -28,13 +28,13 @@
       </div>
 
       <div v-if="selectedOption === 'between'" class="between">
-        <label>Set Start & End Characters:</label>
+        <label>Set Start & End Chars:</label>
         <input type="number" min="0" v-model="startCharacter" />
         <div class="field-text">&</div>
         <input type="number" min="0" v-model="endCharacter" />
       </div>
 
-      <div v-if="selectedOption">
+      <div class="example-string" v-if="selectedOption">
         <span
           v-for="(letter, index) in exampleString"
           :key="index"
@@ -135,5 +135,12 @@ export default {
 
 .removed {
   color: var(--table-border);
+}
+
+.example-string {
+  font-size: 0.9rem;
+  font-style: italic;
+  padding-bottom: 10px;
+  text-align: center;
 }
 </style>
