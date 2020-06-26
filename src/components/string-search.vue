@@ -3,7 +3,7 @@
     <fieldset>
       <label for="fieldToSearch">Select Field:</label>
       <select v-model="fieldToSearch">
-        <option v-for="field in dataSelectedFieldNames" :key="field.id">
+        <option v-for="field in textFields" :key="field.id">
           {{
           field
           }}
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 import InputChipContainer from "@/components/input-chip.vue";
 
 export default {
@@ -65,7 +65,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(["dataRows", "dataFieldNames", "dataSelectedFieldNames"])
+    ...mapState(["dataRows", "dataFieldNames", "dataSelectedFieldNames"]),
+    ...mapGetters(["textFields"])
   }
 };
 </script>

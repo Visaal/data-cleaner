@@ -3,7 +3,7 @@
     <fieldset>
       <label for="fieldToExtractFrom">Select Field:</label>
       <select v-model="fieldToExtractFrom">
-        <option v-for="field in dataSelectedFieldNames" :key="field.id">
+        <option v-for="field in textFields" :key="field.id">
           {{
           field
           }}
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
   data() {
@@ -118,7 +118,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(["dataFieldNames", "dataSelectedFieldNames"])
+    ...mapState(["dataFieldNames", "dataSelectedFieldNames"]),
+    ...mapGetters(["textFields"])
   }
 };
 </script>
