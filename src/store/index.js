@@ -272,7 +272,7 @@ const actions = {
     let fieldValueArray = [];
 
     if (!clonedDataFieldNames.includes(fieldToAdd)) {
-      // place new field new to the field being searched
+      // place new field next to the field being searched
       let dataFieldIndex = clonedDataFieldNames.indexOf(fieldToSearch);
       let selectedDataFieldIndex = clonedSelectedFields.indexOf(fieldToSearch);
       clonedDataFieldNames.splice(dataFieldIndex + 1, 0, fieldToAdd);
