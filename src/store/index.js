@@ -399,6 +399,11 @@ const getters = {
       return state.dataRows.length;
     }
   },
+  textFields: (state) => {
+    return state.dataSelectedFieldNames.filter(
+      (field) => state.dataSchema[field]["likelyDataType"] === "text"
+    );
+  },
 };
 
 export default new Vuex.Store({
