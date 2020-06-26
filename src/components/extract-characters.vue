@@ -43,6 +43,11 @@
       </div>
 
       <div>
+        <label for="newField">New Field Name:</label>
+        <input type="text" v-model="newField" />
+      </div>
+
+      <div>
         <button v-on:click="applyRule">Apply</button>
       </div>
     </fieldset>
@@ -50,7 +55,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
@@ -61,12 +66,22 @@ export default {
       charactersFromEnd: "",
       startCharacter: 0,
       endCharacter: 0,
+      newField: "",
       exampleString: "example_text_to_slice"
     };
   },
   methods: {
+    ...mapActions(["extractCharactersAction"]),
     applyRule() {
-      console.log("will slice string");
+      this.extractCharactersAction({
+        selectedOption: this.selectedOption,
+        fieldToExtractFrom: this.fieldToExtractFrom,
+        charactersFromFront: this.charactersFromFront,
+        charactersFromEnd: this.charactersFromEnd,
+        startCharacter: this.startCharacter,
+        endCharacter: this.endCharacter,
+        newField: this.newField
+      });
     },
     highLightText(index) {
       if (this.selectedOption === "front") {
