@@ -34,6 +34,14 @@
         <input type="number" min="0" v-model="endCharacter" />
       </div>
 
+      <div v-if="selectedOption">
+        <span
+          v-for="(letter, index) in exampleString"
+          :key="index"
+          :class="highLightText(index)"
+        >{{ letter }}</span>
+      </div>
+
       <div>
         <button v-on:click="applyRule">Apply</button>
       </div>
@@ -51,13 +59,37 @@ export default {
       selectedOption: "",
       charactersFromFront: "",
       charactersFromEnd: "",
-      startCharacter: "",
-      endCharacter: ""
+      startCharacter: 0,
+      endCharacter: 0,
+      exampleString: "example_text_to_slice"
     };
   },
   methods: {
     applyRule() {
       console.log("will slice string");
+    },
+    highLightText(index) {
+      if (this.selectedOption === "front") {
+        if (index < this.charactersFromFront) {
+          return "in-slice";
+        }
+        return "removed";
+      }
+      if (this.selectedOption === "end") {
+        if (index < this.exampleString.length - this.charactersFromEnd) {
+          return "removed";
+        }
+        return "in-slice";
+      }
+      if (this.selectedOption === "between") {
+        if (
+          index < this.startCharacter ||
+          index >= this.exampleString.length - this.endCharacter
+        ) {
+          return "removed";
+        }
+        return "in-slice";
+      }
     }
   },
   computed: {
@@ -80,5 +112,13 @@ export default {
 .between > input[type="number"] {
   width: 45%;
   vertical-align: unset;
+}
+.in-slice {
+  color: var(--headline);
+  font-weight: bold;
+}
+
+.removed {
+  color: var(--table-border);
 }
 </style>
