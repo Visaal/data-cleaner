@@ -337,14 +337,14 @@ const actions = {
     }
 
     if (selectedOption === "between") {
-      if (startCharacter === 0) {
-        startCharacter = undefined;
-      }
-      if (endCharacter === 0) {
-        endCharacter = undefined;
-      }
       startIndex = startCharacter;
       endIndex = -endCharacter;
+      if (startCharacter === 0) {
+        startIndex = undefined;
+      }
+      if (endCharacter === 0) {
+        endIndex = undefined;
+      }
     }
 
     if (!clonedDataFieldNames.includes(fieldToAdd)) {
