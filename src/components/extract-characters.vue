@@ -4,9 +4,7 @@
       <label for="fieldToExtractFrom">Select Field:</label>
       <select v-model="fieldToExtractFrom">
         <option v-for="field in textFields" :key="field.id">
-          {{
-          field
-          }}
+          {{ field }}
         </option>
       </select>
 
@@ -39,7 +37,8 @@
           v-for="(letter, index) in exampleString"
           :key="index"
           :class="highLightText(index)"
-        >{{ letter }}</span>
+          >{{ letter }}</span
+        >
       </div>
 
       <div>
@@ -67,7 +66,7 @@ export default {
       startCharacter: 0,
       endCharacter: 0,
       newField: "",
-      exampleString: "example_text_to_slice"
+      exampleString: "example_text_to_slice",
     };
   },
   methods: {
@@ -80,7 +79,7 @@ export default {
         charactersFromEnd: this.charactersFromEnd,
         startCharacter: this.startCharacter,
         endCharacter: this.endCharacter,
-        newField: this.newField
+        newField: this.newField,
       });
     },
     highLightText(index) {
@@ -105,7 +104,7 @@ export default {
         }
         return "in-slice";
       }
-    }
+    },
   },
   watch: {
     fieldToExtractFrom: function(fieldValue) {
@@ -113,14 +112,14 @@ export default {
       selectedField.scrollIntoView({
         behavior: "smooth",
         block: "end",
-        inline: "center"
+        inline: "center",
       });
-    }
+    },
   },
   computed: {
     ...mapState(["dataFieldNames", "dataSelectedFieldNames"]),
-    ...mapGetters(["textFields"])
-  }
+    ...mapGetters(["textFields"]),
+  },
 };
 </script>
 
