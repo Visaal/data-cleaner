@@ -30,11 +30,11 @@ export default {
   components: {
     RuleSelector,
     DataView,
-    ContentActionMenu
+    ContentActionMenu,
   },
   computed: {
-    ...mapState(["dataFileName"])
-  }
+    ...mapState(["dataFileName"]),
+  },
 };
 </script>
 
@@ -121,7 +121,7 @@ label {
   font-size: 0.8rem;
   color: var(--field-label);
   font-weight: 600;
-  padding-right: 10px;
+  padding-right: 0px;
   padding-left: 0;
   vertical-align: top;
 }
