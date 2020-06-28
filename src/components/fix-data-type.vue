@@ -3,19 +3,18 @@
     <fieldset>
       <label for="fieldName">Select Field:</label>
       <select v-model="fieldName">
-        <option v-for="field in fieldsWithInconsistentDataTypes" :key="field.id">
-          {{
-          field
-          }}
+        <option
+          v-for="field in fieldsWithInconsistentDataTypes"
+          :key="field.id"
+        >
+          {{ field }}
         </option>
       </select>
 
       <label for="dataTypeName">Set Data Type:</label>
       <select v-model="dataTypeName">
         <option v-for="dataType in availableDataTypes" :key="dataType.id">
-          {{
-          dataType
-          }}
+          {{ dataType }}
         </option>
       </select>
 
@@ -24,17 +23,51 @@
         <label class="custom-radio" name="dataTypeOption">
           <input type="radio" name="dataTypeOption" v-model="selectedOption" />
           <label for="radio">null</label>
-          <span class="radiomark" name="dataTypeOption" v-on:click="setToNull"></span>
+          <span
+            class="radiomark"
+            name="dataTypeOption"
+            v-on:click="setToNull"
+          ></span>
         </label>
         <label class="custom-radio" name="dataTypeOption">
           <input type="radio" name="dataTypeOption" />
-          <span class="radiomark" name="dataTypeOption" v-on:click="setDefaultNumber"></span>
+          <span
+            class="radiomark"
+            name="dataTypeOption"
+            v-on:click="setDefaultNumber"
+          ></span>
           <input type="number" name="dataTypeOption" v-model="selectedOption" />
+        </label>
+        <div
+          v-for="(value, key) in dataSchema[fieldName]['valueCounts']['date']"
+          :key="key"
+        >
+          {{ key }}: {{ value }}
+        </div>
+      </div>
+
+      <div v-if="dataTypeName === 'Date'">
+        <label>Set Non-Date Values to:</label>
+        <label class="custom-radio" name="dataTypeOption">
+          <input type="radio" name="dataTypeOption" v-model="selectedOption" />
+          <label for="radio">null</label>
+          <span
+            class="radiomark"
+            name="dataTypeOption"
+            v-on:click="setToNull"
+          ></span>
+        </label>
+        <label class="custom-radio" name="dataTypeOption">
+          <input type="radio" name="dataTypeOption" />
+          <span class="radiomark" name="dataTypeOption"></span>
+          <input type="date" name="dataTypeOption" v-model="selectedOption" />
         </label>
         <div
           v-for="(value, key) in dataSchema[fieldName]['valueCounts']['text']"
           :key="key"
-        >{{key}}: {{value}}</div>
+        >
+          {{ key }}: {{ value }}
+        </div>
       </div>
 
       <button v-on:click="setDataType" type="button">Apply</button>
@@ -52,7 +85,7 @@ export default {
       fieldName: "",
       dataTypeName: "",
       availableDataTypes: ["Date", "Number", "Text"],
-      selectedOption: null
+      selectedOption: null,
     };
   },
   methods: {
@@ -61,7 +94,7 @@ export default {
       this.setDataTypeAction({
         fieldName: this.fieldName,
         dataTypeName: this.dataTypeName,
-        selectedOption: this.selectedOption
+        selectedOption: this.selectedOption,
       });
     },
     setToNull() {
@@ -69,7 +102,7 @@ export default {
     },
     setDefaultNumber() {
       this.selectedOption = "0";
-    }
+    },
   },
   watch: {
     fieldName: function(fieldValue) {
@@ -77,23 +110,23 @@ export default {
       selectedField.scrollIntoView({
         behavior: "smooth",
         block: "end",
-        inline: "center"
+        inline: "center",
       });
-    }
+    },
   },
   computed: {
     ...mapState([
       "dataRows",
       "dataFieldNames",
       "dataSelectedFieldNames",
-      "dataSchema"
+      "dataSchema",
     ]),
     fieldsWithInconsistentDataTypes: function() {
       return this.dataFieldNames.filter(
-        fieldName => this.dataSchema[fieldName]["inconsistentDataTypes"]
+        (fieldName) => this.dataSchema[fieldName]["inconsistentDataTypes"]
       );
-    }
-  }
+    },
+  },
 };
 </script>
 

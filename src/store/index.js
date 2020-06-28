@@ -265,6 +265,22 @@ const actions = {
       clonedSchema[fieldName]["valueCounts"]["text"] = {};
       clonedSchema[fieldName]["valueCounts"]["date"] = {};
     }
+
+    if (selectedDataType === "date") {
+      let fieldValueArray = [];
+      for (let i = 0; i < clonedDataRows.length; i++) {
+        if (DateTime.fromISO(clonedDataRows[i][fieldName]).invalid) {
+          clonedDataRows[i][fieldName] = selectedOption;
+        }
+        fieldValueArray.push(clonedDataRows[i][fieldName]);
+      }
+      clonedSchema[fieldName]["valueCounts"]["date"] = _distinctValuesInArray(
+        fieldValueArray
+      );
+      clonedSchema[fieldName]["valueCounts"]["number"] = {};
+      clonedSchema[fieldName]["valueCounts"]["text"] = {};
+    }
+
     if (selectedDataType === "text") {
       let mergedValueCounts = {
         ...clonedSchema[fieldName]["valueCounts"]["text"],
