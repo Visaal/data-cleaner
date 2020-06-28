@@ -30,12 +30,12 @@
           ></span>
         </label>
         <label class="custom-radio" name="dataTypeOption">
-          <input type="radio" name="dataTypeOption" />
-          <span
-            class="radiomark"
+          <input
+            type="radio"
             name="dataTypeOption"
             v-on:click="setDefaultNumber"
-          ></span>
+          />
+          <span class="radiomark" name="dataTypeOption"></span>
           <input type="number" name="dataTypeOption" v-model="selectedOption" />
         </label>
         <div
