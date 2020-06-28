@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { cloneDeep } from "lodash";
+import { DateTime } from "luxon";
 
 import {
   UPDATE_DATA_ROWS,
@@ -36,11 +37,18 @@ function _createSchemaFieldSkeleton() {
 }
 
 function _countLikelyDataTypes(schema) {
+  let potentialDateFields = _checkForPotentialDateFields();
   // create count of the data type for each field value
+  // TODO: check for additional date formats rather than just ISO date
   for (let i = 0; i < state.dataRows.length; i++) {
     for (let [fieldName, fieldValue] of Object.entries(state.dataRows[i])) {
       if (!isNaN(+fieldValue)) {
         schema[fieldName]["number"] += 1;
+      } else if (
+        potentialDateFields.includes(fieldName) &&
+        !DateTime.fromISO(fieldValue).invalid
+      ) {
+        schema[fieldName]["date"] += 1;
       } else {
         schema[fieldName]["text"] += 1;
       }
@@ -50,13 +58,15 @@ function _countLikelyDataTypes(schema) {
 
 function _determineLikelyFieldDataType(schema) {
   // determine most likely data type for each field
+  // TO DO: restructure schema to group data type counts into their own object
   for (let i = 0; i < state.dataFieldNames.length; i++) {
-    if (
-      schema[state.dataFieldNames[i]]["number"] / state.dataRows.length >
-      0.5
-    ) {
-      schema[state.dataFieldNames[i]]["likelyDataType"] = "number";
-    }
+    let dataTypeKeys = ["number", "date", "text"];
+    let maxCountDataType = dataTypeKeys.reduce((a, b) =>
+      schema[state.dataFieldNames[i]][a] > schema[state.dataFieldNames[i]][b]
+        ? a
+        : b
+    );
+    schema[state.dataFieldNames[i]]["likelyDataType"] = maxCountDataType;
   }
 }
 
@@ -96,6 +106,17 @@ function _determineIfConsistentDataType(schema) {
       schema[fieldName]["inconsistentDataTypes"] = true;
     }
   }
+}
+
+function _checkForPotentialDateFields() {
+  // TODO: maybe expand logic to check value of fields rather than just looking for word 'date'
+  let potentialDateFields = [];
+  for (let i = 0; i < state.dataFieldNames.length; i++) {
+    if (state.dataFieldNames[i].toLowerCase().includes("date")) {
+      potentialDateFields.push(state.dataFieldNames[i]);
+    }
+  }
+  return potentialDateFields;
 }
 
 const state = {
