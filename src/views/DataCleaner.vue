@@ -89,6 +89,7 @@ export default {
 
 input[type="text"],
 input[type="number"],
+input[type="date"],
 select {
   display: inline-block;
   font-family: menlo;
@@ -111,6 +112,9 @@ select {
 }
 input:focus {
   outline: none;
+}
+input[type="date"] {
+  padding-right: 0px;
 }
 
 label {
