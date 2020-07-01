@@ -39,10 +39,20 @@
           <input type="number" name="dataTypeOption" v-model="selectedOption" />
         </label>
         <div
-          v-for="(value, key) in dataSchema[fieldName]['valueCounts']['date']"
+          v-for="(value, key) in dataSchema[fieldName]['distinctValues'][
+            'date'
+          ]"
           :key="key"
         >
-          {{ key }}: {{ value }}
+          {{ key }}: {{ value.length }}
+        </div>
+        <div
+          v-for="(value, key) in dataSchema[fieldName]['distinctValues'][
+            'text'
+          ]"
+          :key="key"
+        >
+          {{ key }}: {{ value.length }}
         </div>
       </div>
 
@@ -63,10 +73,20 @@
           <input type="date" name="dataTypeOption" v-model="selectedOption" />
         </label>
         <div
-          v-for="(value, key) in dataSchema[fieldName]['valueCounts']['text']"
+          v-for="(value, key) in dataSchema[fieldName]['distinctValues'][
+            'text'
+          ]"
           :key="key"
         >
-          {{ key }}: {{ value }}
+          {{ key }}: {{ value.length }}
+        </div>
+        <div
+          v-for="(value, key) in dataSchema[fieldName]['distinctValues'][
+            'number'
+          ]"
+          :key="key"
+        >
+          {{ key }}: {{ value.length }}
         </div>
       </div>
 

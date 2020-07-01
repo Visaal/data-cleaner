@@ -26,7 +26,7 @@ function _createSchemaFieldSkeleton() {
       date: 0,
       inconsistentDataTypes: false,
       likelyDataType: "text",
-      valueCounts: {
+      distinctValues: {
         number: {},
         text: {},
         date: {},
@@ -71,17 +71,31 @@ function _determineLikelyFieldDataType(schema) {
 }
 
 function _countUniqueFieldValues(schema, dataRows = state.dataRows) {
+  let potentialDateFields = _checkForPotentialDateFields();
   for (let i = 0; i < dataRows.length; i++) {
     for (let [fieldName, fieldValue] of Object.entries(dataRows[i])) {
       if (!isNaN(+fieldValue)) {
-        schema[fieldName]["valueCounts"]["number"][fieldValue] =
-          1 + (schema[fieldName]["valueCounts"]["number"][fieldValue] || 0);
+        (schema[fieldName]["distinctValues"]["number"][fieldValue] =
+          schema[fieldName]["distinctValues"]["number"][fieldValue] || []).push(
+          i
+        );
+      } else if (
+        potentialDateFields.includes(fieldName) &&
+        !DateTime.fromISO(fieldValue).invalid
+      ) {
+        (schema[fieldName]["distinctValues"]["date"][fieldValue] =
+          schema[fieldName]["distinctValues"]["date"][fieldValue] || []).push(
+          i
+        );
       } else {
-        schema[fieldName]["valueCounts"]["text"][fieldValue] =
-          1 + (schema[fieldName]["valueCounts"]["text"][fieldValue] || 0);
+        (schema[fieldName]["distinctValues"]["text"][fieldValue] =
+          schema[fieldName]["distinctValues"]["text"][fieldValue] || []).push(
+          i
+        );
       }
     }
   }
+  console.log(schema);
 }
 
 function _distinctValuesInArray(inputArray) {
@@ -259,11 +273,11 @@ const actions = {
         }
         fieldValueArray.push(clonedDataRows[i][fieldName]);
       }
-      clonedSchema[fieldName]["valueCounts"]["number"] = _distinctValuesInArray(
-        fieldValueArray
-      );
-      clonedSchema[fieldName]["valueCounts"]["text"] = {};
-      clonedSchema[fieldName]["valueCounts"]["date"] = {};
+      clonedSchema[fieldName]["distinctValues"][
+        "number"
+      ] = _distinctValuesInArray(fieldValueArray);
+      clonedSchema[fieldName]["distinctValues"]["text"] = {};
+      clonedSchema[fieldName]["distinctValues"]["date"] = {};
     }
 
     if (selectedDataType === "date") {
@@ -274,22 +288,22 @@ const actions = {
         }
         fieldValueArray.push(clonedDataRows[i][fieldName]);
       }
-      clonedSchema[fieldName]["valueCounts"]["date"] = _distinctValuesInArray(
-        fieldValueArray
-      );
-      clonedSchema[fieldName]["valueCounts"]["number"] = {};
-      clonedSchema[fieldName]["valueCounts"]["text"] = {};
+      clonedSchema[fieldName]["distinctValues"][
+        "date"
+      ] = _distinctValuesInArray(fieldValueArray);
+      clonedSchema[fieldName]["distinctValues"]["number"] = {};
+      clonedSchema[fieldName]["distinctValues"]["text"] = {};
     }
 
     if (selectedDataType === "text") {
-      let mergedValueCounts = {
-        ...clonedSchema[fieldName]["valueCounts"]["text"],
-        ...clonedSchema[fieldName]["valueCounts"]["number"],
-        ...clonedSchema[fieldName]["valueCounts"]["date"],
+      let mergeddistinctValues = {
+        ...clonedSchema[fieldName]["distinctValues"]["text"],
+        ...clonedSchema[fieldName]["distinctValues"]["number"],
+        ...clonedSchema[fieldName]["distinctValues"]["date"],
       };
-      clonedSchema[fieldName]["valueCounts"]["text"] = mergedValueCounts;
-      clonedSchema[fieldName]["valueCounts"]["number"] = {};
-      clonedSchema[fieldName]["valueCounts"]["date"] = {};
+      clonedSchema[fieldName]["distinctValues"]["text"] = mergeddistinctValues;
+      clonedSchema[fieldName]["distinctValues"]["number"] = {};
+      clonedSchema[fieldName]["distinctValues"]["date"] = {};
     }
 
     commit(UPDATE_DATA_ROWS, clonedDataRows);
@@ -333,7 +347,7 @@ const actions = {
       date: 0,
       inconsistentDataTypes: false,
       likelyDataType: "text",
-      valueCounts: {
+      distinctValues: {
         number: {},
         text: _distinctValuesInArray(fieldValueArray),
         date: {},
@@ -411,7 +425,7 @@ const actions = {
       date: 0,
       inconsistentDataTypes: false,
       likelyDataType: "text",
-      valueCounts: {
+      distinctValues: {
         number: {},
         text: _distinctValuesInArray(fieldValueArray),
         date: {},
