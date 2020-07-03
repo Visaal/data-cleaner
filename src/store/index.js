@@ -12,6 +12,7 @@ import {
   SET_NEW_ROW_START_SLICE_INDEX,
   CREATE_SCHEMA,
   UNDO_LAST_CHANGE,
+  SET_FILTERED_ROWS,
 } from "./mutation-types";
 
 Vue.use(Vuex);
@@ -136,6 +137,7 @@ function _checkForPotentialDateFields() {
 const state = {
   dataFieldNames: [],
   dataRows: [],
+  filteredDataRows: [],
   dataFileName: "",
   dataSelectedFieldNames: [],
   numberOfRowsToDisplay: 100,
@@ -188,6 +190,9 @@ const mutations = {
       state.previousDataFieldNames = [];
       state.previousDataSelectedFieldNames = [];
     }
+  },
+  [SET_FILTERED_ROWS](state, filteredRows) {
+    state.filteredDataRows = filteredRows;
   },
 };
 
@@ -437,23 +442,45 @@ const actions = {
     commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
     commit(UPDATE_DATA_ROWS, clonedDataRows);
   },
+  filterDataAction({ commit }, filterParams) {
+    let selectedField = filterParams["selectedField"];
+    let filterValue = filterParams["filterValue"];
+    let distinctValueObject = {
+      ...state.dataSchema[selectedField]["distinctValues"]["date"],
+      ...state.dataSchema[selectedField]["distinctValues"]["number"],
+      ...state.dataSchema[selectedField]["distinctValues"]["text"],
+    };
+
+    let rowsToKeep = distinctValueObject[filterValue];
+    let filteredDataRows = rowsToKeep.map(
+      (rowIndex) => state.dataRows[rowIndex]
+    );
+
+    commit(SET_FILTERED_ROWS, filteredDataRows);
+  },
 };
 
 const getters = {
-  rowEndSliceIndex: (state) => {
+  rowEndSliceIndex: (state, getters) => {
     if (
       state.rowStartSliceIndex + state.numberOfRowsToDisplay <
-      state.dataRows.length
+      getters.dataRowsToDisplay.length
     ) {
       return state.rowStartSliceIndex + state.numberOfRowsToDisplay;
     } else {
-      return state.dataRows.length;
+      return getters.dataRowsToDisplay.length;
     }
   },
   textFields: (state) => {
     return state.dataSelectedFieldNames.filter(
       (field) => state.dataSchema[field]["likelyDataType"] === "text"
     );
+  },
+  dataRowsToDisplay: (state) => {
+    if (state.filteredDataRows.length) {
+      return state.filteredDataRows;
+    }
+    return state.dataRows;
   },
 };
 
