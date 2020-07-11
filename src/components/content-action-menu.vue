@@ -19,8 +19,13 @@
       <div class="action-bar-section">
         <span class="action-bar-element">show</span>
         <div class="action-bar-element">
-          <select v-model="rowsToDisplay" @change="setRowPerPage(rowsToDisplay)">
-            <option v-for="rowOption in rowOptions" :key="rowOption">{{ rowOption }}</option>
+          <select
+            v-model="rowsToDisplay"
+            @change="setRowPerPage(rowsToDisplay)"
+          >
+            <option v-for="rowOption in rowOptions" :key="rowOption">{{
+              rowOption
+            }}</option>
           </select>
         </div>
         <span class="action-bar-element">records per page</span>
@@ -38,7 +43,7 @@
       Showing from
       <span class="data-stat">{{ rowStartSliceIndex + 1 }}</span> to
       <span class="data-stat">{{ rowEndSliceIndex }}</span> of
-      <span class="data-stat">{{ dataRows.length }}</span>
+      <span class="data-stat">{{ dataRowsToDisplay.length }}</span>
     </div>
   </div>
 </template>
@@ -50,7 +55,7 @@ export default {
   name: "ContentActionMenu",
   data() {
     return {
-      rowOptions: [10, 50, 100, 250, 500]
+      rowOptions: [10, 50, 100, 250, 500],
     };
   },
   created() {
@@ -65,7 +70,7 @@ export default {
       "setNumberOfRowsToDisplayAction",
       "setStartIndexNextPageAction",
       "setStartIndexPreviousPageAction",
-      "undoLastAction"
+      "undoLastAction",
     ]),
     setRowPerPage(rowsToDisplay) {
       this.setNumberOfRowsToDisplayAction(rowsToDisplay);
@@ -78,7 +83,7 @@ export default {
     },
     undo() {
       this.undoLastAction();
-    }
+    },
   },
   computed: {
     ...mapState([
@@ -87,10 +92,10 @@ export default {
       "dataFileName",
       "dataSelectedFieldNames",
       "numberOfRowsToDisplay",
-      "rowStartSliceIndex"
+      "rowStartSliceIndex",
     ]),
-    ...mapGetters(["rowEndSliceIndex"])
-  }
+    ...mapGetters(["rowEndSliceIndex", "dataRowsToDisplay"]),
+  },
 };
 </script>
 

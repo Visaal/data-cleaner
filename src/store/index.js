@@ -239,10 +239,10 @@ const actions = {
     let convertedSelectedNumber = Number(numberSelected);
     commit(SET_NUMBER_OF_DISPLAYED_ROWS, convertedSelectedNumber);
   },
-  setStartIndexNextPageAction({ commit }) {
+  setStartIndexNextPageAction({ commit, getters }) {
     if (
       state.rowStartSliceIndex + state.numberOfRowsToDisplay <
-      state.dataRows.length
+      getters.dataRowsToDisplay.length
     ) {
       let newStartIndex =
         state.rowStartSliceIndex + state.numberOfRowsToDisplay;
