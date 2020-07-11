@@ -44,6 +44,9 @@
       <span class="data-stat">{{ rowStartSliceIndex + 1 }}</span> to
       <span class="data-stat">{{ rowEndSliceIndex }}</span> of
       <span class="data-stat">{{ dataRowsToDisplay.length }}</span>
+      <span v-if="dataRowsToDisplay.length != dataRows.length">
+        rows (filtered from {{ dataRows.length }} total records)</span
+      >
     </div>
   </div>
 </template>
