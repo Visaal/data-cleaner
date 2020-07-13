@@ -443,15 +443,19 @@ const actions = {
     commit(UPDATE_DATA_ROWS, clonedDataRows);
   },
   filterDataAction({ commit }, filterParams) {
+    // TODO: KEEP TRACK OF FILTERS IN STATE
     let selectedField = filterParams["selectedField"];
-    let filterValue = filterParams["filterValue"];
+    let filterValues = filterParams["filterValues"];
     let distinctValueObject = {
       ...state.dataSchema[selectedField]["distinctValues"]["date"],
       ...state.dataSchema[selectedField]["distinctValues"]["number"],
       ...state.dataSchema[selectedField]["distinctValues"]["text"],
     };
+    let rowsToKeep = [];
 
-    let rowsToKeep = distinctValueObject[filterValue];
+    for (let i = 0; i < filterValues.length; i++) {
+      rowsToKeep.push(...distinctValueObject[filterValues[i]]);
+    }
     let filteredDataRows = rowsToKeep.map(
       (rowIndex) => state.dataRows[rowIndex]
     );

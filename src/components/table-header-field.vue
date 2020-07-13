@@ -1,6 +1,6 @@
 <template>
-  <td class="custom-field-header" :id="field" @click="filterData(field)">
-    <div class="field-name">{{ field }}</div>
+  <td class="custom-field-header" :id="field">
+    <div class="field-name">{{ field }} <FieldFilter :field="field" /></div>
     <div class="data-type">{{ dataType }}</div>
     <div class="data-match">
       <progress :value="primaryTypeValue" :max="numberOfRecords"></progress>
@@ -9,33 +9,18 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import FieldFilter from "@/components/field-filter.vue";
 
 export default {
   name: "TableHeaderField",
+  components: {
+    FieldFilter,
+  },
   props: {
     field: String,
     dataType: String,
     numberOfRecords: Number,
     primaryTypeValue: Number,
-  },
-  methods: {
-    ...mapActions(["filterDataAction"]),
-    filterData(field) {
-      let distinctValues = [
-        ...Object.keys(this.dataSchema[field]["distinctValues"]["date"]),
-        ...Object.keys(this.dataSchema[field]["distinctValues"]["number"]),
-        ...Object.keys(this.dataSchema[field]["distinctValues"]["text"]),
-      ];
-      console.log(distinctValues);
-      this.filterDataAction({
-        selectedField: field,
-        filterValue: distinctValues[0],
-      });
-    },
-  },
-  computed: {
-    ...mapState(["dataSchema"]),
   },
 };
 </script>
@@ -46,6 +31,7 @@ export default {
   padding: 0px;
   background-color: var(--field-grey);
   white-space: nowrap;
+  /* position: relative; */
 }
 
 .field-name {
