@@ -7,3 +7,4 @@ export const SET_NEW_ROW_START_SLICE_INDEX = "setNewStartRowIndex";
 export const CREATE_SCHEMA = "createSchema";
 export const UNDO_LAST_CHANGE = "undoLastAction";
 export const SET_FILTERED_ROWS = "setFilteredRows";
+export const SET_FILTERED_ROW_INDEXES = "setFilteredRowIndexes";

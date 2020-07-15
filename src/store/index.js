@@ -13,6 +13,7 @@ import {
   CREATE_SCHEMA,
   UNDO_LAST_CHANGE,
   SET_FILTERED_ROWS,
+  SET_FILTERED_ROW_INDEXES,
 } from "./mutation-types";
 
 Vue.use(Vuex);
@@ -138,6 +139,7 @@ const state = {
   dataFieldNames: [],
   dataRows: [],
   filteredDataRows: [],
+  filteredDataRowIndexes: [],
   dataFileName: "",
   dataSelectedFieldNames: [],
   numberOfRowsToDisplay: 100,
@@ -193,6 +195,9 @@ const mutations = {
   },
   [SET_FILTERED_ROWS](state, filteredRows) {
     state.filteredDataRows = filteredRows;
+  },
+  [SET_FILTERED_ROW_INDEXES](state, rowIndexesToKeep) {
+    state.filteredDataRowIndexes = rowIndexesToKeep;
   },
 };
 
@@ -451,16 +456,28 @@ const actions = {
       ...state.dataSchema[selectedField]["distinctValues"]["number"],
       ...state.dataSchema[selectedField]["distinctValues"]["text"],
     };
-    let rowsToKeep = [];
 
+    let rowIndexesToFilter = [];
     for (let i = 0; i < filterValues.length; i++) {
-      rowsToKeep.push(...distinctValueObject[filterValues[i]]);
+      rowIndexesToFilter.push(...distinctValueObject[filterValues[i]]);
     }
-    let filteredDataRows = rowsToKeep.map(
+
+    let rowIndexesToKeep = [];
+    if (state.filteredDataRowIndexes.length) {
+      // If already using a filter get the intersection of the existing filter rows and the new filter rows selected
+      rowIndexesToKeep = rowIndexesToFilter.filter((value) =>
+        state.filteredDataRowIndexes.includes(value)
+      );
+    } else {
+      rowIndexesToKeep = [...rowIndexesToFilter];
+    }
+
+    let filteredDataRows = rowIndexesToKeep.map(
       (rowIndex) => state.dataRows[rowIndex]
     );
 
     commit(SET_FILTERED_ROWS, filteredDataRows);
+    commit(SET_FILTERED_ROW_INDEXES, rowIndexesToKeep);
   },
 };
 
