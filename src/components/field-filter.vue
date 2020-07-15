@@ -4,21 +4,27 @@
       <img class="filter-icon" alt=">>>" src="../assets/filter_icon.png" />
     </div>
     <fieldset v-if="filterOption" class="filter-options" :style="positionStyle">
-      <input type="text" :placeholder="field" />
-      <div v-for="value in distinctValuesForField" :key="value">
-        <label class="custom-checkbox">
-          {{ value }}
-          <input
-            type="checkbox"
-            :name="value"
-            :value="value"
-            v-model="selectedValues"
-          />
-          <span class="checkmark"></span>
-        </label>
+      <div class="filter-box-search">
+        <input type="text" :placeholder="field" />
       </div>
-      <div>
-        <button @click="setFilter(field)">Select</button>
+
+      <div class="filter-value-list">
+        <div v-for="value in distinctValuesForField" :key="value">
+          <label class="custom-checkbox">
+            {{ value }}
+            <input
+              type="checkbox"
+              :name="value"
+              :value="value"
+              v-model="selectedValues"
+            />
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+      <div class="filter-list-actions">
+        <button @click="setFilter(field)">Apply</button>
+        <button class="secondary">Clear</button>
       </div>
     </fieldset>
   </div>
@@ -84,8 +90,6 @@ export default {
 
 .filter-options {
   position: absolute;
-  /* top: 170px;
-  left: 300px; */
   background: var(--background);
   -webkit-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
   -moz-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
@@ -93,5 +97,38 @@ export default {
   max-height: 50vh;
   overflow: auto;
   width: auto;
+}
+
+/* FILTER BOX */
+
+.filter-box-search {
+  padding-bottom: 10px;
+  border-bottom: 2px;
+  border-bottom-style: solid;
+  border-color: var(--field-grey);
+}
+
+.filter-value-list {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  max-height: 20vh;
+  overflow-y: auto;
+}
+
+.filter-list-actions {
+  border-top: 2px;
+  border-top-style: solid;
+  border-color: var(--field-grey);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-list-actions button:first-child {
+  margin-right: 4%;
+}
+
+.filter-list-actions button {
+  width: 48%;
 }
 </style>
