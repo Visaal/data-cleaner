@@ -5,11 +5,11 @@
     </div>
     <fieldset v-if="filterOption" class="filter-options" :style="positionStyle">
       <div class="filter-box-search">
-        <input type="text" :placeholder="field" />
+        <input type="text" :placeholder="field" v-model="search" />
       </div>
 
       <div class="filter-value-list">
-        <div v-for="value in distinctValuesForField" :key="value">
+        <div v-for="value in filteredList" :key="value">
           <label class="custom-checkbox">
             {{ value }}
             <input
@@ -24,7 +24,7 @@
       </div>
       <div class="filter-list-actions">
         <button @click="setFilter(field)">Apply</button>
-        <button class="secondary">Clear</button>
+        <button @click="clearFilter()" class="secondary">Clear</button>
       </div>
     </fieldset>
   </div>
@@ -43,6 +43,7 @@ export default {
       filterOption: false,
       distinctValuesForField: [],
       selectedValues: [],
+      search: "",
       positionStyle: {
         top: "0px",
         left: "0px",
@@ -70,9 +71,17 @@ export default {
         filterValues: this.selectedValues,
       });
     },
+    clearFilter() {
+      this.filterOption = false;
+    },
   },
   computed: {
     ...mapState(["dataSchema"]),
+    filteredList() {
+      return this.distinctValuesForField.filter((value) => {
+        return value.toLowerCase().includes(this.search.toLowerCase());
+      });
+    },
   },
 };
 </script>

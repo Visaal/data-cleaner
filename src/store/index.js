@@ -448,7 +448,7 @@ const actions = {
     commit(UPDATE_DATA_ROWS, clonedDataRows);
   },
   filterDataAction({ commit }, filterParams) {
-    // TODO: KEEP TRACK OF FILTERS IN STATE
+    // TODO: ABILITY TO REMOVE FILTERS
     let selectedField = filterParams["selectedField"];
     let filterValues = filterParams["filterValues"];
     let distinctValueObject = {
