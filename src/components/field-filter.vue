@@ -5,7 +5,7 @@
     </div>
     <fieldset v-if="filterOption" class="filter-options" :style="positionStyle">
       <div class="filter-box-search">
-        <input type="text" :placeholder="field" v-model="search" />
+        <input type="text" placeholder="search" v-model="search" />
       </div>
 
       <div class="filter-value-list">
