@@ -3,7 +3,12 @@
     <div @click="filterData(field)">
       <img class="filter-icon" alt=">>>" src="../assets/filter_icon.png" />
     </div>
-    <fieldset v-if="filterOption" class="filter-options" :style="positionStyle">
+    <fieldset
+      v-if="filterOption"
+      class="filter-options"
+      :style="positionStyle"
+      ref="filterBox"
+    >
       <div class="filter-box-search">
         <input type="text" placeholder="search" v-model="search" />
       </div>
@@ -53,9 +58,6 @@ export default {
   methods: {
     ...mapActions(["filterDataAction"]),
     filterData(field) {
-      this.positionStyle.left = `${event.pageX}px`;
-      this.positionStyle.top = `${event.pageY}px`;
-
       let distinctValues = [
         ...Object.keys(this.dataSchema[field]["distinctValues"]["date"]),
         ...Object.keys(this.dataSchema[field]["distinctValues"]["number"]),
@@ -63,6 +65,23 @@ export default {
       ];
       this.distinctValuesForField = distinctValues;
       this.filterOption = true;
+      this.positionStyle.left = `${event.pageX}px`;
+      this.positionStyle.top = `${event.pageY}px`;
+      this.$nextTick(() => {
+        if (
+          event.pageX + this.$refs.filterBox.clientWidth >
+          window.innerWidth
+        ) {
+          let buffer = 10;
+          let leftAdjustment =
+            event.pageX -
+            (event.pageX +
+              this.$refs.filterBox.clientWidth -
+              window.innerWidth +
+              buffer);
+          this.positionStyle.left = `${leftAdjustment}px`;
+        }
+      });
     },
     setFilter(field) {
       this.filterOption = false;
