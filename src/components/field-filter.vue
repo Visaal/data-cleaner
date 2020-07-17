@@ -122,7 +122,6 @@ export default {
   -webkit-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
   -moz-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
   box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
-  max-height: 50vh;
   overflow: auto;
   width: auto;
 }
@@ -139,7 +138,7 @@ export default {
 .filter-value-list {
   margin-top: 10px;
   margin-bottom: 10px;
-  max-height: 20vh;
+  max-height: 50vh;
   overflow-y: auto;
 }
 
