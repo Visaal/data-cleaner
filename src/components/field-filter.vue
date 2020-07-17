@@ -92,6 +92,7 @@ export default {
     },
     clearFilter() {
       this.filterOption = false;
+      this.selectedValues = [];
     },
   },
   computed: {
