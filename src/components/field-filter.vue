@@ -65,14 +65,14 @@ export default {
       ];
       this.distinctValuesForField = distinctValues;
       this.filterOption = true;
+      let buffer = 15;
       this.positionStyle.left = `${event.pageX}px`;
-      this.positionStyle.top = `${event.pageY}px`;
+      this.positionStyle.top = `${event.pageY + buffer}px`;
       this.$nextTick(() => {
         if (
           event.pageX + this.$refs.filterBox.clientWidth >
           window.innerWidth
         ) {
-          let buffer = 10;
           let leftAdjustment =
             event.pageX -
             (event.pageX +
