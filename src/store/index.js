@@ -16,6 +16,8 @@ import {
   SET_FILTERED_ROW_INDEXES,
 } from "./mutation-types";
 
+import { getSelectedRowIndexes } from "./helper-functions";
+
 Vue.use(Vuex);
 
 // Helper functions
@@ -98,6 +100,7 @@ function _countUniqueFieldValues(schema, dataRows = state.dataRows) {
     }
   }
   console.log(schema);
+  console.toString(schema);
 }
 
 function _distinctValuesInArray(inputArray) {
@@ -449,28 +452,11 @@ const actions = {
   },
   filterDataAction({ commit }, filterParams) {
     // TODO: ABILITY TO REMOVE FILTERS
-    let selectedField = filterParams["selectedField"];
-    let filterValues = filterParams["filterValues"];
-    let distinctValueObject = {
-      ...state.dataSchema[selectedField]["distinctValues"]["date"],
-      ...state.dataSchema[selectedField]["distinctValues"]["number"],
-      ...state.dataSchema[selectedField]["distinctValues"]["text"],
-    };
-
-    let rowIndexesToFilter = [];
-    for (let i = 0; i < filterValues.length; i++) {
-      rowIndexesToFilter.push(...distinctValueObject[filterValues[i]]);
-    }
-
-    let rowIndexesToKeep = [];
-    if (state.filteredDataRowIndexes.length) {
-      // If already using a filter get the intersection of the existing filter rows and the new filter rows selected
-      rowIndexesToKeep = rowIndexesToFilter.filter((value) =>
-        state.filteredDataRowIndexes.includes(value)
-      );
-    } else {
-      rowIndexesToKeep = [...rowIndexesToFilter];
-    }
+    let rowIndexesToKeep = getSelectedRowIndexes(
+      state.dataSchema,
+      filterParams,
+      state.filteredDataRowIndexes
+    );
 
     let filteredDataRows = rowIndexesToKeep.map(
       (rowIndex) => state.dataRows[rowIndex]
