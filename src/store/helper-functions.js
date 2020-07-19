@@ -1,9 +1,28 @@
 "use stict";
 
-// DATA MODEL CURRENT FILTERS:
-// let filtersInPlace = {
-//   filterField: { filterValue: [filterValueRows] },
-// };
+// import { isEmpty } from "lodash";
+
+function setFilterValues(filterParams, activeFilterValues = {}) {
+  // DATA MODEL CURRENT FILTERS:
+  // activeFilterValues = {
+  //   filterField: [filterValue1, filterValue2],
+  //   filterField2: [filterValue1, filterValue2]
+  // };
+  let selectedField = filterParams["selectedField"];
+  let fieldValuesSelected = filterParams["fieldValuesSelected"];
+
+  if (!fieldValuesSelected.length) {
+    delete activeFilterValues[selectedField];
+  } else {
+    Object.assign(activeFilterValues, {
+      [selectedField]: [],
+    });
+    for (let i = 0; i < fieldValuesSelected.length; i++) {
+      activeFilterValues[selectedField].push(fieldValuesSelected[i]);
+    }
+  }
+  return activeFilterValues;
+}
 
 function getSelectedRowIndexes(
   dataSchema,
@@ -11,7 +30,7 @@ function getSelectedRowIndexes(
   filteredDataRowIndexes = []
 ) {
   let selectedField = filterParams["selectedField"];
-  let filterValues = filterParams["filterValues"];
+  let fieldValuesSelected = filterParams["fieldValuesSelected"];
   let distinctValueObject = {
     ...dataSchema[selectedField]["distinctValues"]["date"],
     ...dataSchema[selectedField]["distinctValues"]["number"],
@@ -19,8 +38,8 @@ function getSelectedRowIndexes(
   };
 
   let rowIndexesToFilter = [];
-  for (let i = 0; i < filterValues.length; i++) {
-    rowIndexesToFilter.push(...distinctValueObject[filterValues[i]]);
+  for (let i = 0; i < fieldValuesSelected.length; i++) {
+    rowIndexesToFilter.push(...distinctValueObject[fieldValuesSelected[i]]);
   }
 
   let rowIndexesToKeep = [];
@@ -35,4 +54,16 @@ function getSelectedRowIndexes(
   return rowIndexesToKeep;
 }
 
+function getDistinctValuesForField(dataSchema, field) {
+  // TODO: MAKE THIS DYNAMIC SO DATA TYPES CAN BE EXPANDED
+  let distinctValueObject = {
+    ...dataSchema[field]["distinctValues"]["date"],
+    ...dataSchema[field]["distinctValues"]["number"],
+    ...dataSchema[field]["distinctValues"]["text"],
+  };
+  return distinctValueObject;
+}
+
 module.exports.getSelectedRowIndexes = getSelectedRowIndexes;
+module.exports.setFilterValues = setFilterValues;
+module.exports.getDistinctValuesForField = getDistinctValuesForField;
