@@ -100,8 +100,6 @@ function _countUniqueFieldValues(schema, dataRows = state.dataRows) {
       }
     }
   }
-  console.log(schema);
-  console.toString(schema);
 }
 
 function _distinctValuesInArray(inputArray) {
@@ -490,7 +488,6 @@ const getters = {
     );
   },
   dataRowsToDisplay: (state) => {
-    // if (state.filteredDataRows.length) {
     if (Object.keys(state.activeFilterValues).length > 0) {
       return state.filteredDataRows;
     }
