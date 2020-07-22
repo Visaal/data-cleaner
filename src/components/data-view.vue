@@ -18,11 +18,16 @@
       </thead>
       <tbody>
         <tr
-          v-for="(row, index) in dataRows.slice(rowStartSliceIndex, rowEndSliceIndex)"
+          v-for="(row, index) in dataRowsToDisplay.slice(
+            rowStartSliceIndex,
+            rowEndSliceIndex
+          )"
           :key="index"
         >
           <td>{{ index + 1 }}</td>
-          <td v-for="field in dataSelectedFieldNames" :key="field.id">{{ row[field] }}</td>
+          <td v-for="field in dataSelectedFieldNames" :key="field.id">
+            {{ row[field] }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -36,7 +41,7 @@ import TableHeaderField from "@/components/table-header-field.vue";
 export default {
   name: "DataView",
   components: {
-    TableHeaderField
+    TableHeaderField,
   },
   data() {
     return {};
@@ -45,7 +50,7 @@ export default {
     getLikelyDataTypeCount(fieldSchema) {
       let likelyDataType = fieldSchema["likelyDataType"];
       return fieldSchema[likelyDataType];
-    }
+    },
   },
   computed: {
     ...mapState([
@@ -55,10 +60,10 @@ export default {
       "dataSelectedFieldNames",
       "numberOfRowsToDisplay",
       "rowStartSliceIndex",
-      "dataSchema"
+      "dataSchema",
     ]),
-    ...mapGetters(["rowEndSliceIndex"])
-  }
+    ...mapGetters(["rowEndSliceIndex", "dataRowsToDisplay"]),
+  },
 };
 </script>
 

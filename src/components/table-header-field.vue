@@ -1,7 +1,7 @@
 <template>
   <td class="custom-field-header" :id="field">
-    <div class="field-name">{{ field }}</div>
-    <div class="data-type">{{dataType}}</div>
+    <div class="field-name">{{ field }} <FieldFilter :field="field" /></div>
+    <div class="data-type">{{ dataType }}</div>
     <div class="data-match">
       <progress :value="primaryTypeValue" :max="numberOfRecords"></progress>
     </div>
@@ -9,14 +9,19 @@
 </template>
 
 <script>
+import FieldFilter from "@/components/field-filter.vue";
+
 export default {
   name: "TableHeaderField",
+  components: {
+    FieldFilter,
+  },
   props: {
     field: String,
     dataType: String,
     numberOfRecords: Number,
-    primaryTypeValue: Number
-  }
+    primaryTypeValue: Number,
+  },
 };
 </script>
 
@@ -26,6 +31,7 @@ export default {
   padding: 0px;
   background-color: var(--field-grey);
   white-space: nowrap;
+  /* position: relative; */
 }
 
 .field-name {

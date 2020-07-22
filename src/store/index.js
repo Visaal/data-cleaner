@@ -12,7 +12,12 @@ import {
   SET_NEW_ROW_START_SLICE_INDEX,
   CREATE_SCHEMA,
   UNDO_LAST_CHANGE,
+  SET_FILTERED_ROWS,
+  SET_FILTERED_ROW_INDEXES,
+  SET_ACTIVE_FILTER_VALUES,
 } from "./mutation-types";
+
+import { setFilterValues, getFilterRowIndexes } from "./helper-functions";
 
 Vue.use(Vuex);
 
@@ -26,7 +31,7 @@ function _createSchemaFieldSkeleton() {
       date: 0,
       inconsistentDataTypes: false,
       likelyDataType: "text",
-      valueCounts: {
+      distinctValues: {
         number: {},
         text: {},
         date: {},
@@ -71,14 +76,27 @@ function _determineLikelyFieldDataType(schema) {
 }
 
 function _countUniqueFieldValues(schema, dataRows = state.dataRows) {
+  let potentialDateFields = _checkForPotentialDateFields();
   for (let i = 0; i < dataRows.length; i++) {
     for (let [fieldName, fieldValue] of Object.entries(dataRows[i])) {
       if (!isNaN(+fieldValue)) {
-        schema[fieldName]["valueCounts"]["number"][fieldValue] =
-          1 + (schema[fieldName]["valueCounts"]["number"][fieldValue] || 0);
+        (schema[fieldName]["distinctValues"]["number"][fieldValue] =
+          schema[fieldName]["distinctValues"]["number"][fieldValue] || []).push(
+          i
+        );
+      } else if (
+        potentialDateFields.includes(fieldName) &&
+        !DateTime.fromISO(fieldValue).invalid
+      ) {
+        (schema[fieldName]["distinctValues"]["date"][fieldValue] =
+          schema[fieldName]["distinctValues"]["date"][fieldValue] || []).push(
+          i
+        );
       } else {
-        schema[fieldName]["valueCounts"]["text"][fieldValue] =
-          1 + (schema[fieldName]["valueCounts"]["text"][fieldValue] || 0);
+        (schema[fieldName]["distinctValues"]["text"][fieldValue] =
+          schema[fieldName]["distinctValues"]["text"][fieldValue] || []).push(
+          i
+        );
       }
     }
   }
@@ -122,6 +140,8 @@ function _checkForPotentialDateFields() {
 const state = {
   dataFieldNames: [],
   dataRows: [],
+  filteredDataRows: [],
+  filteredDataRowIndexes: [],
   dataFileName: "",
   dataSelectedFieldNames: [],
   numberOfRowsToDisplay: 100,
@@ -131,6 +151,7 @@ const state = {
   previousDataSchema: {},
   previousDataFieldNames: [],
   previousDataSelectedFieldNames: [],
+  activeFilterValues: {},
 };
 
 const mutations = {
@@ -174,6 +195,15 @@ const mutations = {
       state.previousDataFieldNames = [];
       state.previousDataSelectedFieldNames = [];
     }
+  },
+  [SET_FILTERED_ROWS](state, filteredRows) {
+    state.filteredDataRows = filteredRows;
+  },
+  [SET_FILTERED_ROW_INDEXES](state, filteredRowIndexes) {
+    state.filteredDataRowIndexes = filteredRowIndexes;
+  },
+  [SET_ACTIVE_FILTER_VALUES](state, filterValues) {
+    state.activeFilterValues = filterValues;
   },
 };
 
@@ -220,10 +250,10 @@ const actions = {
     let convertedSelectedNumber = Number(numberSelected);
     commit(SET_NUMBER_OF_DISPLAYED_ROWS, convertedSelectedNumber);
   },
-  setStartIndexNextPageAction({ commit }) {
+  setStartIndexNextPageAction({ commit, getters }) {
     if (
       state.rowStartSliceIndex + state.numberOfRowsToDisplay <
-      state.dataRows.length
+      getters.dataRowsToDisplay.length
     ) {
       let newStartIndex =
         state.rowStartSliceIndex + state.numberOfRowsToDisplay;
@@ -259,11 +289,11 @@ const actions = {
         }
         fieldValueArray.push(clonedDataRows[i][fieldName]);
       }
-      clonedSchema[fieldName]["valueCounts"]["number"] = _distinctValuesInArray(
-        fieldValueArray
-      );
-      clonedSchema[fieldName]["valueCounts"]["text"] = {};
-      clonedSchema[fieldName]["valueCounts"]["date"] = {};
+      clonedSchema[fieldName]["distinctValues"][
+        "number"
+      ] = _distinctValuesInArray(fieldValueArray);
+      clonedSchema[fieldName]["distinctValues"]["text"] = {};
+      clonedSchema[fieldName]["distinctValues"]["date"] = {};
     }
 
     if (selectedDataType === "date") {
@@ -274,22 +304,22 @@ const actions = {
         }
         fieldValueArray.push(clonedDataRows[i][fieldName]);
       }
-      clonedSchema[fieldName]["valueCounts"]["date"] = _distinctValuesInArray(
-        fieldValueArray
-      );
-      clonedSchema[fieldName]["valueCounts"]["number"] = {};
-      clonedSchema[fieldName]["valueCounts"]["text"] = {};
+      clonedSchema[fieldName]["distinctValues"][
+        "date"
+      ] = _distinctValuesInArray(fieldValueArray);
+      clonedSchema[fieldName]["distinctValues"]["number"] = {};
+      clonedSchema[fieldName]["distinctValues"]["text"] = {};
     }
 
     if (selectedDataType === "text") {
-      let mergedValueCounts = {
-        ...clonedSchema[fieldName]["valueCounts"]["text"],
-        ...clonedSchema[fieldName]["valueCounts"]["number"],
-        ...clonedSchema[fieldName]["valueCounts"]["date"],
+      let mergeddistinctValues = {
+        ...clonedSchema[fieldName]["distinctValues"]["text"],
+        ...clonedSchema[fieldName]["distinctValues"]["number"],
+        ...clonedSchema[fieldName]["distinctValues"]["date"],
       };
-      clonedSchema[fieldName]["valueCounts"]["text"] = mergedValueCounts;
-      clonedSchema[fieldName]["valueCounts"]["number"] = {};
-      clonedSchema[fieldName]["valueCounts"]["date"] = {};
+      clonedSchema[fieldName]["distinctValues"]["text"] = mergeddistinctValues;
+      clonedSchema[fieldName]["distinctValues"]["number"] = {};
+      clonedSchema[fieldName]["distinctValues"]["date"] = {};
     }
 
     commit(UPDATE_DATA_ROWS, clonedDataRows);
@@ -333,7 +363,7 @@ const actions = {
       date: 0,
       inconsistentDataTypes: false,
       likelyDataType: "text",
-      valueCounts: {
+      distinctValues: {
         number: {},
         text: _distinctValuesInArray(fieldValueArray),
         date: {},
@@ -411,7 +441,7 @@ const actions = {
       date: 0,
       inconsistentDataTypes: false,
       likelyDataType: "text",
-      valueCounts: {
+      distinctValues: {
         number: {},
         text: _distinctValuesInArray(fieldValueArray),
         date: {},
@@ -423,23 +453,45 @@ const actions = {
     commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
     commit(UPDATE_DATA_ROWS, clonedDataRows);
   },
+  filterDataAction({ commit }, filterParams) {
+    let filterValuesClone = cloneDeep(state.activeFilterValues);
+    let filterValues = setFilterValues(filterParams, filterValuesClone);
+    let filteredRowIndexes = getFilterRowIndexes(
+      state.dataSchema,
+      filterValues
+    );
+
+    let filteredDataRows = filteredRowIndexes.map(
+      (rowIndex) => state.dataRows[rowIndex]
+    );
+
+    commit(SET_FILTERED_ROWS, filteredDataRows);
+    commit(SET_FILTERED_ROW_INDEXES, filteredRowIndexes);
+    commit(SET_ACTIVE_FILTER_VALUES, filterValues);
+  },
 };
 
 const getters = {
-  rowEndSliceIndex: (state) => {
+  rowEndSliceIndex: (state, getters) => {
     if (
       state.rowStartSliceIndex + state.numberOfRowsToDisplay <
-      state.dataRows.length
+      getters.dataRowsToDisplay.length
     ) {
       return state.rowStartSliceIndex + state.numberOfRowsToDisplay;
     } else {
-      return state.dataRows.length;
+      return getters.dataRowsToDisplay.length;
     }
   },
   textFields: (state) => {
     return state.dataSelectedFieldNames.filter(
       (field) => state.dataSchema[field]["likelyDataType"] === "text"
     );
+  },
+  dataRowsToDisplay: (state) => {
+    if (Object.keys(state.activeFilterValues).length > 0) {
+      return state.filteredDataRows;
+    }
+    return state.dataRows;
   },
 };
 

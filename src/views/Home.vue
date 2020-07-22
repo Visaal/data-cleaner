@@ -1,15 +1,18 @@
 <template>
   <div>
-    <fieldset :class="{ 'display-from-left': fileName }" class="hidden-left field-list-fieldset">
+    <fieldset
+      :class="{ 'display-from-left': fileName }"
+      class="hidden-left field-list-fieldset"
+    >
       <div class="field-list-action">
         <h3>Please Select Fields</h3>
         <div class="action-button-container">
-          <button @click="updateState(),navigate()">Confirm</button>
+          <button @click="updateState(), navigate()">Confirm</button>
           <button class="secondary">Cancel</button>
         </div>
       </div>
       <div class="field-list">
-        <div v-for="(field,index) in fieldNames" :key="index">
+        <div v-for="(field, index) in fieldNames" :key="index">
           <label class="custom-checkbox">
             {{ field }}
             <input
@@ -28,8 +31,15 @@
     <div class="landing-page-form">
       <fieldset>
         <h2>Data Cleaner</h2>
-        <label for="fileItem" class="custom-file-input-label">Select File To Clean</label>
-        <input id="fileItem" type="file" class="custom-file-input" @change="getFile($event)" />
+        <label for="fileItem" class="custom-file-input-label"
+          >Select File To Clean</label
+        >
+        <input
+          id="fileItem"
+          type="file"
+          class="custom-file-input"
+          @change="getFile($event)"
+        />
         <span>{{ message }}</span>
         <span>{{ fileName }}</span>
       </fieldset>
@@ -54,7 +64,7 @@ export default {
       data: [],
       fieldNames: [],
       selectedFieldIndexes: [],
-      message: ""
+      message: "",
     };
   },
   watch: {
@@ -62,14 +72,14 @@ export default {
       this.fieldNames = Object.keys(this.data[0]);
       // Select all fields by default
       this.selectedFieldIndexes = [...Array(this.fieldNames.length).keys()];
-    }
+    },
   },
   methods: {
     ...mapActions([
       "setFieldNamesAction",
       "setDataAction",
       "updateDataAction",
-      "setSelectedFieldsAction"
+      "setSelectedFieldsAction",
     ]),
     getFile(event) {
       this.fileItem = event.target.files[0];
@@ -96,13 +106,13 @@ export default {
       this.updateDataAction({
         fileName: this.fileName,
         data: this.data,
-        fieldNames: this.fieldNames
+        fieldNames: this.fieldNames,
       });
       this.setSelectedFieldsAction(this.selectedFieldNames);
     },
     navigate() {
       router.push({ path: "/DataCleaner" });
-    }
+    },
   },
   computed: {
     ...mapState(["dataRows", "dataFieldNames", "dataFileName"]), // can be used as variable and state are both named 'dataRows'
@@ -115,8 +125,8 @@ export default {
         fieldNamesInOrder.push(this.fieldNames[sortedSelectedFieldIndexes[i]]);
       }
       return fieldNamesInOrder;
-    }
-  }
+    },
+  },
 };
 </script>
 
