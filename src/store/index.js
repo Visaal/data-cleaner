@@ -201,8 +201,8 @@ const mutations = {
   [SET_FILTERED_ROWS](state, filteredRows) {
     state.filteredDataRows = filteredRows;
   },
-  [SET_FILTERED_ROW_INDEXES](state, rowIndexesToKeep) {
-    state.filteredDataRowIndexes = rowIndexesToKeep;
+  [SET_FILTERED_ROW_INDEXES](state, filteredRowIndexes) {
+    state.filteredDataRowIndexes = filteredRowIndexes;
   },
   [SET_ACTIVE_FILTER_VALUES](state, filterValues) {
     state.activeFilterValues = filterValues;
@@ -456,16 +456,20 @@ const actions = {
     commit(UPDATE_DATA_ROWS, clonedDataRows);
   },
   filterDataAction({ commit }, filterParams) {
-    let filterValues = setFilterValues(filterParams, state.activeFilterValues);
-    let filteredRows = getFilterRowIndexes(state.dataSchema, filterValues);
+    let filterValuesClone = cloneDeep(state.activeFilterValues);
+    let filterValues = setFilterValues(filterParams, filterValuesClone);
+    let filteredRowIndexes = getFilterRowIndexes(
+      state.dataSchema,
+      filterValues
+    );
 
-    let filteredDataRows = filteredRows.map(
+    let filteredDataRows = filteredRowIndexes.map(
       (rowIndex) => state.dataRows[rowIndex]
     );
 
-    commit(SET_ACTIVE_FILTER_VALUES, filterValues);
     commit(SET_FILTERED_ROWS, filteredDataRows);
-    commit(SET_FILTERED_ROW_INDEXES, filteredRows);
+    commit(SET_FILTERED_ROW_INDEXES, filteredRowIndexes);
+    commit(SET_ACTIVE_FILTER_VALUES, filterValues);
   },
 };
 
@@ -486,7 +490,8 @@ const getters = {
     );
   },
   dataRowsToDisplay: (state) => {
-    if (state.filteredDataRows.length) {
+    // if (state.filteredDataRows.length) {
+    if (Object.keys(state.activeFilterValues).length > 0) {
       return state.filteredDataRows;
     }
     return state.dataRows;
