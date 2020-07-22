@@ -75,87 +75,7 @@ afterAll(() => {
   delete schema;
 });
 
-test("Single Field Single Value Filter", () => {
-  expect(
-    helperFunctions.getSelectedRowIndexes(schema, {
-      selectedField: "animal",
-      fieldValuesSelected: ["lion"],
-    })
-  ).toStrictEqual([0, 2, 4, 6, 8]);
-});
-
-test("Single Field Two Value Filter", () => {
-  expect(
-    helperFunctions.getSelectedRowIndexes(schema, {
-      selectedField: "animal",
-      fieldValuesSelected: ["lion", "tiger"],
-    })
-  ).toStrictEqual([0, 2, 4, 6, 8, 3, 7, 10, 11]);
-});
-
 let filteredDataRowIndexes;
-
-describe("Test when one existing filter is in place", () => {
-  beforeAll(() => {
-    // First filter: Animal > Lion
-    filteredDataRowIndexes = [0, 2, 4, 6, 8];
-    return filteredDataRowIndexes;
-  });
-
-  afterAll(() => {
-    delete filteredDataRowIndexes;
-  });
-
-  test("One existing filter in place and new filter applied for additional field", () => {
-    expect(
-      helperFunctions.getSelectedRowIndexes(
-        schema,
-        {
-          selectedField: "cities",
-          fieldValuesSelected: ["london"],
-        },
-        filteredDataRowIndexes
-      )
-    ).toStrictEqual([0, 2, 4]);
-  });
-  test("Two existing filters in place and new filter applied for additional field", () => {
-    expect(
-      helperFunctions.getSelectedRowIndexes(
-        schema,
-        {
-          selectedField: "cities",
-          fieldValuesSelected: ["london"],
-        },
-        filteredDataRowIndexes
-      )
-    ).toStrictEqual([0, 2, 4]);
-  });
-});
-
-describe("Test when two existing filters are in place", () => {
-  beforeAll(() => {
-    // First filter: Animal > Lion
-    // Second filter: Cities > London
-    filteredDataRowIndexes = [0, 2, 4];
-    return filteredDataRowIndexes;
-  });
-
-  afterAll(() => {
-    delete filteredDataRowIndexes;
-  });
-  test("Two existing filters in place and new filter applied for additional field", () => {
-    expect(
-      helperFunctions.getSelectedRowIndexes(
-        schema,
-        {
-          selectedField: "vegetables",
-          fieldValuesSelected: ["carrots"],
-        },
-        filteredDataRowIndexes
-      )
-    ).toStrictEqual([2]);
-  });
-});
 
 // TESTING setFilterValues i.e. object store holding filter fields and values
 
@@ -300,4 +220,46 @@ test("Field with inconsistent data type", () => {
     2: [1, 3, 7, 9],
     "n/a": [5, 10, 11, 12],
   });
+});
+
+test("GF1: One filter field, one value", () => {
+  let selectedFilters = { animal: ["lion"] };
+  expect(
+    helperFunctions.getFilterRowIndexes(schema, selectedFilters)
+  ).toStrictEqual([0, 2, 4, 6, 8]);
+});
+
+test("GF2: One filter field, two values", () => {
+  let selectedFilters = { animal: ["lion", "tiger"] };
+  expect(
+    helperFunctions.getFilterRowIndexes(schema, selectedFilters)
+  ).toStrictEqual([0, 2, 3, 4, 6, 7, 8, 10, 11]);
+});
+
+test("GF3: Two filter fields, one value each", () => {
+  let selectedFilters = { animal: ["lion"], cities: ["london"] };
+  expect(
+    helperFunctions.getFilterRowIndexes(schema, selectedFilters)
+  ).toStrictEqual([0, 2, 4]);
+});
+
+test("GF4: Two filter fields, two values each", () => {
+  let selectedFilters = {
+    animal: ["lion", "tiger"],
+    cities: ["london", "paris"],
+  };
+  expect(
+    helperFunctions.getFilterRowIndexes(schema, selectedFilters)
+  ).toStrictEqual([0, 2, 3, 4, 6, 7, 8]);
+});
+
+test("GF5: Three filter fields, two values each", () => {
+  let selectedFilters = {
+    animal: ["elephant", "tiger"],
+    cities: ["london", "paris"],
+    spend: ["2", "n/a"],
+  };
+  expect(
+    helperFunctions.getFilterRowIndexes(schema, selectedFilters)
+  ).toStrictEqual([1, 3, 5, 7, 9]);
 });

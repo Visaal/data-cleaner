@@ -29,7 +29,7 @@
       </div>
       <div class="filter-list-actions">
         <button @click="setFilter(field)">Apply</button>
-        <button @click="clearFilter()" class="secondary">Clear</button>
+        <button @click="clearFilter(field)" class="secondary">Clear</button>
       </div>
     </fieldset>
   </div>
@@ -87,12 +87,16 @@ export default {
       this.filterOption = false;
       this.filterDataAction({
         selectedField: field,
-        filterValues: this.selectedValues,
+        fieldValuesSelected: this.selectedValues,
       });
     },
-    clearFilter() {
+    clearFilter(field) {
       this.filterOption = false;
       this.selectedValues = [];
+      this.filterDataAction({
+        selectedField: field,
+        fieldValuesSelected: this.selectedValues,
+      });
     },
   },
   computed: {

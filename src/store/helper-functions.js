@@ -24,34 +24,36 @@ function setFilterValues(filterParams, activeFilterValues = {}) {
   return activeFilterValues;
 }
 
-function getSelectedRowIndexes(
-  dataSchema,
-  filterParams,
-  filteredDataRowIndexes = []
-) {
-  let selectedField = filterParams["selectedField"];
-  let fieldValuesSelected = filterParams["fieldValuesSelected"];
-  let distinctValueObject = {
-    ...dataSchema[selectedField]["distinctValues"]["date"],
-    ...dataSchema[selectedField]["distinctValues"]["number"],
-    ...dataSchema[selectedField]["distinctValues"]["text"],
-  };
-
-  let rowIndexesToFilter = [];
-  for (let i = 0; i < fieldValuesSelected.length; i++) {
-    rowIndexesToFilter.push(...distinctValueObject[fieldValuesSelected[i]]);
-  }
-
-  let rowIndexesToKeep = [];
-  if (filteredDataRowIndexes.length) {
-    // If already using a filter get the intersection of the existing filter rows and the new filter rows selected
-    rowIndexesToKeep = rowIndexesToFilter.filter((value) =>
-      filteredDataRowIndexes.includes(value)
+function getFilterRowIndexes(dataSchema, selectedFilterValues) {
+  let filterFields = Object.keys(selectedFilterValues);
+  let filteredRowIndexes = [];
+  for (let i = 0; i < filterFields.length; i++) {
+    let selectedField = filterFields[i];
+    let fieldValueIndexes = getDistinctValuesForField(
+      dataSchema,
+      selectedField
     );
-  } else {
-    rowIndexesToKeep = [...rowIndexesToFilter];
+    let selectedValuesForField = selectedFilterValues[selectedField];
+
+    let rowIndexesForSelectedValue = [];
+    for (let j = 0; j < selectedValuesForField.length; j++) {
+      rowIndexesForSelectedValue.push(
+        ...fieldValueIndexes[selectedValuesForField[j]]
+      );
+    }
+    if (i === 0) {
+      filteredRowIndexes.push(...rowIndexesForSelectedValue);
+    } else {
+      // If more than one filter field get the intersection of the filter rows for existing filters and new filter field
+      filteredRowIndexes = rowIndexesForSelectedValue.filter((value) =>
+        filteredRowIndexes.includes(value)
+      );
+    }
   }
-  return rowIndexesToKeep;
+  filteredRowIndexes = filteredRowIndexes.sort(function(a, b) {
+    return a - b;
+  });
+  return filteredRowIndexes;
 }
 
 function getDistinctValuesForField(dataSchema, field) {
@@ -64,6 +66,6 @@ function getDistinctValuesForField(dataSchema, field) {
   return distinctValueObject;
 }
 
-module.exports.getSelectedRowIndexes = getSelectedRowIndexes;
 module.exports.setFilterValues = setFilterValues;
 module.exports.getDistinctValuesForField = getDistinctValuesForField;
+module.exports.getFilterRowIndexes = getFilterRowIndexes;

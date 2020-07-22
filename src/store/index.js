@@ -14,9 +14,10 @@ import {
   UNDO_LAST_CHANGE,
   SET_FILTERED_ROWS,
   SET_FILTERED_ROW_INDEXES,
+  SET_ACTIVE_FILTER_VALUES,
 } from "./mutation-types";
 
-import { getSelectedRowIndexes } from "./helper-functions";
+import { setFilterValues, getFilterRowIndexes } from "./helper-functions";
 
 Vue.use(Vuex);
 
@@ -152,6 +153,7 @@ const state = {
   previousDataSchema: {},
   previousDataFieldNames: [],
   previousDataSelectedFieldNames: [],
+  activeFilterValues: {},
 };
 
 const mutations = {
@@ -201,6 +203,9 @@ const mutations = {
   },
   [SET_FILTERED_ROW_INDEXES](state, rowIndexesToKeep) {
     state.filteredDataRowIndexes = rowIndexesToKeep;
+  },
+  [SET_ACTIVE_FILTER_VALUES](state, filterValues) {
+    state.activeFilterValues = filterValues;
   },
 };
 
@@ -451,19 +456,16 @@ const actions = {
     commit(UPDATE_DATA_ROWS, clonedDataRows);
   },
   filterDataAction({ commit }, filterParams) {
-    // TODO: ABILITY TO REMOVE FILTERS
-    let rowIndexesToKeep = getSelectedRowIndexes(
-      state.dataSchema,
-      filterParams,
-      state.filteredDataRowIndexes
-    );
+    let filterValues = setFilterValues(filterParams, state.activeFilterValues);
+    let filteredRows = getFilterRowIndexes(state.dataSchema, filterValues);
 
-    let filteredDataRows = rowIndexesToKeep.map(
+    let filteredDataRows = filteredRows.map(
       (rowIndex) => state.dataRows[rowIndex]
     );
 
+    commit(SET_ACTIVE_FILTER_VALUES, filterValues);
     commit(SET_FILTERED_ROWS, filteredDataRows);
-    commit(SET_FILTERED_ROW_INDEXES, rowIndexesToKeep);
+    commit(SET_FILTERED_ROW_INDEXES, filteredRows);
   },
 };
 

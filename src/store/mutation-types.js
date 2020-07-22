@@ -8,3 +8,4 @@ export const CREATE_SCHEMA = "createSchema";
 export const UNDO_LAST_CHANGE = "undoLastAction";
 export const SET_FILTERED_ROWS = "setFilteredRows";
 export const SET_FILTERED_ROW_INDEXES = "setFilteredRowIndexes";
+export const SET_ACTIVE_FILTER_VALUES = "setActiveFilterValues";
