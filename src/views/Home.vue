@@ -1,16 +1,18 @@
 <template>
   <div>
+    <div id="particles-js"></div>
     <fieldset
       :class="{ 'display-from-left': fileName }"
       class="hidden-left field-list-fieldset"
     >
-      <div class="field-list-action">
-        <h3>Please Select Fields</h3>
-        <div class="action-button-container">
-          <button @click="updateState(), navigate()">Confirm</button>
-          <button class="secondary">Cancel</button>
-        </div>
+      <h3>Please Select Fields</h3>
+      <div class="action-button-container">
+        <button @click="updateState(), navigate()">Confirm</button>
+        <button @click="cancelSelection()" class="secondary">
+          Cancel
+        </button>
       </div>
+
       <div class="field-list">
         <div v-for="(field, index) in fieldNames" :key="index">
           <label class="custom-checkbox">
@@ -39,6 +41,8 @@
           type="file"
           class="custom-file-input"
           @change="getFile($event)"
+          :accept="VALID_FILE_TYPES"
+          ref="fileInput"
         />
         <span>{{ message }}</span>
         <span>{{ fileName }}</span>
@@ -51,6 +55,7 @@
 import Papa from "papaparse";
 import { mapState, mapActions } from "vuex";
 import router from "../router";
+import "particles.js";
 
 export default {
   name: "Home",
@@ -67,14 +72,25 @@ export default {
       message: "",
     };
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.initParticles();
+    });
+  },
   watch: {
     data: function() {
-      this.fieldNames = Object.keys(this.data[0]);
-      // Select all fields by default
-      this.selectedFieldIndexes = [...Array(this.fieldNames.length).keys()];
+      if (this.data.length) {
+        this.fieldNames = Object.keys(this.data[0]);
+        // Select all fields by default
+        this.selectedFieldIndexes = [...Array(this.fieldNames.length).keys()];
+      }
     },
   },
   methods: {
+    initParticles() {
+      let particleConfig = require("../assets/particles.json");
+      window.particlesJS("particles-js", particleConfig);
+    },
     ...mapActions([
       "setFieldNamesAction",
       "setDataAction",
@@ -113,6 +129,15 @@ export default {
     navigate() {
       router.push({ path: "/DataCleaner" });
     },
+    cancelSelection() {
+      this.$refs.fileInput.value = ""; // use to allow the file to be reselected
+      this.fileName = "";
+      this.fileType = "";
+      this.fileSize = 0;
+      this.fieldNames = [];
+      this.selectedFieldIndexes = [];
+      this.message = "";
+    },
   },
   computed: {
     ...mapState(["dataRows", "dataFieldNames", "dataFileName"]), // can be used as variable and state are both named 'dataRows'
@@ -131,6 +156,18 @@ export default {
 </script>
 
 <style>
+/* ---- particles.js container ---- */
+#particles-js {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #fffffe;
+  background-image: url("");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
 .landing-page-form {
   /* https://css-tricks.com/centering-css-complete-guide/ */
   width: 20%;
@@ -168,6 +205,7 @@ export default {
   background-color: var(--button);
   border: 1px solid var(--button);
   color: var(--button-text);
+  text-align: center;
   display: -ms-inline-flexbox;
   display: inline-flex;
   -ms-flex-align: center;
@@ -213,28 +251,26 @@ progress::-moz-progress-bar {
 /* FIELD LIST STYLING */
 .hidden-left {
   position: absolute;
-  left: -23vw;
+  left: -30vw;
   transition: 1.5s ease-in-out;
-  margin-top: 3vh;
-  margin-bottom: 3vh;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .display-from-left {
-  transform: translateX(23vw);
-  margin-left: 3vh;
+  transform: translateX(30vw);
+  margin-left: 20px;
 }
 
 .field-list-fieldset {
   width: 20vw;
 }
 
-.field-list-action {
-  height: 100px;
-}
-
 .field-list {
-  height: 75vh;
-  overflow: auto;
+  margin-top: 10px;
+  padding-bottom: 10px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
 }
 
 .field-list-fieldset h3 {
@@ -243,12 +279,18 @@ progress::-moz-progress-bar {
 }
 
 .action-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   border-bottom: 2px solid var(--field-grey);
 }
 
-.action-button-container > button {
-  margin-right: 2%;
+.action-button-container button:first-child {
+  margin-right: 4%;
+}
+
+.action-button-container button {
   width: 48%;
 }
 
