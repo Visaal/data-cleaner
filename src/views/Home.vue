@@ -39,6 +39,7 @@
           type="file"
           class="custom-file-input"
           @change="getFile($event)"
+          :accept="VALID_FILE_TYPES"
         />
         <span>{{ message }}</span>
         <span>{{ fileName }}</span>
@@ -190,6 +191,7 @@ export default {
   background-color: var(--button);
   border: 1px solid var(--button);
   color: var(--button-text);
+  text-align: center;
   display: -ms-inline-flexbox;
   display: inline-flex;
   -ms-flex-align: center;
