@@ -8,7 +8,9 @@
       <h3>Please Select Fields</h3>
       <div class="action-button-container">
         <button @click="updateState(), navigate()">Confirm</button>
-        <button class="secondary">Cancel</button>
+        <button @click="cancelSelection()" class="secondary">
+          Cancel
+        </button>
       </div>
 
       <div class="field-list">
@@ -40,6 +42,7 @@
           class="custom-file-input"
           @change="getFile($event)"
           :accept="VALID_FILE_TYPES"
+          ref="fileInput"
         />
         <span>{{ message }}</span>
         <span>{{ fileName }}</span>
@@ -76,9 +79,11 @@ export default {
   },
   watch: {
     data: function() {
-      this.fieldNames = Object.keys(this.data[0]);
-      // Select all fields by default
-      this.selectedFieldIndexes = [...Array(this.fieldNames.length).keys()];
+      if (this.data.length) {
+        this.fieldNames = Object.keys(this.data[0]);
+        // Select all fields by default
+        this.selectedFieldIndexes = [...Array(this.fieldNames.length).keys()];
+      }
     },
   },
   methods: {
@@ -123,6 +128,15 @@ export default {
     },
     navigate() {
       router.push({ path: "/DataCleaner" });
+    },
+    cancelSelection() {
+      this.$refs.fileInput.value = ""; // use to allow the file to be reselected
+      this.fileName = "";
+      this.fileType = "";
+      this.fileSize = 0;
+      this.fieldNames = [];
+      this.selectedFieldIndexes = [];
+      this.message = "";
     },
   },
   computed: {
