@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div id="particles-js"></div>
     <fieldset
       :class="{ 'display-from-left': fileName }"
       class="hidden-left field-list-fieldset"
@@ -51,6 +52,7 @@
 import Papa from "papaparse";
 import { mapState, mapActions } from "vuex";
 import router from "../router";
+import "particles.js";
 
 export default {
   name: "Home",
@@ -67,6 +69,11 @@ export default {
       message: "",
     };
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.initParticles();
+    });
+  },
   watch: {
     data: function() {
       this.fieldNames = Object.keys(this.data[0]);
@@ -75,6 +82,10 @@ export default {
     },
   },
   methods: {
+    initParticles() {
+      let particleConfig = require("../assets/particles.json");
+      window.particlesJS("particles-js", particleConfig);
+    },
     ...mapActions([
       "setFieldNamesAction",
       "setDataAction",
@@ -82,6 +93,10 @@ export default {
       "setSelectedFieldsAction",
     ]),
     getFile(event) {
+      // pJS.load("particles-js", "../assets/particles.json", function() {
+      //   console.log("callback - particles.js config loaded");
+      // });
+      // console.log(pJS, Papa);
       this.fileItem = event.target.files[0];
       this.fileName = this.fileItem["name"];
       this.fileType = this.fileItem["type"];
@@ -131,6 +146,18 @@ export default {
 </script>
 
 <style>
+/* ---- particles.js container ---- */
+#particles-js {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #fffffe;
+  background-image: url("");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
 .landing-page-form {
   /* https://css-tricks.com/centering-css-complete-guide/ */
   width: 20%;
