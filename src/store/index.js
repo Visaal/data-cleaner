@@ -29,6 +29,7 @@ function _createSchemaFieldSkeleton() {
       number: 0,
       text: 0,
       date: 0,
+      userCreatedField: false,
       inconsistentDataTypes: false,
       likelyDataType: "text",
       distinctValues: {
@@ -361,6 +362,7 @@ const actions = {
       number: 0,
       text: clonedDataRows.length,
       date: 0,
+      userCreatedField: true,
       inconsistentDataTypes: false,
       likelyDataType: "text",
       distinctValues: {
@@ -439,6 +441,7 @@ const actions = {
       number: 0,
       text: clonedDataRows.length,
       date: 0,
+      userCreatedField: true,
       inconsistentDataTypes: false,
       likelyDataType: "text",
       distinctValues: {
