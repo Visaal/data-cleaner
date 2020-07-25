@@ -93,10 +93,6 @@ export default {
       "setSelectedFieldsAction",
     ]),
     getFile(event) {
-      // pJS.load("particles-js", "../assets/particles.json", function() {
-      //   console.log("callback - particles.js config loaded");
-      // });
-      // console.log(pJS, Papa);
       this.fileItem = event.target.files[0];
       this.fileName = this.fileItem["name"];
       this.fileType = this.fileItem["type"];
