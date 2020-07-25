@@ -1,7 +1,21 @@
 <template>
   <div class="filter">
     <div @click="filterData(field)">
-      <img class="filter-icon" alt=">>>" src="../assets/filter_icon.png" />
+      <svg
+        :class="{ 'active-filter': selectedValues.length }"
+        class="filter-icon"
+        fill="none"
+        height="24"
+        stroke="#546778"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+      </svg>
     </div>
     <fieldset
       v-if="filterOption"
@@ -13,7 +27,7 @@
         <input type="text" placeholder="search" v-model="search" />
       </div>
 
-      <div class="filter-value-list">
+      <div class="filter-value-list" :class="{ expanded: filterOption }">
         <div v-for="value in filteredList" :key="value">
           <label class="custom-checkbox">
             {{ value }}
@@ -116,9 +130,16 @@ export default {
 }
 
 .filter-icon {
-  width: 8px;
-  height: 8px;
+  stroke: var(--field-label);
+  height: 15px;
+  width: 15px;
+  transition: 0.5s;
+  fill: transparent;
   cursor: pointer;
+}
+
+.active-filter {
+  fill: var(--field-label);
 }
 
 .filter-options {
@@ -143,8 +164,56 @@ export default {
 .filter-value-list {
   margin-top: 10px;
   margin-bottom: 10px;
-  max-height: 50vh;
+  max-height: 0vh;
   overflow-y: auto;
+}
+
+.expanded.filter-value-list {
+  overflow-y: auto;
+  animation: undefined-easeOutElastic 1.2s none;
+  max-height: 50vh;
+}
+
+@keyframes undefined-easeOutElastic {
+  0% {
+    /* transform: translateY(0%); */
+    max-height: 0vh;
+  }
+
+  16% {
+    /* transform: translateY(132.27%); */
+    max-height: 66vh;
+  }
+
+  28% {
+    /* transform: translateY(86.88%); */
+    max-height: 44vh;
+  }
+
+  44% {
+    /* transform: translateY(104.63%); */
+    max-height: 52vh;
+  }
+
+  59% {
+    /* transform: translateY(98.36%); */
+    max-height: 49vh;
+  }
+
+  73% {
+    /* transform: translateY(100.58%); */
+    max-height: 50vh;
+  }
+
+  88% {
+    /* transform: translateY(99.8%); */
+    max-height: 50vh;
+  }
+
+  100% {
+    /* transform: translateY(100%); */
+    max-height: 50vh;
+  }
 }
 
 .filter-list-actions {
