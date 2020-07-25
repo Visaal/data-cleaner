@@ -1,5 +1,9 @@
 <template>
-  <td class="custom-field-header" :id="field">
+  <td
+    class="custom-field-header"
+    :id="field"
+    :class="{ 'user-created-field': userCreatedField }"
+  >
     <div class="field-name">{{ field }} <FieldFilter :field="field" /></div>
     <div class="data-type">{{ dataType }}</div>
     <div class="data-match">
@@ -21,6 +25,7 @@ export default {
     dataType: String,
     numberOfRecords: Number,
     primaryTypeValue: Number,
+    userCreatedField: Boolean,
   },
 };
 </script>
@@ -49,6 +54,10 @@ export default {
 .data-match {
   padding: 0px;
   font-size: 0.5rem;
+}
+
+.user-created-field {
+  background-color: var(--secondary);
 }
 
 progress {

@@ -13,6 +13,7 @@
           :dataType="dataSchema[field]['likelyDataType']"
           :numberOfRecords="dataRows.length"
           :primaryTypeValue="getLikelyDataTypeCount(dataSchema[field])"
+          :userCreatedField="dataSchema[field]['userCreatedField']"
         />
         <!-- </td> -->
       </thead>
