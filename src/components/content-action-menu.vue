@@ -1,42 +1,34 @@
 <template>
-  <div class="action-bar-container">
-    <div class="action-bar">
-      <div class="action-bar-section">
-        <div class="action-bar-element">
-          <div class="pagination" @click="previousPage()">
-            <div class="backward">❮</div>
-          </div>
-        </div>
-        <div class="action-bar-element">
-          <div class="pagination" @click="nextPage()">
-            <div class="forward">❯</div>
-          </div>
-        </div>
-      </div>
+  <div>
+    <div class="action-top">
+      <button class="action-bar-button first" @click="previousPage()">
+        <div class="backward">❮</div>
+      </button>
+
+      <button class="action-bar-button" @click="nextPage()">
+        <div class="forward">❯</div>
+      </button>
 
       <div class="action-bar-divider"></div>
 
-      <div class="action-bar-section">
-        <span class="action-bar-element">show</span>
-        <div class="action-bar-element">
-          <select
-            v-model="rowsToDisplay"
-            @change="setRowPerPage(rowsToDisplay)"
-          >
-            <option v-for="rowOption in rowOptions" :key="rowOption">{{
-              rowOption
-            }}</option>
-          </select>
-        </div>
-        <span class="action-bar-element">records per page</span>
-      </div>
+      <span>show </span>
+      <select
+        class="action-bar-option"
+        v-model="rowsToDisplay"
+        @change="setRowPerPage(rowsToDisplay)"
+      >
+        <option v-for="rowOption in rowOptions" :key="rowOption">{{
+          rowOption
+        }}</option>
+      </select>
+      <span> records per page</span>
+
       <div class="action-bar-divider"></div>
 
-      <div class="action-bar-section">
-        <div class="action-bar-element">
-          <div class="pagination" @click="undo()">undo</div>
-        </div>
-      </div>
+      <button class="action-bar-button" @click="undo()">
+        <div class="undo">↺</div>
+        undo
+      </button>
     </div>
 
     <div class="data-row-info">
@@ -103,96 +95,102 @@ export default {
 </script>
 
 <style scoped>
-/* ACTION BAR */
-.action-bar-container {
-  margin: 0px;
-}
-
-.action-bar {
+.action-top {
+  width: 100%;
+  height: 3.6rem;
   border-bottom: 2px solid var(--field-grey);
-  height: 40px;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
-.action-bar-section {
-  display: inline-block;
-  position: relative;
-  height: 30px;
-  margin-top: 5px;
-  margin-bottom: 5px;
+.action-top span {
+  font-size: 0.8rem;
+  color: var(--field-label);
 }
-
 .action-bar-divider {
   display: inline-block;
   position: relative;
   height: 30px;
   border-left: 2px solid var(--field-grey);
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   vertical-align: bottom; /* important to have this or other elements around it will be displaced */
   margin-left: 8px;
   margin-right: 8px;
 }
 
-.action-bar-element {
-  display: inline-block;
-  height: 30px;
-  line-height: 30px;
-  text-align: center;
+.data-row-info {
   font-size: 0.8rem;
   color: var(--field-label);
-  margin-right: 5px;
 }
 
-div.action-bar-element {
-  background-color: var(--background);
+.action-bar-option {
+  width: 50px;
+  vertical-align: 0%;
 }
-/* ACTION BAR */
 
-/* DATA PAGINATION */
-.pagination {
-  display: inline-block;
-  padding-left: 10px;
-  padding-right: 10px;
-  box-sizing: border-box;
+.action-bar-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  /* height: 30px; */
+  /* line-height: 30px; */
   background-color: var(--field-grey);
-  text-decoration: none;
+  border-color: var(--field-grey);
+  color: var(--button-text);
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   cursor: pointer;
+  outline: none;
+  padding: 0.55rem 0.55rem;
   font-size: 1rem;
-  font-weight: bolder;
-  color: var(--paragraph);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  z-index: 1;
 }
 
-/* PAGINATION STYLING */
-div.pagination > .forward {
+.action-bar-button:hover {
+  filter: brightness(93%);
+}
+
+.action-bar-button.first {
+  margin-right: 0.5rem;
+}
+
+/* UNDO BUTTON */
+.action-bar-button > .undo {
+  margin-right: 3px;
   transition: 0.3s;
-  font-size: 1rem;
-  font-weight: bolder;
-  color: var(--paragraph);
+  font-weight: 900;
+  overflow: hidden;
+}
+.action-bar-button:hover > .undo {
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
 }
 
-div.pagination > .backward {
+.action-bar-button > .backward {
   transition: 0.3s;
-  font-size: 1rem;
-  font-weight: bolder;
-  color: var(--paragraph);
 }
-
-div:hover.pagination {
-  background-color: var(--secondary);
-  text-decoration: none;
-  cursor: pointer;
-}
-div:hover.pagination > .forward {
-  transform: translateX(3px);
-  -webkit-transform: translateX(3px);
-  -ms-transform: translateX(3px);
-}
-
-div:hover.pagination > .backward {
+.action-bar-button:hover > .backward {
   transform: translateX(-3px);
   -webkit-transform: translateX(-3px);
   -ms-transform: translateX(-3px);
+}
+
+.action-bar-button > .forward {
+  transition: 0.3s;
+}
+.action-bar-button:hover > .forward {
+  transform: translateX(3px);
+  -webkit-transform: translateX(3px);
+  -ms-transform: translateX(3px);
 }
 
 .data-row-info {
