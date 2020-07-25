@@ -5,13 +5,12 @@
       :class="{ 'display-from-left': fileName }"
       class="hidden-left field-list-fieldset"
     >
-      <div class="field-list-action">
-        <h3>Please Select Fields</h3>
-        <div class="action-button-container">
-          <button @click="updateState(), navigate()">Confirm</button>
-          <button class="secondary">Cancel</button>
-        </div>
+      <h3>Please Select Fields</h3>
+      <div class="action-button-container">
+        <button @click="updateState(), navigate()">Confirm</button>
+        <button class="secondary">Cancel</button>
       </div>
+
       <div class="field-list">
         <div v-for="(field, index) in fieldNames" :key="index">
           <label class="custom-checkbox">
@@ -236,28 +235,26 @@ progress::-moz-progress-bar {
 /* FIELD LIST STYLING */
 .hidden-left {
   position: absolute;
-  left: -23vw;
+  left: -30vw;
   transition: 1.5s ease-in-out;
-  margin-top: 3vh;
-  margin-bottom: 3vh;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .display-from-left {
-  transform: translateX(23vw);
-  margin-left: 3vh;
+  transform: translateX(30vw);
+  margin-left: 20px;
 }
 
 .field-list-fieldset {
   width: 20vw;
 }
 
-.field-list-action {
-  height: 100px;
-}
-
 .field-list {
-  height: 75vh;
-  overflow: auto;
+  margin-top: 10px;
+  padding-bottom: 10px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
 }
 
 .field-list-fieldset h3 {
@@ -266,12 +263,18 @@ progress::-moz-progress-bar {
 }
 
 .action-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   border-bottom: 2px solid var(--field-grey);
 }
 
-.action-button-container > button {
-  margin-right: 2%;
+.action-button-container button:first-child {
+  margin-right: 4%;
+}
+
+.action-button-container button {
   width: 48%;
 }
 
