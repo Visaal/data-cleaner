@@ -170,7 +170,7 @@ export default {
 
 .expanded.filter-value-list {
   overflow-y: auto;
-  animation: undefined-easeOutElastic 1.2s none;
+  animation: undefined-easeOutElastic 0.9s none;
   max-height: 50vh;
 }
 
@@ -179,37 +179,6 @@ export default {
     /* transform: translateY(0%); */
     max-height: 0vh;
   }
-
-  16% {
-    /* transform: translateY(132.27%); */
-    max-height: 66vh;
-  }
-
-  28% {
-    /* transform: translateY(86.88%); */
-    max-height: 44vh;
-  }
-
-  44% {
-    /* transform: translateY(104.63%); */
-    max-height: 52vh;
-  }
-
-  59% {
-    /* transform: translateY(98.36%); */
-    max-height: 49vh;
-  }
-
-  73% {
-    /* transform: translateY(100.58%); */
-    max-height: 50vh;
-  }
-
-  88% {
-    /* transform: translateY(99.8%); */
-    max-height: 50vh;
-  }
-
   100% {
     /* transform: translateY(100%); */
     max-height: 50vh;
