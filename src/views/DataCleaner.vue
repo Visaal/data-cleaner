@@ -200,7 +200,7 @@ button {
   -ms-user-select: none;
   user-select: none;
   position: relative;
-  z-index: 1;
+  /* z-index: 1; */
 }
 
 button:hover {
