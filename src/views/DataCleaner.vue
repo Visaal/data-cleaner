@@ -30,11 +30,11 @@ export default {
   components: {
     RuleSelector,
     DataView,
-    ContentActionMenu,
+    ContentActionMenu
   },
   computed: {
-    ...mapState(["dataFileName"]),
-  },
+    ...mapState(["dataFileName"])
+  }
 };
 </script>
 
@@ -48,7 +48,7 @@ export default {
   display: grid;
   grid-gap: 0px;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 40px 80px auto 40px;
+  grid-template-rows: 5vh 10vh auto 5vh;
   background-color: var(--background);
 }
 
