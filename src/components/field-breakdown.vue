@@ -9,92 +9,31 @@
 
     <div class="data-type-breakdown">
       <h3>Data Type Breakdown</h3>
-      <progress class="amount-progress" value="30" max="100"></progress>
+      <progress class="amount-progress" :value="orderedValues[0][1].length" :max="recordCount"></progress>
       <br />
       <br />
       <div class="data-type-row">
-        <div class="data-type-name">Missing Values:</div>
-        <div class="data-type-stat">60</div>
-        <div class="data-type-stat">80%</div>
+        <div class="data-type-name">blank:</div>
+        <div class="data-type-stat">0</div>
+        <div class="data-type-stat">0%</div>
       </div>
-      <div class="data-type-row">
-        <div class="data-type-name">Text:</div>
-        <div class="data-type-stat">60</div>
-        <div class="data-type-stat">80%</div>
-      </div>
-      <div class="data-type-row">
-        <div class="data-type-name">Number:</div>
-        <div class="data-type-stat">60</div>
-        <div class="data-type-stat">80%</div>
-      </div>
-      <div class="data-type-row">
-        <div class="data-type-name">Date:</div>
-        <div class="data-type-stat">60</div>
-        <div class="data-type-stat">80%</div>
+      <div class="data-type-row" v-for="(value, key) in fieldSchema['distinctValues']" :key="key">
+        <div class="data-type-name">{{ key }}:</div>
+        <div class="data-type-stat">{{ fieldSchema[key] }}</div>
+        <div class="data-type-stat">{{ fieldSchema[key]/recordCount | roundPercentage2DP }}</div>
       </div>
     </div>
 
     <div class="distinct-value-breakdown">
       <h3>Distinct Values</h3>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 1</div>
-        <div class="distinct-value-stat">40</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 2</div>
-        <div class="distinct-value-stat">60</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 3</div>
-        <div class="distinct-value-stat">80</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 4</div>
-        <div class="distinct-value-stat">140</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 5</div>
-        <div class="distinct-value-stat">30</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 1</div>
-        <div class="distinct-value-stat">40</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 2</div>
-        <div class="distinct-value-stat">60</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 3</div>
-        <div class="distinct-value-stat">80</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 4</div>
-        <div class="distinct-value-stat">140</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 5</div>
-        <div class="distinct-value-stat">30</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 1</div>
-        <div class="distinct-value-stat">40</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 2</div>
-        <div class="distinct-value-stat">60</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 3</div>
-        <div class="distinct-value-stat">80</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 4</div>
-        <div class="distinct-value-stat">140</div>
-      </div>
-      <div class="distinct-value-rows">
-        <div class="distinct-value">Value 5</div>
-        <div class="distinct-value-stat">30</div>
+      <div class="distinct-values">
+        <div class="distinct-value-rows" v-for="(value,index) in orderedValues" :key="index">
+          <div class="distinct-value">{{value[0]}}</div>
+          <div
+            class="distinct-value-stat"
+            :style="calculateWidth(value[1].length)"
+          >{{value[1].length}}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -105,11 +44,37 @@ export default {
   name: "FieldBreakdown",
   props: {
     field: String,
-    fieldBreakdownDisplayed: Boolean
+    fieldBreakdownDisplayed: Boolean,
+    recordCount: Number,
+    fieldSchema: Object
   },
   methods: {
     closeFieldDetail() {
       this.$emit("closeFieldBreakdown");
+    },
+    calculateWidth(value) {
+      let maxValueCount = this.orderedValues[0][1].length;
+      let ratio = (value / maxValueCount) * 48;
+      return `width: ${ratio}%`;
+    }
+  },
+  filters: {
+    roundPercentage2DP: function(value) {
+      return (value * 100).toFixed(0) + "%";
+    }
+  },
+  computed: {
+    orderedValues: function() {
+      let allDistinctValues = {};
+      for (const [key] of Object.entries(this.fieldSchema["distinctValues"])) {
+        Object.assign(
+          allDistinctValues,
+          this.fieldSchema["distinctValues"][key]
+        );
+      }
+      let entries = Object.entries(allDistinctValues);
+      let sorted = entries.sort((a, b) => b[1].length - a[1].length);
+      return sorted;
     }
   }
 };
@@ -134,6 +99,7 @@ export default {
   width: 33vw;
   font-size: 0.9rem;
   min-height: 90vh;
+  max-height: 90vh;
   overflow-y: auto;
   box-sizing: border-box;
 }
@@ -142,6 +108,7 @@ export default {
   padding: 10px;
   background-color: var(--button);
   box-sizing: border-box;
+  overflow-x: scroll;
 }
 
 .data-type-breakdown {
@@ -178,6 +145,9 @@ export default {
   padding: 10px;
 }
 
+.distinct-values {
+}
+
 .distinct-value-rows {
   padding-top: 0.3rem;
   padding-bottom: 0.3rem;
@@ -186,7 +156,9 @@ export default {
 }
 
 .distinct-value {
-  width: 50%;
+  overflow-x: auto;
+  width: 48%;
+  margin-right: 4%;
 }
 
 .distinct-value-stat {

@@ -14,7 +14,12 @@
     </div>
     <transition name="slide">
       <div v-if="fieldBreakdownDisplayed" class="breakdown-position">
-        <FieldBreakdown :field="field" @closeFieldBreakdown="closeFieldBreakdown" />
+        <FieldBreakdown
+          :field="field"
+          :recordCount="numberOfRecords"
+          :fieldSchema="fieldSchema"
+          @closeFieldBreakdown="closeFieldBreakdown"
+        />
       </div>
     </transition>
   </td>
@@ -35,7 +40,8 @@ export default {
     dataType: String,
     numberOfRecords: Number,
     primaryTypeValue: Number,
-    userCreatedField: Boolean
+    userCreatedField: Boolean,
+    fieldSchema: Object
   },
   data() {
     return {
