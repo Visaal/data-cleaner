@@ -30,11 +30,11 @@ export default {
   components: {
     RuleSelector,
     DataView,
-    ContentActionMenu,
+    ContentActionMenu
   },
   computed: {
-    ...mapState(["dataFileName"]),
-  },
+    ...mapState(["dataFileName"])
+  }
 };
 </script>
 
@@ -48,7 +48,7 @@ export default {
   display: grid;
   grid-gap: 0px;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 40px 80px auto 40px;
+  grid-template-rows: var(--header-height) 90px auto var(--footer-height);
   background-color: var(--background);
 }
 
@@ -56,7 +56,7 @@ export default {
   color: var(--headline);
   grid-column: 1 / -1;
   background-color: var(--teritary);
-  line-height: 40px;
+  line-height: var(--header-height);
   vertical-align: middle;
   padding-left: 10px;
   padding-right: 10px;

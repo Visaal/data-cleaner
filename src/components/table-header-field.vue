@@ -1,24 +1,39 @@
 <template>
-  <td
-    class="custom-field-header"
-    :id="field"
-    :class="{ 'user-created-field': userCreatedField }"
-  >
-    <div class="field-name">{{ field }} <FieldFilter :field="field" /></div>
+  <td class="custom-field-header" :id="field" :class="{ 'user-created-field': userCreatedField }">
+    <div class="field-name">
+      {{ field }}
+      <FieldFilter :field="field" />
+    </div>
     <div class="data-type">{{ dataType }}</div>
     <div class="data-match">
-      <progress :value="primaryTypeValue" :max="numberOfRecords"></progress>
+      <progress
+        :value="primaryTypeValue"
+        :max="numberOfRecords"
+        @click="fieldBreakdownDisplayed = !fieldBreakdownDisplayed"
+      ></progress>
     </div>
+    <transition name="slide">
+      <div v-if="fieldBreakdownDisplayed" class="breakdown-position">
+        <FieldBreakdown
+          :field="field"
+          :recordCount="numberOfRecords"
+          :fieldSchema="fieldSchema"
+          @closeFieldBreakdown="closeFieldBreakdown"
+        />
+      </div>
+    </transition>
   </td>
 </template>
 
 <script>
 import FieldFilter from "@/components/field-filter.vue";
+import FieldBreakdown from "@/components/field-breakdown.vue";
 
 export default {
   name: "TableHeaderField",
   components: {
     FieldFilter,
+    FieldBreakdown
   },
   props: {
     field: String,
@@ -26,17 +41,47 @@ export default {
     numberOfRecords: Number,
     primaryTypeValue: Number,
     userCreatedField: Boolean,
+    fieldSchema: Object
   },
+  data() {
+    return {
+      fieldBreakdownDisplayed: false
+    };
+  },
+  methods: {
+    showFieldBreakdown(field) {
+      this.fieldBreakdownDisplayed = true;
+      console.log(`will show breakdown for ${field}`);
+    },
+    closeFieldBreakdown() {
+      this.fieldBreakdownDisplayed = false;
+    }
+  }
 };
 </script>
 
 <style>
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide-enter,
+.slide-leave-to {
+  transform: translateX(33vw);
+}
+
+.breakdown-position {
+  position: absolute;
+  top: var(--header-height);
+  right: 0;
+}
+
 .custom-field-header {
   margin: 0px;
   padding: 0px;
   background-color: var(--field-grey);
   white-space: nowrap;
-  /* position: relative; */
 }
 
 .field-name {
@@ -54,6 +99,7 @@ export default {
 .data-match {
   padding: 0px;
   font-size: 0.5rem;
+  cursor: pointer;
 }
 
 .user-created-field {
