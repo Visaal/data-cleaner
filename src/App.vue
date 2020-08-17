@@ -24,6 +24,8 @@
   --field-label: #546778;
   --table-border: #ccc;
   color: var(--stroke);
+  --header-height: 40px;
+  --footer-height: 40px;
 }
 
 html,

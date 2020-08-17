@@ -99,8 +99,8 @@ export default {
   background-color: var(--teritary);
   width: 33vw;
   font-size: 0.9rem;
-  min-height: calc(100vh - 40px - 40px);
-  max-height: calc(100vh - 40px - 40px);
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+  max-height: calc(100vh - var(--header-height) - var(--footer-height));
   overflow-y: auto;
   box-sizing: border-box;
 }
