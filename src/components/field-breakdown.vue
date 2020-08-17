@@ -54,7 +54,8 @@ export default {
     },
     calculateWidth(value) {
       let maxValueCount = this.orderedValues[0][1].length;
-      let ratio = (value / maxValueCount) * 48;
+      let cssPercentageWidthValue = 100 - 68 - 4;
+      let ratio = (value / maxValueCount) * cssPercentageWidthValue;
       return `width: ${ratio}%`;
     }
   },
@@ -98,8 +99,8 @@ export default {
   background-color: var(--teritary);
   width: 33vw;
   font-size: 0.9rem;
-  min-height: 90vh;
-  max-height: 90vh;
+  min-height: calc(100vh - 40px - 40px);
+  max-height: calc(100vh - 40px - 40px);
   overflow-y: auto;
   box-sizing: border-box;
 }
@@ -149,6 +150,7 @@ export default {
 }
 
 .distinct-value-rows {
+  font-size: 0.8rem;
   padding-top: 0.3rem;
   padding-bottom: 0.3rem;
   display: flex;
@@ -157,7 +159,7 @@ export default {
 
 .distinct-value {
   overflow-x: auto;
-  width: 48%;
+  width: 68%;
   margin-right: 4%;
 }
 

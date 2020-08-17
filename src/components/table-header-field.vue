@@ -73,7 +73,7 @@ export default {
 
 .breakdown-position {
   position: absolute;
-  top: 5vh;
+  top: 40px;
   right: 0;
 }
 

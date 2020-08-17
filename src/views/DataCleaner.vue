@@ -48,7 +48,7 @@ export default {
   display: grid;
   grid-gap: 0px;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 5vh 10vh auto 5vh;
+  grid-template-rows: 40px 90px auto 40px;
   background-color: var(--background);
 }
 
