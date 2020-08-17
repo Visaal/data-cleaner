@@ -1,4 +1,4 @@
-const helperFunctions = require("../helper-functions");
+const helperFunctions = require("../filter-helper-functions");
 
 let schema;
 

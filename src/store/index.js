@@ -17,7 +17,10 @@ import {
   SET_ACTIVE_FILTER_VALUES,
 } from "./mutation-types";
 
-import { setFilterValues, getFilterRowIndexes } from "./helper-functions";
+import {
+  setFilterValues,
+  getFilterRowIndexes,
+} from "./filter-helper-functions";
 
 Vue.use(Vuex);
 
