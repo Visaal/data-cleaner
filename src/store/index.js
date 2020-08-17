@@ -22,28 +22,12 @@ import {
   getFilterRowIndexes,
 } from "./filter-helper-functions";
 
+import { createSchemaFieldSkeleton } from "./schema-helper-functions";
+const dataTypes = ["null", "number", "text", "date"];
+
 Vue.use(Vuex);
 
 // Helper functions
-function _createSchemaFieldSkeleton() {
-  let schema = {};
-  for (let i = 0; i < state.dataFieldNames.length; i++) {
-    schema[state.dataFieldNames[i]] = {
-      number: 0,
-      text: 0,
-      date: 0,
-      userCreatedField: false,
-      inconsistentDataTypes: false,
-      likelyDataType: "text",
-      distinctValues: {
-        number: {},
-        text: {},
-        date: {},
-      },
-    };
-  }
-  return schema;
-}
 
 function _countLikelyDataTypes(schema) {
   let potentialDateFields = _checkForPotentialDateFields();
@@ -243,7 +227,7 @@ const actions = {
   },
   _createSchema({ commit }) {
     //TODO: Remove helper functions to separate file
-    let schema = _createSchemaFieldSkeleton();
+    let schema = createSchemaFieldSkeleton(state.dataFieldNames, dataTypes);
     _countLikelyDataTypes(schema);
     _determineLikelyFieldDataType(schema);
     _countUniqueFieldValues(schema);

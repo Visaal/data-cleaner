@@ -12,11 +12,6 @@
       <progress class="amount-progress" :value="orderedValues[0][1].length" :max="recordCount"></progress>
       <br />
       <br />
-      <div class="data-type-row">
-        <div class="data-type-name">blank:</div>
-        <div class="data-type-stat">0</div>
-        <div class="data-type-stat">0%</div>
-      </div>
       <div class="data-type-row" v-for="(value, key) in fieldSchema['distinctValues']" :key="key">
         <div class="data-type-name">{{ key }}:</div>
         <div class="data-type-stat">{{ fieldSchema[key] }}</div>
