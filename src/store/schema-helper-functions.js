@@ -61,15 +61,14 @@ function determineLikelyFieldDataType(schema, dataTypes) {
   return schema;
 }
 
-function determineIfConsistentDataType(schema) {
+function determineIfConsistentDataType(schema, dataTypes) {
   // determine if field values have inconsistent data types
   for (let [fieldName, fieldSchema] of Object.entries(schema)) {
-    let fieldDataTypeCounts = [
-      fieldSchema["number"],
-      fieldSchema["text"],
-      fieldSchema["date"],
-    ].filter((count) => count > 0);
-
+    let fieldDataTypeCounts = [];
+    for (let i = 0; i < dataTypes.length; i++) {
+      fieldDataTypeCounts.push(fieldSchema[dataTypes[i]]);
+    }
+    fieldDataTypeCounts = fieldDataTypeCounts.filter((count) => count > 0);
     if (fieldDataTypeCounts.length > 1) {
       schema[fieldName]["inconsistentDataTypes"] = true;
     }

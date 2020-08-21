@@ -26,6 +26,7 @@ import {
   createSchemaFieldSkeleton,
   countUniqueFieldValues,
   determineLikelyFieldDataType,
+  determineIfConsistentDataType,
 } from "./schema-helper-functions";
 
 const dataTypes = ["null", "number", "text", "date"];
@@ -40,21 +41,6 @@ function _distinctValuesInArray(inputArray) {
       1 + valuesCountObject[inputArray[i]] || 1;
   }
   return valuesCountObject;
-}
-
-function _determineIfConsistentDataType(schema) {
-  // determine if field values have inconsistent data types
-  for (let [fieldName, fieldSchema] of Object.entries(schema)) {
-    let fieldDataTypeCounts = [
-      fieldSchema["number"],
-      fieldSchema["text"],
-      fieldSchema["date"],
-    ].filter((count) => count > 0);
-
-    if (fieldDataTypeCounts.length > 1) {
-      schema[fieldName]["inconsistentDataTypes"] = true;
-    }
-  }
 }
 
 // function _checkForPotentialDateFields() {
@@ -169,11 +155,10 @@ const actions = {
     commit(SET_SELECTED_FIELD_NAMES, selectedFieldNames);
   },
   _createSchema({ commit }) {
-    //TODO: Remove helper functions to separate file
     let schema = createSchemaFieldSkeleton(state.dataFieldNames, dataTypes);
     countUniqueFieldValues(schema, state.dataRows);
     determineLikelyFieldDataType(schema, dataTypes);
-    _determineIfConsistentDataType(schema);
+    determineIfConsistentDataType(schema, dataTypes);
     commit(CREATE_SCHEMA, schema);
   },
   setNumberOfRowsToDisplayAction({ commit }, numberSelected) {

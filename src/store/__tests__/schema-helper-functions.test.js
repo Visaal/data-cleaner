@@ -979,7 +979,7 @@ describe("4. Populate Schema - Check For Consistent Data Types", () => {
 
   test("4.01: Consistent Value", () => {
     expect(
-      helperFunctions.determineIfConsistentDataType(schemaOne)
+      helperFunctions.determineIfConsistentDataType(schemaOne, dataTypes)
     ).toStrictEqual({
       spend: {
         null: 0,
@@ -1002,7 +1002,7 @@ describe("4. Populate Schema - Check For Consistent Data Types", () => {
   });
   test("4.02: Inconsistent Values", () => {
     expect(
-      helperFunctions.determineIfConsistentDataType(schemaTwo)
+      helperFunctions.determineIfConsistentDataType(schemaTwo, dataTypes)
     ).toStrictEqual({
       spend: {
         null: 0,
