@@ -26,7 +26,11 @@ function countUniqueFieldValues(dataSchema, dataRows) {
   let schema = dataSchema;
   for (let i = 0; i < dataRows.length; i++) {
     for (let [fieldName, fieldValue] of Object.entries(dataRows[i])) {
-      if (!isNaN(+fieldValue)) {
+      if (fieldValue.length === 0) {
+        (schema[fieldName]["distinctValues"]["null"]["null"] =
+          schema[fieldName]["distinctValues"]["null"]["null"] || []).push(i);
+        schema[fieldName]["null"] += 1;
+      } else if (!isNaN(+fieldValue)) {
         (schema[fieldName]["distinctValues"]["number"][fieldValue] =
           schema[fieldName]["distinctValues"]["number"][fieldValue] || []).push(
           i
