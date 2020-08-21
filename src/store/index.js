@@ -17,92 +17,23 @@ import {
   SET_ACTIVE_FILTER_VALUES,
 } from "./mutation-types";
 
-import { setFilterValues, getFilterRowIndexes } from "./helper-functions";
+import {
+  setFilterValues,
+  getFilterRowIndexes,
+} from "./filter-helper-functions";
+
+import {
+  createSchemaFieldSkeleton,
+  countUniqueFieldValues,
+  determineLikelyFieldDataType,
+  determineIfConsistentDataType,
+} from "./schema-helper-functions";
+
+const dataTypes = ["null", "number", "text", "date"];
 
 Vue.use(Vuex);
 
 // Helper functions
-function _createSchemaFieldSkeleton() {
-  let schema = {};
-  for (let i = 0; i < state.dataFieldNames.length; i++) {
-    schema[state.dataFieldNames[i]] = {
-      number: 0,
-      text: 0,
-      date: 0,
-      userCreatedField: false,
-      inconsistentDataTypes: false,
-      likelyDataType: "text",
-      distinctValues: {
-        number: {},
-        text: {},
-        date: {},
-      },
-    };
-  }
-  return schema;
-}
-
-function _countLikelyDataTypes(schema) {
-  let potentialDateFields = _checkForPotentialDateFields();
-  // create count of the data type for each field value
-  // TODO: check for additional date formats rather than just ISO date
-  for (let i = 0; i < state.dataRows.length; i++) {
-    for (let [fieldName, fieldValue] of Object.entries(state.dataRows[i])) {
-      if (!isNaN(+fieldValue)) {
-        schema[fieldName]["number"] += 1;
-      } else if (
-        potentialDateFields.includes(fieldName) &&
-        !DateTime.fromISO(fieldValue).invalid
-      ) {
-        schema[fieldName]["date"] += 1;
-      } else {
-        schema[fieldName]["text"] += 1;
-      }
-    }
-  }
-}
-
-function _determineLikelyFieldDataType(schema) {
-  // determine most likely data type for each field
-  // TO DO: restructure schema to group data type counts into their own object
-  for (let i = 0; i < state.dataFieldNames.length; i++) {
-    let dataTypeKeys = ["number", "date", "text"];
-    let maxCountDataType = dataTypeKeys.reduce((a, b) =>
-      schema[state.dataFieldNames[i]][a] > schema[state.dataFieldNames[i]][b]
-        ? a
-        : b
-    );
-    schema[state.dataFieldNames[i]]["likelyDataType"] = maxCountDataType;
-  }
-}
-
-function _countUniqueFieldValues(schema, dataRows = state.dataRows) {
-  let potentialDateFields = _checkForPotentialDateFields();
-  for (let i = 0; i < dataRows.length; i++) {
-    for (let [fieldName, fieldValue] of Object.entries(dataRows[i])) {
-      if (!isNaN(+fieldValue)) {
-        (schema[fieldName]["distinctValues"]["number"][fieldValue] =
-          schema[fieldName]["distinctValues"]["number"][fieldValue] || []).push(
-          i
-        );
-      } else if (
-        potentialDateFields.includes(fieldName) &&
-        !DateTime.fromISO(fieldValue).invalid
-      ) {
-        (schema[fieldName]["distinctValues"]["date"][fieldValue] =
-          schema[fieldName]["distinctValues"]["date"][fieldValue] || []).push(
-          i
-        );
-      } else {
-        (schema[fieldName]["distinctValues"]["text"][fieldValue] =
-          schema[fieldName]["distinctValues"]["text"][fieldValue] || []).push(
-          i
-        );
-      }
-    }
-  }
-}
-
 function _distinctValuesInArray(inputArray) {
   let valuesCountObject = {};
   for (let i = 0; i < inputArray.length; i++) {
@@ -112,31 +43,16 @@ function _distinctValuesInArray(inputArray) {
   return valuesCountObject;
 }
 
-function _determineIfConsistentDataType(schema) {
-  // determine if field values have inconsistent data types
-  for (let [fieldName, fieldSchema] of Object.entries(schema)) {
-    let fieldDataTypeCounts = [
-      fieldSchema["number"],
-      fieldSchema["text"],
-      fieldSchema["date"],
-    ].filter((count) => count > 0);
-
-    if (fieldDataTypeCounts.length > 1) {
-      schema[fieldName]["inconsistentDataTypes"] = true;
-    }
-  }
-}
-
-function _checkForPotentialDateFields() {
-  // TODO: maybe expand logic to check value of fields rather than just looking for word 'date'
-  let potentialDateFields = [];
-  for (let i = 0; i < state.dataFieldNames.length; i++) {
-    if (state.dataFieldNames[i].toLowerCase().includes("date")) {
-      potentialDateFields.push(state.dataFieldNames[i]);
-    }
-  }
-  return potentialDateFields;
-}
+// function _checkForPotentialDateFields() {
+//   // TODO: maybe expand logic to check value of fields rather than just looking for word 'date'
+//   let potentialDateFields = [];
+//   for (let i = 0; i < state.dataFieldNames.length; i++) {
+//     if (state.dataFieldNames[i].toLowerCase().includes("date")) {
+//       potentialDateFields.push(state.dataFieldNames[i]);
+//     }
+//   }
+//   return potentialDateFields;
+// }
 
 const state = {
   dataFieldNames: [],
@@ -239,12 +155,10 @@ const actions = {
     commit(SET_SELECTED_FIELD_NAMES, selectedFieldNames);
   },
   _createSchema({ commit }) {
-    //TODO: Remove helper functions to separate file
-    let schema = _createSchemaFieldSkeleton();
-    _countLikelyDataTypes(schema);
-    _determineLikelyFieldDataType(schema);
-    _countUniqueFieldValues(schema);
-    _determineIfConsistentDataType(schema);
+    let schema = createSchemaFieldSkeleton(state.dataFieldNames, dataTypes);
+    countUniqueFieldValues(schema, state.dataRows);
+    determineLikelyFieldDataType(schema, dataTypes);
+    determineIfConsistentDataType(schema, dataTypes);
     commit(CREATE_SCHEMA, schema);
   },
   setNumberOfRowsToDisplayAction({ commit }, numberSelected) {
