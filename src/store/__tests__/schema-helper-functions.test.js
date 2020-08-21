@@ -701,3 +701,246 @@ describe("2. Populate Schema - Unique Values", () => {
     });
   });
 });
+
+describe("3. Populate Schema - Likely Data Type", () => {
+  let dataFieldsOne,
+    dataFieldsTwo,
+    schemaOne,
+    schemaTwo,
+    schemaThree,
+    schemaFour;
+  beforeEach(() => {
+    dataFieldsOne = ["spend"];
+    dataFieldsTwo = ["start_date", "spend"];
+    schemaOne = {
+      spend: {
+        null: 0,
+        number: 1,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0],
+          },
+          text: {},
+          date: {},
+        },
+      },
+    };
+    schemaTwo = {
+      spend: {
+        null: 0,
+        number: 2,
+        text: 1,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0, 1],
+          },
+          text: {
+            NA: [2],
+          },
+          date: {},
+        },
+      },
+    };
+    schemaThree = {
+      spend: {
+        null: 0,
+        number: 2,
+        text: 2,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0, 1],
+          },
+          text: {
+            NA: [2, 3],
+          },
+          date: {},
+        },
+      },
+    };
+    schemaFour = {
+      start_date: {
+        null: 0,
+        number: 0,
+        text: 2,
+        date: 4,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            "15thDecember2020": [3, 5],
+          },
+          date: {
+            "2020-06-21": [0, 1, 2, 4],
+          },
+        },
+      },
+      spend: {
+        null: 0,
+        number: 4,
+        text: 2,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0, 1, 3],
+            20: [4],
+          },
+          text: {
+            Null: [2, 5],
+          },
+          date: {},
+        },
+      },
+    };
+  });
+
+  afterEach(() => {
+    delete schemaOne,
+      schemaTwo,
+      schemaThree,
+      schemaFour,
+      dataFieldsOne,
+      dataFieldsTwo;
+  });
+
+  test("3.01: Likely Data Type - 1 row 1 field", () => {
+    expect(
+      helperFunctions.determineLikelyFieldDataType(schemaOne, dataFieldsOne)
+    ).toStrictEqual({
+      spend: {
+        null: 0,
+        number: 1,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "number",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0],
+          },
+          text: {},
+          date: {},
+        },
+      },
+    });
+  });
+  test("3.02: Likely Data Type - 1 row 3 fields - inconsistent values", () => {
+    expect(
+      helperFunctions.determineLikelyFieldDataType(schemaTwo, dataFieldsOne)
+    ).toStrictEqual({
+      spend: {
+        null: 0,
+        number: 2,
+        text: 1,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "number",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0, 1],
+          },
+          text: {
+            NA: [2],
+          },
+          date: {},
+        },
+      },
+    });
+  });
+  test("3.03: Likely Data Type - 1 row 4 fields - even split of data types", () => {
+    expect(
+      helperFunctions.determineLikelyFieldDataType(schemaThree, dataFieldsOne)
+    ).toStrictEqual({
+      spend: {
+        null: 0,
+        number: 2,
+        text: 2,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0, 1],
+          },
+          text: {
+            NA: [2, 3],
+          },
+          date: {},
+        },
+      },
+    });
+  });
+  test("3.04: Likely Data Type - 6 row 2 fields", () => {
+    expect(
+      helperFunctions.determineLikelyFieldDataType(schemaFour, dataFieldsTwo)
+    ).toStrictEqual({
+      start_date: {
+        null: 0,
+        number: 0,
+        text: 2,
+        date: 4,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "date",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            "15thDecember2020": [3, 5],
+          },
+          date: {
+            "2020-06-21": [0, 1, 2, 4],
+          },
+        },
+      },
+      spend: {
+        null: 0,
+        number: 4,
+        text: 2,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "number",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0, 1, 3],
+            20: [4],
+          },
+          text: {
+            Null: [2, 5],
+          },
+          date: {},
+        },
+      },
+    });
+  });
+});
