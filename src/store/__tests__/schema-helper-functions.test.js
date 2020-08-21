@@ -932,3 +932,97 @@ describe("3. Populate Schema - Likely Data Type", () => {
     });
   });
 });
+
+describe("4. Populate Schema - Check For Consistent Data Types", () => {
+  beforeEach(() => {
+    schemaOne = {
+      spend: {
+        null: 0,
+        number: 1,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0],
+          },
+          text: {},
+          date: {},
+        },
+      },
+    };
+    schemaTwo = {
+      spend: {
+        null: 0,
+        number: 2,
+        text: 1,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0, 1],
+          },
+          text: {
+            NA: [2],
+          },
+          date: {},
+        },
+      },
+    };
+  });
+
+  test("4.01: Consistent Value", () => {
+    expect(
+      helperFunctions.determineIfConsistentDataType(schemaOne)
+    ).toStrictEqual({
+      spend: {
+        null: 0,
+        number: 1,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0],
+          },
+          text: {},
+          date: {},
+        },
+      },
+    });
+  });
+  test("4.02: Inconsistent Values", () => {
+    expect(
+      helperFunctions.determineIfConsistentDataType(schemaTwo)
+    ).toStrictEqual({
+      spend: {
+        null: 0,
+        number: 2,
+        text: 1,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: true,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0, 1],
+          },
+          text: {
+            NA: [2],
+          },
+          date: {},
+        },
+      },
+    });
+  });
+});

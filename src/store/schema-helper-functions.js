@@ -61,6 +61,23 @@ function determineLikelyFieldDataType(schema, dataTypes) {
   return schema;
 }
 
+function determineIfConsistentDataType(schema) {
+  // determine if field values have inconsistent data types
+  for (let [fieldName, fieldSchema] of Object.entries(schema)) {
+    let fieldDataTypeCounts = [
+      fieldSchema["number"],
+      fieldSchema["text"],
+      fieldSchema["date"],
+    ].filter((count) => count > 0);
+
+    if (fieldDataTypeCounts.length > 1) {
+      schema[fieldName]["inconsistentDataTypes"] = true;
+    }
+  }
+  return schema;
+}
+
+module.exports.determineIfConsistentDataType = determineIfConsistentDataType;
 module.exports.determineLikelyFieldDataType = determineLikelyFieldDataType;
 module.exports.countUniqueFieldValues = countUniqueFieldValues;
 module.exports.createSchemaFieldSkeleton = createSchemaFieldSkeleton;
