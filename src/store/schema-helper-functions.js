@@ -50,15 +50,13 @@ function countUniqueFieldValues(dataSchema, dataRows) {
   return schema;
 }
 
-function determineLikelyFieldDataType(schema, dataFieldNames) {
+function determineLikelyFieldDataType(schema, dataTypes) {
   // determine most likely data type for each field
-  // TO DO: restructure schema to group data type counts into their own object
-  for (let i = 0; i < dataFieldNames.length; i++) {
-    let dataTypeKeys = ["number", "date", "text"];
-    let maxCountDataType = dataTypeKeys.reduce((a, b) =>
-      schema[dataFieldNames[i]][a] > schema[dataFieldNames[i]][b] ? a : b
+  for (let [, fieldValue] of Object.entries(schema)) {
+    let maxCountDataType = dataTypes.reduce((a, b) =>
+      fieldValue[a] > fieldValue[b] ? a : b
     );
-    schema[dataFieldNames[i]]["likelyDataType"] = maxCountDataType;
+    fieldValue["likelyDataType"] = maxCountDataType;
   }
   return schema;
 }

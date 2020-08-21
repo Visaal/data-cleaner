@@ -703,15 +703,8 @@ describe("2. Populate Schema - Unique Values", () => {
 });
 
 describe("3. Populate Schema - Likely Data Type", () => {
-  let dataFieldsOne,
-    dataFieldsTwo,
-    schemaOne,
-    schemaTwo,
-    schemaThree,
-    schemaFour;
+  let schemaOne, schemaTwo, schemaThree, schemaFour;
   beforeEach(() => {
-    dataFieldsOne = ["spend"];
-    dataFieldsTwo = ["start_date", "spend"];
     schemaOne = {
       spend: {
         null: 0,
@@ -817,17 +810,12 @@ describe("3. Populate Schema - Likely Data Type", () => {
   });
 
   afterEach(() => {
-    delete schemaOne,
-      schemaTwo,
-      schemaThree,
-      schemaFour,
-      dataFieldsOne,
-      dataFieldsTwo;
+    delete schemaOne, schemaTwo, schemaThree, schemaFour;
   });
 
   test("3.01: Likely Data Type - 1 row 1 field", () => {
     expect(
-      helperFunctions.determineLikelyFieldDataType(schemaOne, dataFieldsOne)
+      helperFunctions.determineLikelyFieldDataType(schemaOne, dataTypes)
     ).toStrictEqual({
       spend: {
         null: 0,
@@ -850,7 +838,7 @@ describe("3. Populate Schema - Likely Data Type", () => {
   });
   test("3.02: Likely Data Type - 1 row 3 fields - inconsistent values", () => {
     expect(
-      helperFunctions.determineLikelyFieldDataType(schemaTwo, dataFieldsOne)
+      helperFunctions.determineLikelyFieldDataType(schemaTwo, dataTypes)
     ).toStrictEqual({
       spend: {
         null: 0,
@@ -875,7 +863,7 @@ describe("3. Populate Schema - Likely Data Type", () => {
   });
   test("3.03: Likely Data Type - 1 row 4 fields - even split of data types", () => {
     expect(
-      helperFunctions.determineLikelyFieldDataType(schemaThree, dataFieldsOne)
+      helperFunctions.determineLikelyFieldDataType(schemaThree, dataTypes)
     ).toStrictEqual({
       spend: {
         null: 0,
@@ -900,7 +888,7 @@ describe("3. Populate Schema - Likely Data Type", () => {
   });
   test("3.04: Likely Data Type - 6 row 2 fields", () => {
     expect(
-      helperFunctions.determineLikelyFieldDataType(schemaFour, dataFieldsTwo)
+      helperFunctions.determineLikelyFieldDataType(schemaFour, dataTypes)
     ).toStrictEqual({
       start_date: {
         null: 0,
