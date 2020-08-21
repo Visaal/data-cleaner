@@ -25,26 +25,14 @@ import {
 import {
   createSchemaFieldSkeleton,
   countUniqueFieldValues,
+  determineLikelyFieldDataType,
 } from "./schema-helper-functions";
+
 const dataTypes = ["null", "number", "text", "date"];
 
 Vue.use(Vuex);
 
 // Helper functions
-function _determineLikelyFieldDataType(schema) {
-  // determine most likely data type for each field
-  // TO DO: restructure schema to group data type counts into their own object
-  for (let i = 0; i < state.dataFieldNames.length; i++) {
-    let dataTypeKeys = ["number", "date", "text"];
-    let maxCountDataType = dataTypeKeys.reduce((a, b) =>
-      schema[state.dataFieldNames[i]][a] > schema[state.dataFieldNames[i]][b]
-        ? a
-        : b
-    );
-    schema[state.dataFieldNames[i]]["likelyDataType"] = maxCountDataType;
-  }
-}
-
 function _distinctValuesInArray(inputArray) {
   let valuesCountObject = {};
   for (let i = 0; i < inputArray.length; i++) {
@@ -183,8 +171,8 @@ const actions = {
   _createSchema({ commit }) {
     //TODO: Remove helper functions to separate file
     let schema = createSchemaFieldSkeleton(state.dataFieldNames, dataTypes);
-    _determineLikelyFieldDataType(schema);
     countUniqueFieldValues(schema, state.dataRows);
+    determineLikelyFieldDataType(schema, dataTypes);
     _determineIfConsistentDataType(schema);
     commit(CREATE_SCHEMA, schema);
   },
