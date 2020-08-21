@@ -22,7 +22,10 @@ import {
   getFilterRowIndexes,
 } from "./filter-helper-functions";
 
-import { createSchemaFieldSkeleton } from "./schema-helper-functions";
+import {
+  createSchemaFieldSkeleton,
+  countUniqueFieldValues,
+} from "./schema-helper-functions";
 const dataTypes = ["null", "number", "text", "date"];
 
 Vue.use(Vuex);
@@ -60,33 +63,6 @@ function _determineLikelyFieldDataType(schema) {
         : b
     );
     schema[state.dataFieldNames[i]]["likelyDataType"] = maxCountDataType;
-  }
-}
-
-function _countUniqueFieldValues(schema, dataRows = state.dataRows) {
-  let potentialDateFields = _checkForPotentialDateFields();
-  for (let i = 0; i < dataRows.length; i++) {
-    for (let [fieldName, fieldValue] of Object.entries(dataRows[i])) {
-      if (!isNaN(+fieldValue)) {
-        (schema[fieldName]["distinctValues"]["number"][fieldValue] =
-          schema[fieldName]["distinctValues"]["number"][fieldValue] || []).push(
-          i
-        );
-      } else if (
-        potentialDateFields.includes(fieldName) &&
-        !DateTime.fromISO(fieldValue).invalid
-      ) {
-        (schema[fieldName]["distinctValues"]["date"][fieldValue] =
-          schema[fieldName]["distinctValues"]["date"][fieldValue] || []).push(
-          i
-        );
-      } else {
-        (schema[fieldName]["distinctValues"]["text"][fieldValue] =
-          schema[fieldName]["distinctValues"]["text"][fieldValue] || []).push(
-          i
-        );
-      }
-    }
   }
 }
 
@@ -230,7 +206,7 @@ const actions = {
     let schema = createSchemaFieldSkeleton(state.dataFieldNames, dataTypes);
     _countLikelyDataTypes(schema);
     _determineLikelyFieldDataType(schema);
-    _countUniqueFieldValues(schema);
+    countUniqueFieldValues(schema, state.dataRows);
     _determineIfConsistentDataType(schema);
     commit(CREATE_SCHEMA, schema);
   },
