@@ -72,7 +72,7 @@ describe("1. Testing initial schema creation - skeleton schema", () => {
   });
 });
 
-describe("2. Populate Schema", () => {
+describe("2. Populate Schema - Unique Values", () => {
   let dataOne,
     dataTwo,
     dataThree,
@@ -80,8 +80,10 @@ describe("2. Populate Schema", () => {
     dataFive,
     dataSix,
     dataSeven,
+    dataEight,
     schemaOne,
-    schemaTwo;
+    schemaTwo,
+    schemaThree;
   beforeEach(() => {
     dataOne = [{ spend: "10" }];
     dataTwo = [
@@ -223,8 +225,10 @@ describe("2. Populate Schema", () => {
       dataFive,
       dataSix,
       dataSeven,
+      dataEight,
       schemaOne,
-      schemaTwo;
+      schemaTwo,
+      schemaThree;
   });
 
   test("2.01: Distinct Value Creation - 1 row 1 field - number", () => {
@@ -532,6 +536,477 @@ describe("2. Populate Schema", () => {
           },
           date: {
             "2020-06-21": [0],
+          },
+        },
+      },
+    });
+  });
+});
+
+describe("3. Populate Schema - DataType Counts", () => {
+  let dataOne, dataTwo, dataThree, schemaOne, schemaTwo, schemaThree;
+  beforeEach(() => {
+    dataOne = [
+      { spend: "10" },
+      { spend: "20" },
+      { spend: "20" },
+      { spend: "Null" },
+      { spend: "50" },
+      { spend: "20" },
+      { spend: "50" },
+    ];
+    dataTwo = [
+      { animal: "lion", cities: "london", vegetable: "carrot", spend: "10" },
+    ];
+    dataThree = [
+      {
+        animal: "lion",
+        cities: "london",
+        vegetable: "carrot",
+        spend: "10",
+        start_date: "2020-06-21",
+      },
+      {
+        animal: "tiger",
+        cities: "paris",
+        vegetable: "potato",
+        spend: "10",
+        start_date: "2020-06-21",
+      },
+      {
+        animal: "dog",
+        cities: "milan",
+        vegetable: "pea",
+        spend: "Null",
+        start_date: "2020-06-21",
+      },
+      {
+        animal: "lion",
+        cities: "mumbai",
+        vegetable: "celery",
+        spend: "10",
+        start_date: "15thDecember2020",
+      },
+      {
+        animal: "cat",
+        cities: "auckland",
+        vegetable: "carrot",
+        spend: "20",
+        start_date: "2020-06-21",
+      },
+      {
+        animal: "lion",
+        cities: "stockholm",
+        vegetable: "pea",
+        spend: "Null",
+        start_date: "15thDecember2020",
+      },
+    ];
+    schemaOne = {
+      spend: {
+        null: 0,
+        number: 0,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0],
+            20: [1, 2, 5],
+            50: [4, 6],
+          },
+          text: {
+            Null: [3],
+          },
+          date: {},
+        },
+      },
+    };
+    schemaTwo = {
+      animal: {
+        null: 0,
+        number: 0,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            lion: [0],
+          },
+          date: {},
+        },
+      },
+      cities: {
+        null: 0,
+        number: 0,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            london: [0],
+          },
+          date: {},
+        },
+      },
+      vegetable: {
+        null: 0,
+        number: 0,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            carrot: [0],
+          },
+          date: {},
+        },
+      },
+      spend: {
+        null: 0,
+        number: 0,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0],
+          },
+          text: {},
+          date: {},
+        },
+      },
+    };
+    schemaThree = {
+      animal: {
+        null: 0,
+        number: 0,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            lion: [0, 3, 5],
+            tiger: [1],
+            dog: [2],
+            cat: [4],
+          },
+          date: {},
+        },
+      },
+      cities: {
+        null: 0,
+        number: 0,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            london: [0],
+            paris: [1],
+            milan: [2],
+            mumbai: [3],
+            auckland: [4],
+            stockholm: [5],
+          },
+          date: {},
+        },
+      },
+      vegetable: {
+        null: 0,
+        number: 0,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            carrot: [0, 4],
+            potato: [1],
+            pea: [2, 5],
+            celery: [3],
+          },
+          date: {},
+        },
+      },
+      spend: {
+        null: 0,
+        number: 0,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0, 1, 3],
+            20: [4],
+          },
+          text: {
+            Null: [2, 5],
+          },
+          date: {},
+        },
+      },
+      start_date: {
+        null: 0,
+        number: 0,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            "15thDecember2020": [3, 5],
+          },
+          date: {
+            "2020-06-21": [0, 1, 2, 4],
+          },
+        },
+      },
+    };
+  });
+
+  afterEach(() => {
+    delete dataOne, dataTwo, dataThree, schemaOne, schemaTwo, schemaThree;
+  });
+
+  test("3.01: Value Count - 7 rows 1 field - number and text", () => {
+    expect(
+      helperFunctions.countLikelyDataTypes(schemaOne, dataOne)
+    ).toStrictEqual({
+      spend: {
+        null: 0,
+        number: 6,
+        text: 1,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0],
+            20: [1, 2, 5],
+            50: [4, 6],
+          },
+          text: {
+            Null: [3],
+          },
+          date: {},
+        },
+      },
+    });
+  });
+  test("2.02: Value Count - 1 row 4 fields - text and number", () => {
+    expect(
+      helperFunctions.countLikelyDataTypes(schemaTwo, dataTwo)
+    ).toStrictEqual({
+      animal: {
+        null: 0,
+        number: 0,
+        text: 1,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            lion: [0],
+          },
+          date: {},
+        },
+      },
+      cities: {
+        null: 0,
+        number: 0,
+        text: 1,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            london: [0],
+          },
+          date: {},
+        },
+      },
+      vegetable: {
+        null: 0,
+        number: 0,
+        text: 1,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            carrot: [0],
+          },
+          date: {},
+        },
+      },
+      spend: {
+        null: 0,
+        number: 1,
+        text: 0,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0],
+          },
+          text: {},
+          date: {},
+        },
+      },
+    });
+  });
+  test("3.03: Value Count - 6 rows 5 fields", () => {
+    expect(
+      helperFunctions.countLikelyDataTypes(schemaThree, dataThree)
+    ).toStrictEqual({
+      animal: {
+        null: 0,
+        number: 0,
+        text: 6,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            lion: [0, 3, 5],
+            tiger: [1],
+            dog: [2],
+            cat: [4],
+          },
+          date: {},
+        },
+      },
+      cities: {
+        null: 0,
+        number: 0,
+        text: 6,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            london: [0],
+            paris: [1],
+            milan: [2],
+            mumbai: [3],
+            auckland: [4],
+            stockholm: [5],
+          },
+          date: {},
+        },
+      },
+      vegetable: {
+        null: 0,
+        number: 0,
+        text: 6,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            carrot: [0, 4],
+            potato: [1],
+            pea: [2, 5],
+            celery: [3],
+          },
+          date: {},
+        },
+      },
+      spend: {
+        null: 0,
+        number: 4,
+        text: 2,
+        date: 0,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {
+            10: [0, 1, 3],
+            20: [4],
+          },
+          text: {
+            Null: [2, 5],
+          },
+          date: {},
+        },
+      },
+      start_date: {
+        null: 0,
+        number: 0,
+        text: 2,
+        date: 4,
+        userCreatedField: false,
+        inconsistentDataTypes: false,
+        likelyDataType: "text",
+        distinctValues: {
+          null: {},
+          number: {},
+          text: {
+            "15thDecember2020": [3, 5],
+          },
+          date: {
+            "2020-06-21": [0, 1, 2, 4],
           },
         },
       },
