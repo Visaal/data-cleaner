@@ -57,12 +57,14 @@ function getFilterRowIndexes(dataSchema, selectedFilterValues) {
 }
 
 function getDistinctValuesForField(dataSchema, field) {
-  // TODO: MAKE THIS DYNAMIC SO DATA TYPES CAN BE EXPANDED
-  let distinctValueObject = {
-    ...dataSchema[field]["distinctValues"]["date"],
-    ...dataSchema[field]["distinctValues"]["number"],
-    ...dataSchema[field]["distinctValues"]["text"],
-  };
+  let distinctValueObject = {};
+  for (const [key] of Object.entries(dataSchema[field]["distinctValues"])) {
+    Object.assign(
+      distinctValueObject,
+      dataSchema[field]["distinctValues"][key]
+    );
+  }
+  console.log(distinctValueObject);
   return distinctValueObject;
 }
 

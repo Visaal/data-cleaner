@@ -1,16 +1,19 @@
 const helperFunctions = require("../filter-helper-functions");
+const dataTypes = ["null", "number", "text", "date"];
 
 let schema;
 
 beforeAll(() => {
   schema = {
     animal: {
+      null: 0,
       number: 0,
       text: 13,
       date: 0,
       inconsistentDataTypes: false,
       likelyDataType: "text",
       distinctValues: {
+        null: {},
         number: {},
         text: {
           lion: [0, 2, 4, 6, 8],
@@ -21,12 +24,14 @@ beforeAll(() => {
       },
     },
     cities: {
+      null: 0,
       number: 0,
       text: 10,
       date: 0,
       inconsistentDataTypes: false,
       likelyDataType: "text",
       distinctValues: {
+        null: {},
         number: {},
         text: {
           london: [0, 1, 2, 3, 4],
@@ -36,12 +41,14 @@ beforeAll(() => {
       },
     },
     vegetables: {
+      null: 0,
       number: 0,
       text: 10,
       date: 0,
       inconsistentDataTypes: false,
       likelyDataType: "text",
       distinctValues: {
+        null: {},
         number: {},
         text: {
           carrots: [2, 6, 7, 8],
@@ -51,12 +58,14 @@ beforeAll(() => {
       },
     },
     spend: {
+      null: 0,
       number: 13,
       text: 0,
       date: 0,
       inconsistentDataTypes: true,
       likelyDataType: "number",
       distinctValues: {
+        null: {},
         number: {
           1: [0, 2, 4, 6, 8],
           2: [1, 3, 7, 9],
@@ -65,6 +74,28 @@ beforeAll(() => {
           "n/a": [5, 10, 11, 12],
         },
         date: {},
+      },
+    },
+    start_date: {
+      null: 7,
+      number: 2,
+      text: 2,
+      date: 2,
+      inconsistentDataTypes: true,
+      likelyDataType: "null",
+      distinctValues: {
+        null: {
+          null: [0, 2, 4, 6, 8, 10, 12],
+        },
+        number: {
+          1: [1, 3],
+        },
+        text: {
+          "n/a": [5, 7],
+        },
+        date: {
+          "2020-06-21": [9, 11],
+        },
       },
     },
   };
@@ -219,6 +250,17 @@ test("Field with inconsistent data type", () => {
     1: [0, 2, 4, 6, 8],
     2: [1, 3, 7, 9],
     "n/a": [5, 10, 11, 12],
+  });
+});
+
+test("Field with null values data type", () => {
+  expect(
+    helperFunctions.getDistinctValuesForField(schema, "start_date")
+  ).toStrictEqual({
+    null: [0, 2, 4, 6, 8, 10, 12],
+    1: [1, 3],
+    "n/a": [5, 7],
+    "2020-06-21": [9, 11],
   });
 });
 
