@@ -31,31 +31,18 @@ function countUniqueFieldValues(dataSchema, dataRows) {
           schema[fieldName]["distinctValues"]["number"][fieldValue] || []).push(
           i
         );
+        schema[fieldName]["number"] += 1;
       } else if (!DateTime.fromISO(fieldValue).invalid) {
         (schema[fieldName]["distinctValues"]["date"][fieldValue] =
           schema[fieldName]["distinctValues"]["date"][fieldValue] || []).push(
           i
         );
+        schema[fieldName]["date"] += 1;
       } else {
         (schema[fieldName]["distinctValues"]["text"][fieldValue] =
           schema[fieldName]["distinctValues"]["text"][fieldValue] || []).push(
           i
         );
-      }
-    }
-  }
-  return schema;
-}
-
-function countLikelyDataTypes(schema, dataRows) {
-  // create count of the data type for each field value
-  for (let i = 0; i < dataRows.length; i++) {
-    for (let [fieldName, fieldValue] of Object.entries(dataRows[i])) {
-      if (!isNaN(+fieldValue)) {
-        schema[fieldName]["number"] += 1;
-      } else if (!DateTime.fromISO(fieldValue).invalid) {
-        schema[fieldName]["date"] += 1;
-      } else {
         schema[fieldName]["text"] += 1;
       }
     }
@@ -63,6 +50,5 @@ function countLikelyDataTypes(schema, dataRows) {
   return schema;
 }
 
-module.exports.countLikelyDataTypes = countLikelyDataTypes;
 module.exports.countUniqueFieldValues = countUniqueFieldValues;
 module.exports.createSchemaFieldSkeleton = createSchemaFieldSkeleton;

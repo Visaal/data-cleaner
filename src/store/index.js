@@ -31,27 +31,6 @@ const dataTypes = ["null", "number", "text", "date"];
 Vue.use(Vuex);
 
 // Helper functions
-
-function _countLikelyDataTypes(schema) {
-  let potentialDateFields = _checkForPotentialDateFields();
-  // create count of the data type for each field value
-  // TODO: check for additional date formats rather than just ISO date
-  for (let i = 0; i < state.dataRows.length; i++) {
-    for (let [fieldName, fieldValue] of Object.entries(state.dataRows[i])) {
-      if (!isNaN(+fieldValue)) {
-        schema[fieldName]["number"] += 1;
-      } else if (
-        potentialDateFields.includes(fieldName) &&
-        !DateTime.fromISO(fieldValue).invalid
-      ) {
-        schema[fieldName]["date"] += 1;
-      } else {
-        schema[fieldName]["text"] += 1;
-      }
-    }
-  }
-}
-
 function _determineLikelyFieldDataType(schema) {
   // determine most likely data type for each field
   // TO DO: restructure schema to group data type counts into their own object
@@ -90,16 +69,16 @@ function _determineIfConsistentDataType(schema) {
   }
 }
 
-function _checkForPotentialDateFields() {
-  // TODO: maybe expand logic to check value of fields rather than just looking for word 'date'
-  let potentialDateFields = [];
-  for (let i = 0; i < state.dataFieldNames.length; i++) {
-    if (state.dataFieldNames[i].toLowerCase().includes("date")) {
-      potentialDateFields.push(state.dataFieldNames[i]);
-    }
-  }
-  return potentialDateFields;
-}
+// function _checkForPotentialDateFields() {
+//   // TODO: maybe expand logic to check value of fields rather than just looking for word 'date'
+//   let potentialDateFields = [];
+//   for (let i = 0; i < state.dataFieldNames.length; i++) {
+//     if (state.dataFieldNames[i].toLowerCase().includes("date")) {
+//       potentialDateFields.push(state.dataFieldNames[i]);
+//     }
+//   }
+//   return potentialDateFields;
+// }
 
 const state = {
   dataFieldNames: [],
@@ -204,7 +183,6 @@ const actions = {
   _createSchema({ commit }) {
     //TODO: Remove helper functions to separate file
     let schema = createSchemaFieldSkeleton(state.dataFieldNames, dataTypes);
-    _countLikelyDataTypes(schema);
     _determineLikelyFieldDataType(schema);
     countUniqueFieldValues(schema, state.dataRows);
     _determineIfConsistentDataType(schema);
