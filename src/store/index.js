@@ -29,7 +29,7 @@ import {
   determineIfConsistentDataType,
 } from "./schema-helper-functions";
 
-const dataTypes = ["null", "number", "text", "date"];
+const DATATYPES = ["null", "number", "text", "date"];
 
 Vue.use(Vuex);
 
@@ -155,10 +155,10 @@ const actions = {
     commit(SET_SELECTED_FIELD_NAMES, selectedFieldNames);
   },
   _createSchema({ commit }) {
-    let schema = createSchemaFieldSkeleton(state.dataFieldNames, dataTypes);
+    let schema = createSchemaFieldSkeleton(state.dataFieldNames, DATATYPES);
     countUniqueFieldValues(schema, state.dataRows);
-    determineLikelyFieldDataType(schema, dataTypes);
-    determineIfConsistentDataType(schema, dataTypes);
+    determineLikelyFieldDataType(schema, DATATYPES);
+    determineIfConsistentDataType(schema, DATATYPES);
     commit(CREATE_SCHEMA, schema);
   },
   _addNewField({ commit }, fieldDetailObject) {
