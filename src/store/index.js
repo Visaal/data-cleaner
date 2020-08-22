@@ -161,6 +161,24 @@ const actions = {
     determineIfConsistentDataType(schema, dataTypes);
     commit(CREATE_SCHEMA, schema);
   },
+  _addNewField({ commit }, fieldDetailObject) {
+    let fieldToAdd = fieldDetailObject["fieldToAdd"];
+    let fieldToPlaceNextTo = fieldDetailObject["fieldToPlaceNextTo"];
+    let clonedDataFieldNames = cloneDeep(state.dataFieldNames);
+    let clonedSelectedFields = cloneDeep(state.dataSelectedFieldNames);
+
+    if (!clonedDataFieldNames.includes(fieldToAdd)) {
+      let dataFieldIndex = clonedDataFieldNames.indexOf(fieldToPlaceNextTo);
+      let selectedDataFieldIndex = clonedSelectedFields.indexOf(
+        fieldToPlaceNextTo
+      );
+      clonedDataFieldNames.splice(dataFieldIndex + 1, 0, fieldToAdd);
+      clonedSelectedFields.splice(selectedDataFieldIndex + 1, 0, fieldToAdd);
+    }
+
+    commit(UPDATE_FIELD_NAMES, clonedDataFieldNames);
+    commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
+  },
   setNumberOfRowsToDisplayAction({ commit }, numberSelected) {
     let convertedSelectedNumber = Number(numberSelected);
     commit(SET_NUMBER_OF_DISPLAYED_ROWS, convertedSelectedNumber);
@@ -281,13 +299,13 @@ const actions = {
     let startCharacter = ruleParameters["startCharacter"];
     let endCharacter = ruleParameters["endCharacter"];
     let fieldToAdd = ruleParameters["newField"];
-
     let startIndex = 0;
     let endIndex = 0;
-
+    let fieldDetailObject = {
+      fieldToAdd: fieldToAdd,
+      fieldToPlaceNextTo: fieldToExtractFrom,
+    };
     let clonedDataRows = cloneDeep(state.dataRows);
-    let clonedDataFieldNames = cloneDeep(state.dataFieldNames);
-    let clonedSelectedFields = cloneDeep(state.dataSelectedFieldNames);
 
     if (selectedOption === "front") {
       startIndex = 0;
@@ -310,16 +328,6 @@ const actions = {
       }
     }
 
-    if (!clonedDataFieldNames.includes(fieldToAdd)) {
-      // place new field next to the field being sliced
-      let dataFieldIndex = clonedDataFieldNames.indexOf(fieldToExtractFrom);
-      let selectedDataFieldIndex = clonedSelectedFields.indexOf(
-        fieldToExtractFrom
-      );
-      clonedDataFieldNames.splice(dataFieldIndex + 1, 0, fieldToAdd);
-      clonedSelectedFields.splice(selectedDataFieldIndex + 1, 0, fieldToAdd);
-    }
-
     for (let i = 0; i < clonedDataRows.length; i++) {
       let slicedString = clonedDataRows[i][fieldToExtractFrom].slice(
         startIndex,
@@ -328,9 +336,8 @@ const actions = {
       clonedDataRows[i][fieldToAdd] = slicedString;
     }
 
-    commit(UPDATE_FIELD_NAMES, clonedDataFieldNames);
-    commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
     commit(UPDATE_DATA_ROWS, clonedDataRows);
+    dispatch("_addNewField", fieldDetailObject);
     dispatch("_createSchema");
   },
   filterDataAction({ commit }, filterParams) {
