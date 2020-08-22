@@ -7,7 +7,7 @@
     <div class="data-type">{{ dataType }}</div>
     <div class="data-match">
       <progress
-        :value="primaryTypeValue"
+        :value="numberOfRecords - nullValues"
         :max="numberOfRecords"
         @click="fieldBreakdownDisplayed = !fieldBreakdownDisplayed"
       ></progress>
@@ -17,6 +17,7 @@
         <FieldBreakdown
           :field="field"
           :recordCount="numberOfRecords"
+          :nullCount="nullValues"
           :fieldSchema="fieldSchema"
           @closeFieldBreakdown="closeFieldBreakdown"
         />
@@ -39,9 +40,9 @@ export default {
     field: String,
     dataType: String,
     numberOfRecords: Number,
-    primaryTypeValue: Number,
     userCreatedField: Boolean,
-    fieldSchema: Object
+    fieldSchema: Object,
+    nullValues: Number
   },
   data() {
     return {
