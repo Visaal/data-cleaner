@@ -266,16 +266,10 @@ const actions = {
     let stringsToFind = ruleParameters["stringsToFind"];
     let fieldToSearch = ruleParameters["fieldToSearch"];
     let clonedDataRows = cloneDeep(state.dataRows);
-    let clonedDataFieldNames = cloneDeep(state.dataFieldNames);
-    let clonedSelectedFields = cloneDeep(state.dataSelectedFieldNames);
-
-    if (!clonedDataFieldNames.includes(fieldToAdd)) {
-      // place new field next to the field being searched
-      let dataFieldIndex = clonedDataFieldNames.indexOf(fieldToSearch);
-      let selectedDataFieldIndex = clonedSelectedFields.indexOf(fieldToSearch);
-      clonedDataFieldNames.splice(dataFieldIndex + 1, 0, fieldToAdd);
-      clonedSelectedFields.splice(selectedDataFieldIndex + 1, 0, fieldToAdd);
-    }
+    let fieldDetailObject = {
+      fieldToAdd: fieldToAdd,
+      fieldToPlaceNextTo: fieldToSearch,
+    };
 
     // Loop through rows, if value in field to search matches a value in strings to find then output it in the new field or just add an empty string
     for (let i = 0; i < clonedDataRows.length; i++) {
@@ -286,9 +280,8 @@ const actions = {
       // TODO - decide how to handle cases where multiple matches are found
     }
 
-    commit(UPDATE_FIELD_NAMES, clonedDataFieldNames);
-    commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
     commit(UPDATE_DATA_ROWS, clonedDataRows);
+    dispatch("_addNewField", fieldDetailObject);
     dispatch("_createSchema");
   },
   extractCharactersAction({ commit, dispatch }, ruleParameters) {
