@@ -114,17 +114,8 @@ const mutations = {
 };
 
 const actions = {
-  capitaliseValuesAction({ commit }, field) {
-    // cloning dataRows as you should not work directly on the state values outside of a mutation
-    // stict mode in vuex will highlight this
-    let clonedDataRows = cloneDeep(state.dataRows);
-    for (let i = 0; i < clonedDataRows.length; i++) {
-      if (typeof clonedDataRows[i][field] === "string") {
-        clonedDataRows[i][field] = clonedDataRows[i][field].toUpperCase();
-      }
-    }
-    commit(UPDATE_DATA_ROWS, clonedDataRows);
-  },
+  //
+  // DATA SETTING ACTIONS
   setFieldNamesAction({ commit }, fieldNames) {
     commit(UPDATE_FIELD_NAMES, fieldNames);
   },
@@ -143,6 +134,8 @@ const actions = {
   setSelectedFieldsAction({ commit }, selectedFieldNames) {
     commit(SET_SELECTED_FIELD_NAMES, selectedFieldNames);
   },
+  //
+  // HELPER ACTIONS
   _createSchema({ commit }) {
     let schema = createSchemaFieldSkeleton(state.dataFieldNames, DATATYPES);
     countUniqueFieldValues(schema, state.dataRows);
@@ -168,28 +161,18 @@ const actions = {
     commit(UPDATE_FIELD_NAMES, clonedDataFieldNames);
     commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
   },
-  setNumberOfRowsToDisplayAction({ commit }, numberSelected) {
-    let convertedSelectedNumber = Number(numberSelected);
-    commit(SET_NUMBER_OF_DISPLAYED_ROWS, convertedSelectedNumber);
-  },
-  setStartIndexNextPageAction({ commit, getters }) {
-    if (
-      state.rowStartSliceIndex + state.numberOfRowsToDisplay <
-      getters.dataRowsToDisplay.length
-    ) {
-      let newStartIndex =
-        state.rowStartSliceIndex + state.numberOfRowsToDisplay;
-      commit(SET_NEW_ROW_START_SLICE_INDEX, newStartIndex);
+  //
+  // DATA CLEANING RULES
+  capitaliseValuesAction({ commit }, field) {
+    // cloning dataRows as you should not work directly on the state values outside of a mutation
+    // stict mode in vuex will highlight this
+    let clonedDataRows = cloneDeep(state.dataRows);
+    for (let i = 0; i < clonedDataRows.length; i++) {
+      if (typeof clonedDataRows[i][field] === "string") {
+        clonedDataRows[i][field] = clonedDataRows[i][field].toUpperCase();
+      }
     }
-  },
-  setStartIndexPreviousPageAction({ commit }) {
-    let newStartIndex = 0;
-    if (state.rowStartSliceIndex - state.numberOfRowsToDisplay >= 0) {
-      newStartIndex = state.rowStartSliceIndex - state.numberOfRowsToDisplay;
-    } else {
-      newStartIndex = 0;
-    }
-    commit(SET_NEW_ROW_START_SLICE_INDEX, newStartIndex);
+    commit(UPDATE_DATA_ROWS, clonedDataRows);
   },
   setDataTypeAction({ commit }, ruleParameters) {
     let clonedDataRows = cloneDeep(state.dataRows);
@@ -246,9 +229,6 @@ const actions = {
 
     commit(UPDATE_DATA_ROWS, clonedDataRows);
     commit(CREATE_SCHEMA, clonedSchema);
-  },
-  undoLastAction({ commit }) {
-    commit(UNDO_LAST_CHANGE);
   },
   extractStringsAction({ commit, dispatch }, ruleParameters) {
     let fieldToAdd = ruleParameters["newField"];
@@ -322,6 +302,36 @@ const actions = {
     dispatch("_addNewField", fieldDetailObject);
     dispatch("_createSchema");
   },
+  //
+  // ACTION BAR ACTIONS
+  setNumberOfRowsToDisplayAction({ commit }, numberSelected) {
+    let convertedSelectedNumber = Number(numberSelected);
+    commit(SET_NUMBER_OF_DISPLAYED_ROWS, convertedSelectedNumber);
+  },
+  setStartIndexNextPageAction({ commit, getters }) {
+    if (
+      state.rowStartSliceIndex + state.numberOfRowsToDisplay <
+      getters.dataRowsToDisplay.length
+    ) {
+      let newStartIndex =
+        state.rowStartSliceIndex + state.numberOfRowsToDisplay;
+      commit(SET_NEW_ROW_START_SLICE_INDEX, newStartIndex);
+    }
+  },
+  setStartIndexPreviousPageAction({ commit }) {
+    let newStartIndex = 0;
+    if (state.rowStartSliceIndex - state.numberOfRowsToDisplay >= 0) {
+      newStartIndex = state.rowStartSliceIndex - state.numberOfRowsToDisplay;
+    } else {
+      newStartIndex = 0;
+    }
+    commit(SET_NEW_ROW_START_SLICE_INDEX, newStartIndex);
+  },
+  undoLastAction({ commit }) {
+    commit(UNDO_LAST_CHANGE);
+  },
+  //
+  // FILTERING ACTIONS
   filterDataAction({ commit }, filterParams) {
     let filterValuesClone = cloneDeep(state.activeFilterValues);
     let filterValues = setFilterValues(filterParams, filterValuesClone);
@@ -339,7 +349,6 @@ const actions = {
     commit(SET_ACTIVE_FILTER_VALUES, filterValues);
   },
 };
-
 const getters = {
   rowEndSliceIndex: (state, getters) => {
     if (
