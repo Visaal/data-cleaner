@@ -243,15 +243,13 @@ const actions = {
   undoLastAction({ commit }) {
     commit(UNDO_LAST_CHANGE);
   },
-  extractStringsAction({ commit }, ruleParameters) {
+  extractStringsAction({ commit, dispatch }, ruleParameters) {
     let fieldToAdd = ruleParameters["newField"];
     let stringsToFind = ruleParameters["stringsToFind"];
     let fieldToSearch = ruleParameters["fieldToSearch"];
     let clonedDataRows = cloneDeep(state.dataRows);
     let clonedDataFieldNames = cloneDeep(state.dataFieldNames);
     let clonedSelectedFields = cloneDeep(state.dataSelectedFieldNames);
-    let clonedSchema = cloneDeep(state.dataSchema);
-    let fieldValueArray = [];
 
     if (!clonedDataFieldNames.includes(fieldToAdd)) {
       // place new field next to the field being searched
@@ -268,28 +266,12 @@ const actions = {
       );
       clonedDataRows[i][fieldToAdd] = matches.toString();
       // TODO - decide how to handle cases where multiple matches are found
-      fieldValueArray.push(matches);
     }
 
-    // Update schema values
-    clonedSchema[fieldToAdd] = {
-      number: 0,
-      text: clonedDataRows.length,
-      date: 0,
-      userCreatedField: true,
-      inconsistentDataTypes: false,
-      likelyDataType: "text",
-      distinctValues: {
-        number: {},
-        text: _distinctValuesInArray(fieldValueArray),
-        date: {},
-      },
-    };
-
-    commit(CREATE_SCHEMA, clonedSchema);
     commit(UPDATE_FIELD_NAMES, clonedDataFieldNames);
     commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
     commit(UPDATE_DATA_ROWS, clonedDataRows);
+    dispatch("_createSchema");
   },
   extractCharactersAction({ commit, dispatch }, ruleParameters) {
     let selectedOption = ruleParameters["selectedOption"];
