@@ -291,7 +291,7 @@ const actions = {
     commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
     commit(UPDATE_DATA_ROWS, clonedDataRows);
   },
-  extractCharactersAction({ commit }, ruleParameters) {
+  extractCharactersAction({ commit, dispatch }, ruleParameters) {
     let selectedOption = ruleParameters["selectedOption"];
     let fieldToExtractFrom = ruleParameters["fieldToExtractFrom"];
     let charactersFromFront = ruleParameters["charactersFromFront"];
@@ -306,8 +306,6 @@ const actions = {
     let clonedDataRows = cloneDeep(state.dataRows);
     let clonedDataFieldNames = cloneDeep(state.dataFieldNames);
     let clonedSelectedFields = cloneDeep(state.dataSelectedFieldNames);
-    let clonedSchema = cloneDeep(state.dataSchema);
-    let fieldValueArray = [];
 
     if (selectedOption === "front") {
       startIndex = 0;
@@ -345,30 +343,13 @@ const actions = {
         startIndex,
         endIndex
       );
-
       clonedDataRows[i][fieldToAdd] = slicedString;
-      fieldValueArray.push(slicedString);
     }
 
-    // Update schema values
-    clonedSchema[fieldToAdd] = {
-      number: 0,
-      text: clonedDataRows.length,
-      date: 0,
-      userCreatedField: true,
-      inconsistentDataTypes: false,
-      likelyDataType: "text",
-      distinctValues: {
-        number: {},
-        text: _distinctValuesInArray(fieldValueArray),
-        date: {},
-      },
-    };
-
-    commit(CREATE_SCHEMA, clonedSchema);
     commit(UPDATE_FIELD_NAMES, clonedDataFieldNames);
     commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
     commit(UPDATE_DATA_ROWS, clonedDataRows);
+    dispatch("_createSchema");
   },
   filterDataAction({ commit }, filterParams) {
     let filterValuesClone = cloneDeep(state.activeFilterValues);
