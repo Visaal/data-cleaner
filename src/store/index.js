@@ -43,17 +43,6 @@ function _distinctValuesInArray(inputArray) {
   return valuesCountObject;
 }
 
-// function _checkForPotentialDateFields() {
-//   // TODO: maybe expand logic to check value of fields rather than just looking for word 'date'
-//   let potentialDateFields = [];
-//   for (let i = 0; i < state.dataFieldNames.length; i++) {
-//     if (state.dataFieldNames[i].toLowerCase().includes("date")) {
-//       potentialDateFields.push(state.dataFieldNames[i]);
-//     }
-//   }
-//   return potentialDateFields;
-// }
-
 const state = {
   dataFieldNames: [],
   dataRows: [],
