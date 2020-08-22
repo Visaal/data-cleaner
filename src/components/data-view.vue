@@ -3,9 +3,6 @@
     <table>
       <thead>
         <td>Row #</td>
-        <!-- <td v-for="field in dataSelectedFieldNames" :key="field.id">
-        {{ field }}-->
-        <!-- TODO: FIX amount - need to know highest for likely data type -->
         <TableHeaderField
           v-for="field in dataSelectedFieldNames"
           :key="field.id"
@@ -13,10 +10,9 @@
           :dataType="dataSchema[field]['likelyDataType']"
           :fieldSchema="dataSchema[field]"
           :numberOfRecords="dataRows.length"
-          :primaryTypeValue="getLikelyDataTypeCount(dataSchema[field])"
+          :nullValues="dataSchema[field]['null']"
           :userCreatedField="dataSchema[field]['userCreatedField']"
         />
-        <!-- </td> -->
       </thead>
       <tbody>
         <tr
@@ -45,12 +41,6 @@ export default {
   },
   data() {
     return {};
-  },
-  methods: {
-    getLikelyDataTypeCount(fieldSchema) {
-      let likelyDataType = fieldSchema["likelyDataType"];
-      return fieldSchema[likelyDataType];
-    }
   },
   computed: {
     ...mapState([

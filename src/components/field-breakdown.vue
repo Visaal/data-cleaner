@@ -9,7 +9,7 @@
 
     <div class="data-type-breakdown">
       <h3>Data Type Breakdown</h3>
-      <progress class="amount-progress" :value="orderedValues[0][1].length" :max="recordCount"></progress>
+      <progress class="amount-progress" :value="recordCount - nullCount" :max="recordCount"></progress>
       <br />
       <br />
       <div class="data-type-row" v-for="(value, key) in fieldSchema['distinctValues']" :key="key">
@@ -41,10 +41,12 @@ export default {
     field: String,
     fieldBreakdownDisplayed: Boolean,
     recordCount: Number,
-    fieldSchema: Object
+    fieldSchema: Object,
+    nullCount: Number
   },
   methods: {
     closeFieldDetail() {
+      console.log(this.nullValues);
       this.$emit("closeFieldBreakdown");
     },
     calculateWidth(value) {
