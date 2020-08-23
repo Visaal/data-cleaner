@@ -29,6 +29,47 @@
         <div class="undo">↺</div>
         undo
       </button>
+
+      <div class="action-bar-divider"></div>
+
+      <button
+        ref="sortButton"
+        class="action-bar-button"
+        @click="
+          showSortField = true;
+          calculatePosition();
+        "
+      >
+        <strong>SORT</strong>
+      </button>
+
+      <fieldset
+        v-if="showSortField"
+        class="sort-fields"
+        :style="positionStyle"
+        ref="sortFieldBox"
+      >
+        <div class="filter-box-search">
+          <h3>Set Field Order</h3>
+        </div>
+
+        <div class="filter-value-list expanded">
+          <draggable v-model="fieldList" @start="drag = true">
+            <div v-for="field in fieldList" :key="field.id" class="field-item">
+              {{ field }}
+            </div>
+          </draggable>
+        </div>
+
+        <div class="filter-list-actions">
+          <button @click="updateFieldOrder">
+            Apply
+          </button>
+          <button class="secondary" @click="cancelFieldOrderChange">
+            Cancel
+          </button>
+        </div>
+      </fieldset>
     </div>
 
     <div class="data-row-info">
@@ -45,16 +86,27 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
+import draggable from "vuedraggable";
 
 export default {
   name: "ContentActionMenu",
+  components: {
+    draggable,
+  },
   data() {
     return {
       rowOptions: [10, 50, 100, 250, 500],
+      showSortField: false,
+      fieldList: [],
+      positionStyle: {
+        top: "0px",
+        left: "0px",
+      },
     };
   },
   created() {
     this.rowsToDisplay = this.numberOfRowsToDisplay;
+    this.fieldList = this.dataSelectedFieldNames;
   },
   methods: {
     ...mapActions([
@@ -78,6 +130,27 @@ export default {
     },
     undo() {
       this.undoLastAction();
+    },
+    calculatePosition() {
+      this.$nextTick(() => {
+        if (this.showSortField) {
+          let leftAdjustment = this.$refs.sortFieldBox.clientWidth;
+          let rightPosition = this.$refs.sortButton.getBoundingClientRect()
+            .right;
+          let topPosition = this.$refs.sortButton.getBoundingClientRect()
+            .bottom;
+          this.positionStyle.left = `${rightPosition - leftAdjustment}px`;
+          this.positionStyle.top = `${topPosition}px`;
+        }
+      });
+    },
+    updateFieldOrder() {
+      this.setSelectedFieldsAction(this.fieldList);
+      this.showSortField = !this.showSortField;
+    },
+    cancelFieldOrderChange() {
+      this.fieldList = this.dataSelectedFieldNames;
+      this.showSortField = !this.showSortField;
     },
   },
   computed: {
@@ -151,7 +224,6 @@ export default {
   -ms-user-select: none;
   user-select: none;
   position: relative;
-  z-index: 1;
 }
 
 .action-bar-button:hover {
@@ -201,5 +273,39 @@ export default {
 .data-stat {
   font-size: 0.8rem;
   font-weight: bold;
+}
+
+.sort-fields {
+  max-width: 30%;
+  max-height: 70%;
+  position: absolute;
+  background: var(--background);
+  -webkit-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
+  -moz-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
+  box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
+  overflow: auto;
+  width: auto;
+}
+
+.field-item {
+  cursor: move;
+  font-size: 0.8rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border: 1px;
+  border-style: solid;
+  border-color: var(--field-grey);
+  margin-bottom: 0.2rem;
+  border-left: 10px;
+  border-left-style: solid;
+  border-left-color: var(--field-grey);
+}
+
+.filter-box-search > h3 {
+  color: var(--stroke);
+  margin-top: 0.5rem;
+  margin-bottom: 0rem;
 }
 </style>
