@@ -17,7 +17,12 @@
         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
       </svg>
     </div>
-    <fieldset v-if="filterOption" class="filter-options" :style="positionStyle" ref="filterBox">
+    <fieldset
+      v-if="filterOption"
+      class="filter-options"
+      :style="positionStyle"
+      ref="filterBox"
+    >
       <div class="filter-box-search">
         <input type="text" placeholder="search" v-model="search" />
       </div>
@@ -26,7 +31,12 @@
         <div v-for="value in filteredList" :key="value">
           <label class="custom-checkbox">
             {{ value }}
-            <input type="checkbox" :name="value" :value="value" v-model="selectedValues" />
+            <input
+              type="checkbox"
+              :name="value"
+              :value="value"
+              v-model="selectedValues"
+            />
             <span class="checkmark"></span>
           </label>
         </div>
@@ -45,7 +55,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   name: "FieldFilter",
   props: {
-    field: String
+    field: String,
   },
   data() {
     return {
@@ -55,8 +65,8 @@ export default {
       search: "",
       positionStyle: {
         top: "0px",
-        left: "0px"
-      }
+        left: "0px",
+      },
     };
   },
   methods: {
@@ -94,7 +104,7 @@ export default {
       this.filterOption = false;
       this.filterDataAction({
         selectedField: field,
-        fieldValuesSelected: this.selectedValues
+        fieldValuesSelected: this.selectedValues,
       });
     },
     clearFilter(field) {
@@ -102,18 +112,18 @@ export default {
       this.selectedValues = [];
       this.filterDataAction({
         selectedField: field,
-        fieldValuesSelected: this.selectedValues
+        fieldValuesSelected: this.selectedValues,
       });
-    }
+    },
   },
   computed: {
     ...mapState(["dataSchema"]),
     filteredList() {
-      return this.distinctValuesForField.filter(value => {
+      return this.distinctValuesForField.filter((value) => {
         return value.toLowerCase().includes(this.search.toLowerCase());
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
