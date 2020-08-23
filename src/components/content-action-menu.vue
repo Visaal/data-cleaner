@@ -70,6 +70,55 @@
           </button>
         </div>
       </fieldset>
+
+      <div class="action-bar-divider"></div>
+
+      <!-- ACTIVE FILTERS -->
+
+      <!-- TODO: FIELD POSITION, REMOVE FILTERS, UPDATE FILTERED ROWS -->
+
+      <button
+        ref="activeFilters"
+        class="action-bar-button"
+        @click="showActiveFilters = !showActiveFilters"
+      >
+        <strong>FILTERS</strong>
+      </button>
+
+      <fieldset
+        v-if="showActiveFilters"
+        class="active-filters"
+        ref="activeFileterBox"
+      >
+        <div class="filter-box-search">
+          <h3>Active Filters</h3>
+        </div>
+
+        <div class="filter-value-list expanded">
+          <div
+            v-for="(filterValues, filterField) in activeFilterValues"
+            :key="filterField.index"
+          >
+            <div
+              v-for="filterValue in filterValues"
+              :key="filterValue.index"
+              class="active-filter"
+            >
+              <div class="filter-detail">
+                <div class="filter-field-name">{{ filterField }}:</div>
+                <div class="filter-field-value">{{ filterValue }}</div>
+              </div>
+
+              <div class="remove-filter">&#x2716;</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-list-actions">
+          <button>Apply</button>
+          <button class="secondary">Cancel</button>
+        </div>
+      </fieldset>
     </div>
 
     <div class="data-row-info">
@@ -102,6 +151,7 @@ export default {
         top: "0px",
         left: "0px",
       },
+      showActiveFilters: false,
     };
   },
   created() {
@@ -161,6 +211,7 @@ export default {
       "dataSelectedFieldNames",
       "numberOfRowsToDisplay",
       "rowStartSliceIndex",
+      "activeFilterValues",
     ]),
     ...mapGetters(["rowEndSliceIndex", "dataRowsToDisplay"]),
   },
@@ -307,5 +358,54 @@ export default {
   color: var(--stroke);
   margin-top: 0.5rem;
   margin-bottom: 0rem;
+}
+
+.active-filters {
+  max-width: 40%;
+  max-height: 70%;
+  position: absolute;
+  background: var(--background);
+  -webkit-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
+  -moz-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
+  box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
+  overflow: auto;
+  width: auto;
+}
+
+.active-filter {
+  font-size: 0.8rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border: 1px;
+  border-style: solid;
+  border-color: var(--field-grey);
+  margin-bottom: 0.2rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  height: 100%;
+}
+
+.filter-detail {
+  display: inline-block;
+  width: 95%;
+}
+
+.filter-field-name {
+  font-weight: bold;
+}
+
+.filter-field-value {
+}
+
+.remove-filter {
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1.5rem;
+  height: 100%;
+  vertical-align: top;
+  color: var(--field-label);
 }
 </style>
