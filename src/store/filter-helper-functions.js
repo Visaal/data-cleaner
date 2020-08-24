@@ -64,7 +64,6 @@ function getDistinctValuesForField(dataSchema, field) {
       dataSchema[field]["distinctValues"][key]
     );
   }
-  console.log(distinctValueObject);
   return distinctValueObject;
 }
 
