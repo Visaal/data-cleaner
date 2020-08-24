@@ -75,12 +75,15 @@
 
       <!-- ACTIVE FILTERS -->
 
-      <!-- TODO: FIELD POSITION, REMOVE FILTERS, UPDATE FILTERED ROWS -->
+      <!-- TODO: REMOVE FILTERS, UPDATE FILTERED ROWS, SHOW NEW FIELD VALUES IN FILTERED ROWS -->
 
       <button
-        ref="activeFilters"
+        ref="activeFiltersButton"
         class="action-bar-button"
-        @click="showActiveFilters = !showActiveFilters"
+        @click="
+          showActiveFilters = !showActiveFilters;
+          calculateFilterBoxPosition();
+        "
       >
         <strong>FILTERS</strong>
       </button>
@@ -89,6 +92,7 @@
         v-if="showActiveFilters"
         class="active-filters"
         ref="activeFileterBox"
+        :style="positionStyle"
       >
         <div class="filter-box-search">
           <h3>Active Filters</h3>
@@ -188,6 +192,19 @@ export default {
           let rightPosition = this.$refs.sortButton.getBoundingClientRect()
             .right;
           let topPosition = this.$refs.sortButton.getBoundingClientRect()
+            .bottom;
+          this.positionStyle.left = `${rightPosition - leftAdjustment}px`;
+          this.positionStyle.top = `${topPosition}px`;
+        }
+      });
+    },
+    calculateFilterBoxPosition() {
+      this.$nextTick(() => {
+        if (this.showActiveFilters) {
+          let leftAdjustment = this.$refs.activeFileterBox.clientWidth;
+          let rightPosition = this.$refs.activeFiltersButton.getBoundingClientRect()
+            .right;
+          let topPosition = this.$refs.activeFiltersButton.getBoundingClientRect()
             .bottom;
           this.positionStyle.left = `${rightPosition - leftAdjustment}px`;
           this.positionStyle.top = `${topPosition}px`;
