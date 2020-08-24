@@ -1,6 +1,16 @@
 <template>
   <div class="container">
-    <div class="header">{{ dataFileName }}</div>
+    <div class="header">
+      <div class="logo-container">
+        <img
+          src="../assets/dc_logo.svg"
+          alt=""
+          class="logo"
+          @click="navigateHome"
+        />
+      </div>
+      <div class="file-name">{{ dataFileName }}</div>
+    </div>
 
     <div class="side-panel">
       <RuleSelector />
@@ -24,17 +34,23 @@ import RuleSelector from "@/components/rule-selector.vue";
 import DataView from "@/components/data-view.vue";
 import ContentActionMenu from "@/components/content-action-menu.vue";
 import { mapState } from "vuex";
+import router from "../router";
 
 export default {
   name: "DataCleaner",
   components: {
     RuleSelector,
     DataView,
-    ContentActionMenu
+    ContentActionMenu,
+  },
+  methods: {
+    navigateHome() {
+      router.push({ path: "/" });
+    },
   },
   computed: {
-    ...mapState(["dataFileName"])
-  }
+    ...mapState(["dataFileName"]),
+  },
 };
 </script>
 
@@ -53,14 +69,42 @@ export default {
 }
 
 .header {
-  color: var(--headline);
+  position: relative;
+  color: var(--paragraph);
   grid-column: 1 / -1;
-  background-color: var(--teritary);
+  background-color: var(--secondary);
   line-height: var(--header-height);
   vertical-align: middle;
+  font-weight: bolder;
+  border-bottom: 2px var(--teritary) solid;
+}
+
+.logo-container {
   padding-left: 10px;
   padding-right: 10px;
-  font-weight: bolder;
+  display: inline-block;
+  position: absolute;
+  vertical-align: middle;
+  height: var(--header-height);
+  overflow: hidden;
+  border-right-color: var(--teritary);
+  border-right-style: solid;
+  border-width: 2px;
+  box-sizing: border-box;
+}
+
+.logo {
+  cursor: pointer;
+  padding-top: 3px;
+  height: 34px;
+  width: 34px;
+}
+
+.file-name {
+  position: absolute;
+  left: 70px;
+  vertical-align: middle;
+  display: inline-block;
 }
 
 .side-panel {
