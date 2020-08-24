@@ -2,7 +2,7 @@
   <div class="filter">
     <div @click="filterData(field)">
       <svg
-        :class="{ 'active-filter': selectedValues.length }"
+        :class="{ 'active-filter': hasActiveFilter }"
         class="filter-icon"
         fill="none"
         height="24"
@@ -72,6 +72,12 @@ export default {
   methods: {
     ...mapActions(["filterDataAction"]),
     filterData(field) {
+      if (this.activeFilterValues[field]) {
+        this.selectedValues = this.activeFilterValues[field];
+      } else {
+        this.selectedValues = [];
+      }
+
       let distinctValues = [];
       for (const [key] of Object.entries(
         this.dataSchema[field]["distinctValues"]
@@ -117,11 +123,17 @@ export default {
     },
   },
   computed: {
-    ...mapState(["dataSchema"]),
+    ...mapState(["dataSchema", "activeFilterValues"]),
     filteredList() {
       return this.distinctValuesForField.filter((value) => {
         return value.toLowerCase().includes(this.search.toLowerCase());
       });
+    },
+    hasActiveFilter() {
+      if (this.activeFilterValues[this.field]) {
+        return true;
+      }
+      return false;
     },
   },
 };

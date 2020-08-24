@@ -348,6 +348,20 @@ const actions = {
     commit(SET_FILTERED_ROW_INDEXES, filteredRowIndexes);
     commit(SET_ACTIVE_FILTER_VALUES, filterValues);
   },
+  removeActiveFilterAction({ commit }, filterValues) {
+    let filteredRowIndexes = getFilterRowIndexes(
+      state.dataSchema,
+      filterValues
+    );
+
+    let filteredDataRows = filteredRowIndexes.map(
+      (rowIndex) => state.dataRows[rowIndex]
+    );
+
+    commit(SET_FILTERED_ROWS, filteredDataRows);
+    commit(SET_FILTERED_ROW_INDEXES, filteredRowIndexes);
+    commit(SET_ACTIVE_FILTER_VALUES, filterValues);
+  },
 };
 const getters = {
   rowEndSliceIndex: (state, getters) => {

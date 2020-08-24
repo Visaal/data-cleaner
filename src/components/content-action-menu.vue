@@ -74,14 +74,13 @@
       <div class="action-bar-divider"></div>
 
       <!-- ACTIVE FILTERS -->
-
-      <!-- TODO: REMOVE FILTERS, UPDATE FILTERED ROWS, SHOW NEW FIELD VALUES IN FILTERED ROWS -->
+      <!-- TODO: SHOW NEW FIELD VALUES IN FILTERED ROWS -->
 
       <button
         ref="activeFiltersButton"
         class="action-bar-button"
         @click="
-          showActiveFilters = !showActiveFilters;
+          showActiveFilters = true;
           calculateFilterBoxPosition();
         "
       >
@@ -100,7 +99,7 @@
 
         <div class="filter-value-list expanded">
           <div
-            v-for="(filterValues, filterField) in activeFilterValues"
+            v-for="(filterValues, filterField) in selectedFilters"
             :key="filterField.index"
           >
             <div
@@ -113,14 +112,21 @@
                 <div class="filter-field-value">{{ filterValue }}</div>
               </div>
 
-              <div class="remove-filter">&#x2716;</div>
+              <div
+                class="remove-filter"
+                @click="removeFilterItems(filterField, filterValue)"
+              >
+                &#x2716;
+              </div>
             </div>
           </div>
         </div>
 
         <div class="filter-list-actions">
-          <button>Apply</button>
-          <button class="secondary">Cancel</button>
+          <button @click="removeActiveFilters()">Apply</button>
+          <button class="secondary" @click="cancelRemoveFilter()">
+            Cancel
+          </button>
         </div>
       </fieldset>
     </div>
@@ -140,6 +146,7 @@
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
+import { cloneDeep } from "lodash";
 
 export default {
   name: "ContentActionMenu",
@@ -156,6 +163,7 @@ export default {
         left: "0px",
       },
       showActiveFilters: false,
+      selectedFilters: {},
     };
   },
   created() {
@@ -172,6 +180,7 @@ export default {
       "setStartIndexNextPageAction",
       "setStartIndexPreviousPageAction",
       "undoLastAction",
+      "removeActiveFilterAction",
     ]),
     setRowPerPage(rowsToDisplay) {
       this.setNumberOfRowsToDisplayAction(rowsToDisplay);
@@ -199,6 +208,7 @@ export default {
       });
     },
     calculateFilterBoxPosition() {
+      this.selectedFilters = cloneDeep(this.activeFilterValues);
       this.$nextTick(() => {
         if (this.showActiveFilters) {
           let leftAdjustment = this.$refs.activeFileterBox.clientWidth;
@@ -218,6 +228,25 @@ export default {
     cancelFieldOrderChange() {
       this.fieldList = this.dataSelectedFieldNames;
       this.showSortField = !this.showSortField;
+    },
+    removeFilterItems(filterField, filterValue) {
+      let fieldValues = this.selectedFilters[filterField];
+      let index = fieldValues.indexOf(filterValue);
+
+      if (index > -1) {
+        fieldValues.splice(index, 1);
+      }
+      if (!fieldValues.length) {
+        delete this.selectedFilters[filterField];
+      }
+    },
+    removeActiveFilters() {
+      this.removeActiveFilterAction(this.selectedFilters);
+      this.showActiveFilters = !this.showActiveFilters;
+    },
+    cancelRemoveFilter() {
+      this.selectedFilters = cloneDeep(this.activeFilterValues);
+      this.showActiveFilters = !this.showActiveFilters;
     },
   },
   computed: {
@@ -378,6 +407,7 @@ export default {
 }
 
 .active-filters {
+  min-width: 40%;
   max-width: 40%;
   max-height: 70%;
   position: absolute;
@@ -387,6 +417,7 @@ export default {
   box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
   overflow: auto;
   width: auto;
+  box-sizing: border-box;
 }
 
 .active-filter {
@@ -406,6 +437,7 @@ export default {
 }
 
 .filter-detail {
+  box-sizing: border-box;
   display: inline-block;
   width: 95%;
 }
