@@ -126,9 +126,15 @@ export default {
 }
 
 .footer {
-  color: var(--headline);
+  font-size: 0.8rem;
+  color: var(--field-label);
   grid-column: 1 / -1;
-  background-color: var(--teritary);
+  background-color: var(--secondary);
+  border-top: 2px var(--teritary) solid;
+  line-height: var(--header-height);
+  vertical-align: middle;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 input[type="text"],
