@@ -1,5 +1,9 @@
 <template>
-  <td class="custom-field-header" :id="field" :class="{ 'user-created-field': userCreatedField }">
+  <th
+    class="custom-field-header"
+    :id="field"
+    :class="{ 'user-created-field': userCreatedField }"
+  >
     <div class="field-name">
       {{ field }}
       <FieldFilter :field="field" />
@@ -23,7 +27,7 @@
         />
       </div>
     </transition>
-  </td>
+  </th>
 </template>
 
 <script>
@@ -34,7 +38,7 @@ export default {
   name: "TableHeaderField",
   components: {
     FieldFilter,
-    FieldBreakdown
+    FieldBreakdown,
   },
   props: {
     field: String,
@@ -42,11 +46,11 @@ export default {
     numberOfRecords: Number,
     userCreatedField: Boolean,
     fieldSchema: Object,
-    nullValues: Number
+    nullValues: Number,
   },
   data() {
     return {
-      fieldBreakdownDisplayed: false
+      fieldBreakdownDisplayed: false,
     };
   },
   methods: {
@@ -56,8 +60,8 @@ export default {
     },
     closeFieldBreakdown() {
       this.fieldBreakdownDisplayed = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -73,7 +77,8 @@ export default {
 }
 
 .breakdown-position {
-  position: absolute;
+  position: fixed;
+  /* top: 0px; */
   top: var(--header-height);
   right: 0;
 }

@@ -373,6 +373,7 @@ export default {
 }
 
 .sort-fields {
+  z-index: 1;
   max-width: 30%;
   max-height: 70%;
   position: absolute;
@@ -407,6 +408,7 @@ export default {
 }
 
 .active-filters {
+  z-index: 1;
   min-width: 40%;
   max-width: 40%;
   max-height: 70%;

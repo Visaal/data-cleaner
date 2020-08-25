@@ -9,25 +9,41 @@
 
     <div class="data-type-breakdown">
       <h3>Data Type Breakdown</h3>
-      <progress class="amount-progress" :value="recordCount - nullCount" :max="recordCount"></progress>
+      <progress
+        class="amount-progress"
+        :value="recordCount - nullCount"
+        :max="recordCount"
+      ></progress>
       <br />
       <br />
-      <div class="data-type-row" v-for="(value, key) in fieldSchema['distinctValues']" :key="key">
+      <div
+        class="data-type-row"
+        v-for="(value, key) in fieldSchema['distinctValues']"
+        :key="key"
+      >
         <div class="data-type-name">{{ key }}:</div>
         <div class="data-type-stat">{{ fieldSchema[key] }}</div>
-        <div class="data-type-stat">{{ fieldSchema[key]/recordCount | roundPercentage2DP }}</div>
+        <div class="data-type-stat">
+          {{ (fieldSchema[key] / recordCount) | roundPercentage2DP }}
+        </div>
       </div>
     </div>
 
     <div class="distinct-value-breakdown">
       <h3>Distinct Values</h3>
       <div class="distinct-values">
-        <div class="distinct-value-rows" v-for="(value,index) in orderedValues" :key="index">
-          <div class="distinct-value">{{value[0]}}</div>
+        <div
+          class="distinct-value-rows"
+          v-for="(value, index) in orderedValues"
+          :key="index"
+        >
+          <div class="distinct-value">{{ value[0] }}</div>
           <div
             class="distinct-value-stat"
             :style="calculateWidth(value[1].length)"
-          >{{value[1].length}}</div>
+          >
+            {{ value[1].length }}
+          </div>
         </div>
       </div>
     </div>
@@ -42,7 +58,7 @@ export default {
     fieldBreakdownDisplayed: Boolean,
     recordCount: Number,
     fieldSchema: Object,
-    nullCount: Number
+    nullCount: Number,
   },
   methods: {
     closeFieldDetail() {
@@ -54,12 +70,12 @@ export default {
       let cssPercentageWidthValue = 100 - 68 - 4;
       let ratio = (value / maxValueCount) * cssPercentageWidthValue;
       return `width: ${ratio}%`;
-    }
+    },
   },
   filters: {
     roundPercentage2DP: function(value) {
       return (value * 100).toFixed(0) + "%";
-    }
+    },
   },
   computed: {
     orderedValues: function() {
@@ -73,8 +89,8 @@ export default {
       let entries = Object.entries(allDistinctValues);
       let sorted = entries.sort((a, b) => b[1].length - a[1].length);
       return sorted;
-    }
-  }
+    },
+  },
 };
 </script>
 
