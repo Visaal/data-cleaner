@@ -13,32 +13,19 @@
       <progress
         :value="numberOfRecords - nullValues"
         :max="numberOfRecords"
-        @click="fieldBreakdownDisplayed = !fieldBreakdownDisplayed"
+        @click="showFieldBreakdown(field)"
       ></progress>
     </div>
-    <transition name="slide">
-      <div v-if="fieldBreakdownDisplayed" class="breakdown-position">
-        <FieldBreakdown
-          :field="field"
-          :recordCount="numberOfRecords"
-          :nullCount="nullValues"
-          :fieldSchema="fieldSchema"
-          @closeFieldBreakdown="closeFieldBreakdown"
-        />
-      </div>
-    </transition>
   </th>
 </template>
 
 <script>
 import FieldFilter from "@/components/field-filter.vue";
-import FieldBreakdown from "@/components/field-breakdown.vue";
 
 export default {
   name: "TableHeaderField",
   components: {
     FieldFilter,
-    FieldBreakdown,
   },
   props: {
     field: String,
@@ -55,34 +42,13 @@ export default {
   },
   methods: {
     showFieldBreakdown(field) {
-      this.fieldBreakdownDisplayed = true;
-      console.log(`will show breakdown for ${field}`);
-    },
-    closeFieldBreakdown() {
-      this.fieldBreakdownDisplayed = false;
+      this.$emit("openFieldBreakdown", field);
     },
   },
 };
 </script>
 
 <style>
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.5s ease-in-out;
-}
-
-.slide-enter,
-.slide-leave-to {
-  transform: translateX(33vw);
-}
-
-.breakdown-position {
-  position: fixed;
-  /* top: 0px; */
-  top: var(--header-height);
-  right: 0;
-}
-
 .custom-field-header {
   margin: 0px;
   padding: 0px;

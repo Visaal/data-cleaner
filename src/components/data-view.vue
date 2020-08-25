@@ -12,6 +12,7 @@
           :numberOfRecords="dataRows.length"
           :nullValues="dataSchema[field]['null']"
           :userCreatedField="dataSchema[field]['userCreatedField']"
+          @openFieldBreakdown="openFieldBreakdown"
         />
       </thead>
       <tbody>
@@ -28,6 +29,17 @@
           </td>
         </tr>
       </tbody>
+      <transition name="slide">
+        <div v-if="fieldBreakdownDisplayed" class="breakdown-position">
+          <FieldBreakdown
+            :field="field"
+            :recordCount="dataRows.length"
+            :nullCount="dataSchema[field]['null']"
+            :fieldSchema="dataSchema[field]"
+            @closeFieldBreakdown="closeFieldBreakdown"
+          />
+        </div>
+      </transition>
     </table>
   </div>
 </template>
@@ -35,14 +47,32 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import TableHeaderField from "@/components/table-header-field.vue";
+import FieldBreakdown from "@/components/field-breakdown.vue";
 
 export default {
   name: "DataView",
   components: {
     TableHeaderField,
+    FieldBreakdown,
   },
   data() {
-    return {};
+    return {
+      field: "",
+      fieldBreakdownDisplayed: false,
+    };
+  },
+  methods: {
+    openFieldBreakdown(field) {
+      if (field === this.field && this.fieldBreakdownDisplayed) {
+        this.closeFieldBreakdown();
+      } else {
+        this.field = field;
+        this.fieldBreakdownDisplayed = true;
+      }
+    },
+    closeFieldBreakdown() {
+      this.fieldBreakdownDisplayed = false;
+    },
   },
   computed: {
     ...mapState([
@@ -60,6 +90,23 @@ export default {
 </script>
 
 <style>
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide-enter,
+.slide-leave-to {
+  transform: translateX(33vw);
+}
+
+.breakdown-position {
+  position: fixed;
+  /* top: 0px; */
+  top: var(--header-height);
+  right: 0;
+}
+
 table {
   /* border-collapse: collapse; */
   border-collapse: separate;

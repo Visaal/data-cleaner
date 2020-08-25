@@ -107,7 +107,7 @@ export default {
 
 .field-detail-breakdown {
   color: var(--stroke);
-  border-bottom: 1px solid;
+  border-bottom: 2px solid;
   border-color: var(--button);
   background-color: var(--teritary);
   width: 33vw;
@@ -122,6 +122,7 @@ export default {
   padding: 10px;
   background-color: var(--button);
   box-sizing: border-box;
+  white-space: nowrap;
   overflow-x: scroll;
 }
 
@@ -171,6 +172,7 @@ export default {
 }
 
 .distinct-value {
+  white-space: nowrap;
   overflow-x: auto;
   width: 68%;
   margin-right: 4%;
@@ -186,5 +188,22 @@ export default {
 
 .distinct-value-rows:hover {
   filter: brightness(107%);
+}
+
+progress {
+  border-radius: 1px;
+  width: 100%;
+  height: 8px;
+  font-size: 1rem;
+}
+progress::-webkit-progress-value {
+  transition: width 2s ease-out;
+  background-color: var(--field-label);
+}
+progress::-webkit-progress-bar {
+  background-color: var(--button);
+}
+progress::-moz-progress-bar {
+  background-color: var(--button);
 }
 </style>
