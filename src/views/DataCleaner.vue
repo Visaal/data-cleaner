@@ -192,42 +192,6 @@ fieldset > h4 {
   margin-top: 0px;
 }
 
-table {
-  border-collapse: collapse;
-  color: var(--field-label);
-  font-size: 0.7rem;
-}
-
-thead {
-  display: table-header-group;
-  vertical-align: middle;
-  border-color: inherit;
-}
-
-tr {
-  display: table-row;
-  vertical-align: inherit;
-  border-color: inherit;
-}
-
-tbody {
-  display: table-row-group;
-  vertical-align: middle;
-  border-color: inherit;
-}
-
-table td,
-table th {
-  vertical-align: top;
-  border: 1px solid var(--table-border);
-  /* line-height: 15px; */
-  padding: 5px;
-}
-
-tbody td {
-  white-space: nowrap;
-}
-
 button {
   margin-top: 10px;
   margin-bottom: 10px;

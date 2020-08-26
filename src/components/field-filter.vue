@@ -20,7 +20,7 @@
     <fieldset
       v-if="filterOption"
       class="filter-options"
-      :style="positionStyle"
+      :style="adjustedPosition"
       ref="filterBox"
     >
       <div class="filter-box-search">
@@ -56,6 +56,7 @@ export default {
   name: "FieldFilter",
   props: {
     field: String,
+    positionStyle: Object,
   },
   data() {
     return {
@@ -63,7 +64,7 @@ export default {
       distinctValuesForField: [],
       selectedValues: [],
       search: "",
-      positionStyle: {
+      adjustedPosition: {
         top: "0px",
         left: "0px",
       },
@@ -72,39 +73,12 @@ export default {
   methods: {
     ...mapActions(["filterDataAction"]),
     filterData(field) {
-      if (this.activeFilterValues[field]) {
-        this.selectedValues = this.activeFilterValues[field];
-      } else {
-        this.selectedValues = [];
+      this.filterOption = !this.filterOption;
+      if (this.filterOption) {
+        this.distinctValuesForField = this.getDistinctValuesForField(field);
+        this.selectedValues = this.setActiveFilters(field);
+        this.adjustedPosition = this.calculateFilterFieldPosition();
       }
-
-      let distinctValues = [];
-      for (const [key] of Object.entries(
-        this.dataSchema[field]["distinctValues"]
-      )) {
-        distinctValues = distinctValues.concat(
-          Object.keys(this.dataSchema[field]["distinctValues"][key])
-        );
-      }
-      this.distinctValuesForField = distinctValues;
-      this.filterOption = true;
-      let buffer = 15;
-      this.positionStyle.left = `${event.pageX}px`;
-      this.positionStyle.top = `${event.pageY + buffer}px`;
-      this.$nextTick(() => {
-        if (
-          event.pageX + this.$refs.filterBox.clientWidth >
-          window.innerWidth
-        ) {
-          let leftAdjustment =
-            event.pageX -
-            (event.pageX +
-              this.$refs.filterBox.clientWidth -
-              window.innerWidth +
-              buffer);
-          this.positionStyle.left = `${leftAdjustment}px`;
-        }
-      });
     },
     setFilter(field) {
       this.filterOption = false;
@@ -120,6 +94,47 @@ export default {
         selectedField: field,
         fieldValuesSelected: this.selectedValues,
       });
+    },
+    getDistinctValuesForField(field) {
+      let distinctValues = [];
+      for (const [key] of Object.entries(
+        this.dataSchema[field]["distinctValues"]
+      )) {
+        distinctValues = distinctValues.concat(
+          Object.keys(this.dataSchema[field]["distinctValues"][key])
+        );
+      }
+      return distinctValues;
+    },
+    setActiveFilters(field) {
+      let activeFilterValues = [];
+      if (this.activeFilterValues[field]) {
+        activeFilterValues = this.activeFilterValues[field];
+      } else {
+        activeFilterValues = [];
+      }
+      return activeFilterValues;
+    },
+    calculateFilterFieldPosition() {
+      let position = { top: "0px", left: "0px" };
+      this.$nextTick(() => {
+        let buffer = 15;
+        position.top = this.$props.positionStyle.top;
+        position.left = `${event.pageX}px`;
+        if (
+          event.pageX + this.$refs.filterBox.clientWidth >
+          window.innerWidth
+        ) {
+          let leftAdjustment =
+            event.pageX -
+            (event.pageX +
+              this.$refs.filterBox.clientWidth -
+              window.innerWidth +
+              buffer);
+          position.left = `${leftAdjustment}px`;
+        }
+      });
+      return position;
     },
   },
   computed: {
@@ -141,6 +156,7 @@ export default {
 
 <style>
 .filter {
+  position: relative;
   display: inline-block;
 }
 
@@ -158,13 +174,14 @@ export default {
 }
 
 .filter-options {
-  position: absolute;
+  position: fixed;
   background: var(--background);
   -webkit-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
   -moz-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
   box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
   overflow: auto;
-  width: auto;
+  min-width: 30%;
+  max-width: 50%;
 }
 
 /* FILTER BOX */

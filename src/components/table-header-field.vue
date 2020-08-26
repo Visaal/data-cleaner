@@ -1,40 +1,32 @@
 <template>
-  <td class="custom-field-header" :id="field" :class="{ 'user-created-field': userCreatedField }">
+  <th
+    class="custom-field-header"
+    :id="field"
+    :class="{ 'user-created-field': userCreatedField }"
+    ref="fieldTableHeader"
+  >
     <div class="field-name">
       {{ field }}
-      <FieldFilter :field="field" />
+      <FieldFilter :field="field" :positionStyle="headerLocation" />
     </div>
     <div class="data-type">{{ dataType }}</div>
     <div class="data-match">
       <progress
         :value="numberOfRecords - nullValues"
         :max="numberOfRecords"
-        @click="fieldBreakdownDisplayed = !fieldBreakdownDisplayed"
+        @click="showFieldBreakdown(field)"
       ></progress>
     </div>
-    <transition name="slide">
-      <div v-if="fieldBreakdownDisplayed" class="breakdown-position">
-        <FieldBreakdown
-          :field="field"
-          :recordCount="numberOfRecords"
-          :nullCount="nullValues"
-          :fieldSchema="fieldSchema"
-          @closeFieldBreakdown="closeFieldBreakdown"
-        />
-      </div>
-    </transition>
-  </td>
+  </th>
 </template>
 
 <script>
 import FieldFilter from "@/components/field-filter.vue";
-import FieldBreakdown from "@/components/field-breakdown.vue";
 
 export default {
   name: "TableHeaderField",
   components: {
     FieldFilter,
-    FieldBreakdown
   },
   props: {
     field: String,
@@ -42,42 +34,32 @@ export default {
     numberOfRecords: Number,
     userCreatedField: Boolean,
     fieldSchema: Object,
-    nullValues: Number
+    nullValues: Number,
   },
   data() {
     return {
-      fieldBreakdownDisplayed: false
+      fieldBreakdownDisplayed: false,
+      headerLocation: {
+        top: "",
+        left: "",
+      },
     };
+  },
+  mounted() {
+    this.headerLocation["left"] =
+      this.$refs.fieldTableHeader.getBoundingClientRect().left + "px";
+    this.headerLocation["top"] =
+      this.$refs.fieldTableHeader.getBoundingClientRect().bottom + "px";
   },
   methods: {
     showFieldBreakdown(field) {
-      this.fieldBreakdownDisplayed = true;
-      console.log(`will show breakdown for ${field}`);
+      this.$emit("openFieldBreakdown", field);
     },
-    closeFieldBreakdown() {
-      this.fieldBreakdownDisplayed = false;
-    }
-  }
+  },
 };
 </script>
 
 <style>
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.5s ease-in-out;
-}
-
-.slide-enter,
-.slide-leave-to {
-  transform: translateX(33vw);
-}
-
-.breakdown-position {
-  position: absolute;
-  top: var(--header-height);
-  right: 0;
-}
-
 .custom-field-header {
   margin: 0px;
   padding: 0px;

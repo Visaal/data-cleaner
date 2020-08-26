@@ -9,25 +9,41 @@
 
     <div class="data-type-breakdown">
       <h3>Data Type Breakdown</h3>
-      <progress class="amount-progress" :value="recordCount - nullCount" :max="recordCount"></progress>
+      <progress
+        class="amount-progress"
+        :value="recordCount - nullCount"
+        :max="recordCount"
+      ></progress>
       <br />
       <br />
-      <div class="data-type-row" v-for="(value, key) in fieldSchema['distinctValues']" :key="key">
+      <div
+        class="data-type-row"
+        v-for="(value, key) in fieldSchema['distinctValues']"
+        :key="key"
+      >
         <div class="data-type-name">{{ key }}:</div>
         <div class="data-type-stat">{{ fieldSchema[key] }}</div>
-        <div class="data-type-stat">{{ fieldSchema[key]/recordCount | roundPercentage2DP }}</div>
+        <div class="data-type-stat">
+          {{ (fieldSchema[key] / recordCount) | roundPercentage2DP }}
+        </div>
       </div>
     </div>
 
     <div class="distinct-value-breakdown">
       <h3>Distinct Values</h3>
       <div class="distinct-values">
-        <div class="distinct-value-rows" v-for="(value,index) in orderedValues" :key="index">
-          <div class="distinct-value">{{value[0]}}</div>
+        <div
+          class="distinct-value-rows"
+          v-for="(value, index) in orderedValues"
+          :key="index"
+        >
+          <div class="distinct-value">{{ value[0] }}</div>
           <div
             class="distinct-value-stat"
             :style="calculateWidth(value[1].length)"
-          >{{value[1].length}}</div>
+          >
+            {{ value[1].length }}
+          </div>
         </div>
       </div>
     </div>
@@ -42,7 +58,7 @@ export default {
     fieldBreakdownDisplayed: Boolean,
     recordCount: Number,
     fieldSchema: Object,
-    nullCount: Number
+    nullCount: Number,
   },
   methods: {
     closeFieldDetail() {
@@ -54,12 +70,12 @@ export default {
       let cssPercentageWidthValue = 100 - 68 - 4;
       let ratio = (value / maxValueCount) * cssPercentageWidthValue;
       return `width: ${ratio}%`;
-    }
+    },
   },
   filters: {
     roundPercentage2DP: function(value) {
       return (value * 100).toFixed(0) + "%";
-    }
+    },
   },
   computed: {
     orderedValues: function() {
@@ -73,8 +89,8 @@ export default {
       let entries = Object.entries(allDistinctValues);
       let sorted = entries.sort((a, b) => b[1].length - a[1].length);
       return sorted;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -91,7 +107,7 @@ export default {
 
 .field-detail-breakdown {
   color: var(--stroke);
-  border-bottom: 1px solid;
+  border-bottom: 2px solid;
   border-color: var(--button);
   background-color: var(--teritary);
   width: 33vw;
@@ -106,6 +122,7 @@ export default {
   padding: 10px;
   background-color: var(--button);
   box-sizing: border-box;
+  white-space: nowrap;
   overflow-x: scroll;
 }
 
@@ -155,6 +172,7 @@ export default {
 }
 
 .distinct-value {
+  white-space: nowrap;
   overflow-x: auto;
   width: 68%;
   margin-right: 4%;
@@ -170,5 +188,22 @@ export default {
 
 .distinct-value-rows:hover {
   filter: brightness(107%);
+}
+
+progress {
+  border-radius: 1px;
+  width: 100%;
+  height: 8px;
+  font-size: 1rem;
+}
+progress::-webkit-progress-value {
+  transition: width 2s ease-out;
+  background-color: var(--field-label);
+}
+progress::-webkit-progress-bar {
+  background-color: var(--button);
+}
+progress::-moz-progress-bar {
+  background-color: var(--button);
 }
 </style>
