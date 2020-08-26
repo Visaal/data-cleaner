@@ -347,6 +347,7 @@ const actions = {
     commit(SET_FILTERED_ROWS, filteredDataRows);
     commit(SET_FILTERED_ROW_INDEXES, filteredRowIndexes);
     commit(SET_ACTIVE_FILTER_VALUES, filterValues);
+    commit(SET_NEW_ROW_START_SLICE_INDEX, 0);
   },
   removeActiveFilterAction({ commit }, filterValues) {
     let filteredRowIndexes = getFilterRowIndexes(
