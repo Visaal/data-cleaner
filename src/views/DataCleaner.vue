@@ -110,12 +110,16 @@ export default {
 .side-panel {
   grid-column: 1 / 3;
   color: var(--paragraph);
-  margin: 10px;
+  padding-top: 10px;
+  padding-right: 5px;
+  padding-left: 5px;
   grid-row: 2/4;
   overflow-y: scroll;
+  border-right: 2px var(--secondary) solid;
 }
 
 .content-action-menu {
+  margin-left: 10px;
   grid-column: 3/-1;
   /* border-bottom: 2px solid var(--field-grey); */
 }
@@ -123,6 +127,7 @@ export default {
 .content {
   grid-column: 3 / -1;
   overflow-x: auto;
+  margin-left: 10px;
 }
 
 .footer {
@@ -219,5 +224,10 @@ button {
 
 button:hover {
   filter: brightness(107%);
+}
+
+fieldset > button {
+  padding: 0.65rem 0rem;
+  width: 100%;
 }
 </style>
