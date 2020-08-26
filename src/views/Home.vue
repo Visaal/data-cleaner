@@ -1,7 +1,10 @@
 <template>
   <div>
     <!-- <div id="particles-js"></div> -->
-    <fieldset :class="{ 'display-from-left': fileName }" class="hidden-left field-list-fieldset">
+    <fieldset
+      :class="{ 'display-from-left': fileName }"
+      class="hidden-left field-list-fieldset"
+    >
       <h3>Please Select Fields</h3>
       <div class="action-button-container">
         <button @click="updateState(), navigate()">Confirm</button>
@@ -28,7 +31,9 @@
     <div class="landing-page-form">
       <fieldset>
         <h2>Data Cleaner</h2>
-        <label for="fileItem" class="custom-file-input-label">Select File To Clean</label>
+        <label for="fileItem" class="custom-file-input-label"
+          >Select File To Clean</label
+        >
         <input
           id="fileItem"
           type="file"
@@ -62,7 +67,7 @@ export default {
       data: [],
       fieldNames: [],
       selectedFieldIndexes: [],
-      message: ""
+      message: "",
     };
   },
   mounted() {
@@ -77,7 +82,7 @@ export default {
         // Select all fields by default
         this.selectedFieldIndexes = [...Array(this.fieldNames.length).keys()];
       }
-    }
+    },
   },
   methods: {
     initParticles() {
@@ -88,7 +93,7 @@ export default {
       "setFieldNamesAction",
       "setDataAction",
       "updateDataAction",
-      "setSelectedFieldsAction"
+      "setSelectedFieldsAction",
     ]),
     getFile(event) {
       this.fileItem = event.target.files[0];
@@ -115,7 +120,7 @@ export default {
       this.updateDataAction({
         fileName: this.fileName,
         data: this.data,
-        fieldNames: this.fieldNames
+        fieldNames: this.fieldNames,
       });
       this.setSelectedFieldsAction(this.selectedFieldNames);
     },
@@ -130,7 +135,7 @@ export default {
       this.fieldNames = [];
       this.selectedFieldIndexes = [];
       this.message = "";
-    }
+    },
   },
   computed: {
     ...mapState(["dataRows", "dataFieldNames", "dataFileName"]), // can be used as variable and state are both named 'dataRows'
@@ -143,8 +148,8 @@ export default {
         fieldNamesInOrder.push(this.fieldNames[sortedSelectedFieldIndexes[i]]);
       }
       return fieldNamesInOrder;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -299,7 +304,7 @@ progress::-moz-progress-bar {
 /* CUSTOM CHECKBOX STYLING */
 /* The container */
 .custom-checkbox {
-  display: inline-block;
+  display: inline-flex;
   position: relative;
   padding-left: 35px;
   padding-top: 5px;
