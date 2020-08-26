@@ -2,7 +2,7 @@
   <div>
     <table>
       <thead>
-        <th>Row #</th>
+        <th class="custom-field-header"><div class="field-name">Row #</div></th>
         <TableHeaderField
           v-for="field in dataSelectedFieldNames"
           :key="field.id"
