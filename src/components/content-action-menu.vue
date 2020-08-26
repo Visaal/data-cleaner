@@ -180,7 +180,7 @@ export default {
       "setStartIndexNextPageAction",
       "setStartIndexPreviousPageAction",
       "undoLastAction",
-      "removeActiveFilterAction",
+      "updateActiveFilterAction",
     ]),
     setRowPerPage(rowsToDisplay) {
       this.setNumberOfRowsToDisplayAction(rowsToDisplay);
@@ -241,7 +241,7 @@ export default {
       }
     },
     removeActiveFilters() {
-      this.removeActiveFilterAction(this.selectedFilters);
+      this.updateActiveFilterAction(this.selectedFilters);
       this.showActiveFilters = !this.showActiveFilters;
     },
     cancelRemoveFilter() {

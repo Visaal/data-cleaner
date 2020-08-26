@@ -163,7 +163,7 @@ const actions = {
   },
   //
   // DATA CLEANING RULES
-  capitaliseValuesAction({ commit }, field) {
+  capitaliseValuesAction({ commit, dispatch }, field) {
     // cloning dataRows as you should not work directly on the state values outside of a mutation
     // stict mode in vuex will highlight this
     let clonedDataRows = cloneDeep(state.dataRows);
@@ -173,6 +173,9 @@ const actions = {
       }
     }
     commit(UPDATE_DATA_ROWS, clonedDataRows);
+    if (Object.keys(state.activeFilterValues).length > 0) {
+      dispatch("updateActiveFilterAction", state.activeFilterValues);
+    }
   },
   setDataTypeAction({ commit }, ruleParameters) {
     let clonedDataRows = cloneDeep(state.dataRows);
@@ -252,6 +255,9 @@ const actions = {
     commit(UPDATE_DATA_ROWS, clonedDataRows);
     dispatch("_addNewField", fieldDetailObject);
     dispatch("_createSchema");
+    if (Object.keys(state.activeFilterValues).length > 0) {
+      dispatch("updateActiveFilterAction", state.activeFilterValues);
+    }
   },
   extractCharactersAction({ commit, dispatch }, ruleParameters) {
     let selectedOption = ruleParameters["selectedOption"];
@@ -301,6 +307,9 @@ const actions = {
     commit(UPDATE_DATA_ROWS, clonedDataRows);
     dispatch("_addNewField", fieldDetailObject);
     dispatch("_createSchema");
+    if (Object.keys(state.activeFilterValues).length > 0) {
+      dispatch("updateActiveFilterAction", state.activeFilterValues);
+    }
   },
   //
   // ACTION BAR ACTIONS
@@ -349,7 +358,7 @@ const actions = {
     commit(SET_ACTIVE_FILTER_VALUES, filterValues);
     commit(SET_NEW_ROW_START_SLICE_INDEX, 0);
   },
-  removeActiveFilterAction({ commit }, filterValues) {
+  updateActiveFilterAction({ commit }, filterValues) {
     let filteredRowIndexes = getFilterRowIndexes(
       state.dataSchema,
       filterValues
