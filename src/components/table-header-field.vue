@@ -3,10 +3,11 @@
     class="custom-field-header"
     :id="field"
     :class="{ 'user-created-field': userCreatedField }"
+    ref="fieldTableHeader"
   >
     <div class="field-name">
       {{ field }}
-      <FieldFilter :field="field" />
+      <FieldFilter :field="field" :positionStyle="headerLocation" />
     </div>
     <div class="data-type">{{ dataType }}</div>
     <div class="data-match">
@@ -38,7 +39,17 @@ export default {
   data() {
     return {
       fieldBreakdownDisplayed: false,
+      headerLocation: {
+        top: "",
+        left: "",
+      },
     };
+  },
+  mounted() {
+    this.headerLocation["left"] =
+      this.$refs.fieldTableHeader.getBoundingClientRect().left + "px";
+    this.headerLocation["top"] =
+      this.$refs.fieldTableHeader.getBoundingClientRect().bottom + "px";
   },
   methods: {
     showFieldBreakdown(field) {
