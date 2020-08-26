@@ -129,6 +129,12 @@
           </button>
         </div>
       </fieldset>
+
+      <div class="action-bar-divider"></div>
+
+      <button class="action-bar-button" @click="downloadData()">
+        <strong>DL</strong>
+      </button>
     </div>
 
     <div class="data-row-info">
@@ -147,6 +153,7 @@
 import { mapState, mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
 import { cloneDeep } from "lodash";
+import Papa from "papaparse";
 
 export default {
   name: "ContentActionMenu",
@@ -247,6 +254,18 @@ export default {
     cancelRemoveFilter() {
       this.selectedFilters = cloneDeep(this.activeFilterValues);
       this.showActiveFilters = !this.showActiveFilters;
+    },
+    downloadData() {
+      let csv = Papa.unparse(this.dataRows, {
+        columns: this.dataSelectedFieldNames,
+      });
+      let csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      let csvURL = window.URL.createObjectURL(csvData);
+      let tempLink = document.createElement("a");
+      tempLink.href = csvURL;
+      let fileName = `CLEANED_${this.dataFileName}`;
+      tempLink.setAttribute("download", fileName);
+      tempLink.click();
     },
   },
   computed: {
