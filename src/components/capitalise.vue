@@ -1,17 +1,13 @@
 <template>
-  <div>
-    <fieldset>
-      <label for="fieldName">Select Field:</label>
-      <select v-model="fieldName">
-        <option v-for="field in textFields" :key="field.id">
-          {{
-          field
-          }}
-        </option>
-      </select>
-      <button v-on:click="capitaliseValues" type="button">Apply</button>
-    </fieldset>
-  </div>
+  <fieldset>
+    <label for="fieldName">Select Field:</label>
+    <select v-model="fieldName">
+      <option v-for="field in textFields" :key="field.id">
+        {{ field }}
+      </option>
+    </select>
+    <button v-on:click="capitaliseValues" type="button">Apply</button>
+  </fieldset>
 </template>
 
 <script>
@@ -21,7 +17,7 @@ export default {
   name: "Capitalise",
   data() {
     return {
-      fieldName: ""
+      fieldName: "",
     };
   },
   created() {},
@@ -30,7 +26,7 @@ export default {
     ...mapActions(["capitaliseValuesAction"]),
     capitaliseValues() {
       this.capitaliseValuesAction(this.fieldName);
-    }
+    },
   },
   watch: {
     fieldName: function(fieldValue) {
@@ -38,19 +34,19 @@ export default {
       selectedField.scrollIntoView({
         behavior: "smooth",
         block: "end",
-        inline: "center"
+        inline: "center",
       });
-    }
+    },
   },
   computed: {
     ...mapState([
       "dataRows",
       "dataFieldNames",
       "dataSelectedFieldNames",
-      "dataSchema"
+      "dataSchema",
     ]),
-    ...mapGetters(["textFields"])
-  }
+    ...mapGetters(["textFields"]),
+  },
 };
 </script>
 
