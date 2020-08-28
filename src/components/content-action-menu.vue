@@ -32,6 +32,7 @@
 
       <div class="action-bar-divider"></div>
 
+      <!-- MANAGE FIELDS - CHANGE ORDER AND REMOVE -->
       <button
         ref="sortButton"
         class="action-bar-button"
@@ -56,13 +57,16 @@
         <div class="filter-value-list expanded">
           <draggable v-model="fieldList" @start="drag = true">
             <div v-for="field in fieldList" :key="field.id" class="field-item">
-              {{ field }}
+              <div class="column-name">{{ field }}</div>
+              <div class="remove-column" @click="selectFieldForRemoval(field)">
+                &#x2716;
+              </div>
             </div>
           </draggable>
         </div>
 
         <div class="filter-list-actions">
-          <button @click="updateFieldOrder">
+          <button @click="updateFieldChanges">
             Apply
           </button>
           <button class="secondary" @click="cancelFieldOrderChange">
@@ -175,7 +179,7 @@ export default {
   },
   created() {
     this.rowsToDisplay = this.numberOfRowsToDisplay;
-    this.fieldList = this.dataSelectedFieldNames;
+    this.fieldList = [...this.dataSelectedFieldNames];
   },
   methods: {
     ...mapActions([
@@ -228,12 +232,18 @@ export default {
         }
       });
     },
-    updateFieldOrder() {
+    selectFieldForRemoval(field) {
+      let index = this.fieldList.indexOf(field);
+      if (index > -1) {
+        this.fieldList.splice(index, 1);
+      }
+    },
+    updateFieldChanges() {
       this.setSelectedFieldsAction(this.fieldList);
       this.showSortField = !this.showSortField;
     },
     cancelFieldOrderChange() {
-      this.fieldList = this.dataSelectedFieldNames;
+      this.fieldList = [...this.dataSelectedFieldNames];
       this.showSortField = !this.showSortField;
     },
     removeFilterItems(filterField, filterValue) {
@@ -418,6 +428,23 @@ export default {
   border-left: 10px;
   border-left-style: solid;
   border-left-color: var(--field-grey);
+  vertical-align: middle;
+}
+
+.column-name {
+  display: inline-block;
+  width: 90%;
+  vertical-align: middle;
+}
+
+.remove-column {
+  display: inline-block;
+  width: 10%;
+  vertical-align: middle;
+  text-align: right;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--field-label);
 }
 
 .filter-box-search > h3 {
