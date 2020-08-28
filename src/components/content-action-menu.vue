@@ -251,6 +251,8 @@ export default {
       if (index > -1) {
         fieldValues.splice(index, 1);
       }
+      // If no filters values left for a field remove the field key from object
+      // This upddates the visual filter icon
       if (!fieldValues.length) {
         delete this.selectedFilters[filterField];
       }
