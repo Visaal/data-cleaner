@@ -78,8 +78,6 @@
       <div class="action-bar-divider"></div>
 
       <!-- ACTIVE FILTERS -->
-      <!-- TODO: SHOW NEW FIELD VALUES IN FILTERED ROWS -->
-
       <button
         ref="activeFiltersButton"
         class="action-bar-button"
