@@ -57,9 +57,37 @@
         <div class="filter-value-list expanded">
           <draggable v-model="fieldList" @start="drag = true">
             <div v-for="field in fieldList" :key="field.id" class="field-item">
-              <div class="column-name">{{ field }}</div>
-              <div class="remove-column" @click="selectFieldForRemoval(field)">
-                &#x2716;
+              <!-- DISPLAYING FIELD -->
+              <div v-if="editingName !== field">
+                <div class="column-name">{{ fieldNameToDisplay(field) }}</div>
+                <div class="edit-column" @click="editFieldName(field)">
+                  &#9999;
+                </div>
+                <div
+                  class="remove-column"
+                  @click="selectFieldForRemoval(field)"
+                >
+                  &#x2716;
+                </div>
+              </div>
+
+              <!-- EDITING FIELD NAME -->
+              <div>
+                <div v-if="editingName === field">
+                  <input
+                    ref="editedField"
+                    class="edit-field-name"
+                    type="text"
+                    :placeholder="fieldNameToDisplay(field)"
+                    @keyup.enter="setNewName(field)"
+                  />
+                  <div class="apply-change" @click="setNewName(field)">
+                    &#x2716;
+                  </div>
+                  <div class="cancel-change" @click="cancelNameChange(field)">
+                    &#8634;
+                  </div>
+                </div>
               </div>
             </div>
           </draggable>
@@ -69,7 +97,7 @@
           <button @click="updateFieldChanges">
             Apply
           </button>
-          <button class="secondary" @click="cancelFieldOrderChange">
+          <button class="secondary" @click="cancelFieldChanges">
             Cancel
           </button>
         </div>
@@ -173,6 +201,9 @@ export default {
       },
       showActiveFilters: false,
       selectedFilters: {},
+      editingName: "",
+      // newFieldName: {},
+      nameMap: {},
     };
   },
   created() {
@@ -236,12 +267,32 @@ export default {
         this.fieldList.splice(index, 1);
       }
     },
+    fieldNameToDisplay(field) {
+      if (this.nameMap[field]) {
+        return this.nameMap[field];
+      }
+      return field;
+    },
+    editFieldName(field) {
+      this.editingName = field;
+    },
+    setNewName(field) {
+      if (this.$refs.editedField[0].value.length > 0) {
+        this.nameMap[field] = this.$refs.editedField[0].value;
+      }
+      this.editingName = "";
+    },
+    cancelNameChange(field) {
+      delete this.nameMap[field];
+      this.editingName = "";
+    },
     updateFieldChanges() {
       this.setSelectedFieldsAction(this.fieldList);
       this.showSortField = !this.showSortField;
     },
-    cancelFieldOrderChange() {
+    cancelFieldChanges() {
       this.fieldList = [...this.dataSelectedFieldNames];
+      this.nameMap = {};
       this.showSortField = !this.showSortField;
     },
     removeFilterItems(filterField, filterValue) {
@@ -433,11 +484,48 @@ export default {
 
 .column-name {
   display: inline-block;
-  width: 90%;
+  width: 80%;
   vertical-align: middle;
 }
 
 .remove-column {
+  display: inline-block;
+  width: 10%;
+  vertical-align: middle;
+  text-align: right;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--field-label);
+}
+
+.edit-column {
+  display: inline-block;
+  width: 10%;
+  vertical-align: middle;
+  text-align: right;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--field-label);
+  transform: rotate(135deg);
+}
+
+.edit-field-name {
+  width: 80%;
+  margin-bottom: 0px;
+}
+
+.apply-change {
+  display: inline-block;
+  width: 10%;
+  vertical-align: middle;
+  text-align: right;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--field-label);
+  transform: rotate(45deg);
+}
+
+.cancel-change {
   display: inline-block;
   width: 10%;
   vertical-align: middle;
