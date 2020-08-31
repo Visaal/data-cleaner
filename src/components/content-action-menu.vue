@@ -221,6 +221,7 @@ export default {
       "setStartIndexPreviousPageAction",
       "undoLastAction",
       "updateActiveFilterAction",
+      "changeFieldNamesAction",
     ]),
     setRowPerPage(rowsToDisplay) {
       this.setNumberOfRowsToDisplayAction(rowsToDisplay);
@@ -287,7 +288,22 @@ export default {
       this.editingName = "";
     },
     updateFieldChanges() {
+      // !! IMPORTANT !!
+      // Change order of the fields before trying to change their names
+      // As the field list will contain reference to the old field name
+
+      // Change field order
       this.setSelectedFieldsAction(this.fieldList);
+      console.log(this.fieldList);
+      // Rename fields
+      if (
+        Object.keys(this.nameMap).length !== 0 &&
+        this.nameMap.constructor === Object
+      ) {
+        this.changeFieldNamesAction(this.nameMap);
+      }
+      console.log(this.fieldList);
+
       this.showSortField = !this.showSortField;
     },
     cancelFieldChanges() {

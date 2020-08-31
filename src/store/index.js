@@ -29,6 +29,8 @@ import {
   determineIfConsistentDataType,
 } from "./schema-helper-functions";
 
+import { renameKeys } from "./general-helper-functions";
+
 const DATATYPES = ["null", "number", "text", "date"];
 
 Vue.use(Vuex);
@@ -338,6 +340,29 @@ const actions = {
   },
   undoLastAction({ commit }) {
     commit(UNDO_LAST_CHANGE);
+  },
+  changeFieldNamesAction({ commit, dispatch }, nameMap) {
+    let clonedDataRows = cloneDeep(state.dataRows);
+    let clonedDataFieldNames = cloneDeep(state.dataFieldNames);
+    let clonedSelectedFields = cloneDeep(state.dataSelectedFieldNames);
+
+    // rename fields in data
+    for (let i = 0; i < clonedDataRows.length; i++) {
+      clonedDataRows[i] = renameKeys(nameMap, clonedDataRows[i]);
+    }
+
+    // rename fields in field name lists
+    for (let [originalName, newName] of Object.entries(nameMap)) {
+      let indexAllFields = clonedDataFieldNames.indexOf(originalName);
+      clonedDataFieldNames[indexAllFields] = newName;
+      let indexSelectedFields = clonedSelectedFields.indexOf(originalName);
+      clonedSelectedFields[indexSelectedFields] = newName;
+    }
+
+    commit(UPDATE_DATA_ROWS, clonedDataRows);
+    commit(UPDATE_FIELD_NAMES, clonedDataFieldNames);
+    commit(SET_SELECTED_FIELD_NAMES, clonedSelectedFields);
+    dispatch("_createSchema");
   },
   //
   // FILTERING ACTIONS
