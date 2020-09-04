@@ -32,6 +32,7 @@
 
       <div class="action-bar-divider"></div>
 
+      <!-- MANAGE FIELDS - CHANGE ORDER AND REMOVE -->
       <button
         ref="sortButton"
         class="action-bar-button"
@@ -56,16 +57,47 @@
         <div class="filter-value-list expanded">
           <draggable v-model="fieldList" @start="drag = true">
             <div v-for="field in fieldList" :key="field.id" class="field-item">
-              {{ field }}
+              <!-- DISPLAYING FIELD -->
+              <div v-if="editingName !== field">
+                <div class="column-name">{{ fieldNameToDisplay(field) }}</div>
+                <div class="edit-column" @click="editFieldName(field)">
+                  &#9999;
+                </div>
+                <div
+                  class="remove-column"
+                  @click="selectFieldForRemoval(field)"
+                >
+                  &#x2716;
+                </div>
+              </div>
+
+              <!-- EDITING FIELD NAME -->
+              <div>
+                <div v-if="editingName === field">
+                  <input
+                    ref="editedField"
+                    class="edit-field-name"
+                    type="text"
+                    :placeholder="fieldNameToDisplay(field)"
+                    @keyup.enter="setNewName(field)"
+                  />
+                  <div class="apply-change" @click="setNewName(field)">
+                    &#x2716;
+                  </div>
+                  <div class="cancel-change" @click="cancelNameChange(field)">
+                    &#8634;
+                  </div>
+                </div>
+              </div>
             </div>
           </draggable>
         </div>
 
         <div class="filter-list-actions">
-          <button @click="updateFieldOrder">
+          <button @click="updateFieldChanges">
             Apply
           </button>
-          <button class="secondary" @click="cancelFieldOrderChange">
+          <button class="secondary" @click="cancelFieldChanges">
             Cancel
           </button>
         </div>
@@ -74,8 +106,6 @@
       <div class="action-bar-divider"></div>
 
       <!-- ACTIVE FILTERS -->
-      <!-- TODO: SHOW NEW FIELD VALUES IN FILTERED ROWS -->
-
       <button
         ref="activeFiltersButton"
         class="action-bar-button"
@@ -171,11 +201,14 @@ export default {
       },
       showActiveFilters: false,
       selectedFilters: {},
+      editingName: "",
+      // newFieldName: {},
+      nameMap: {},
     };
   },
   created() {
     this.rowsToDisplay = this.numberOfRowsToDisplay;
-    this.fieldList = this.dataSelectedFieldNames;
+    this.fieldList = [...this.dataSelectedFieldNames];
   },
   methods: {
     ...mapActions([
@@ -188,6 +221,7 @@ export default {
       "setStartIndexPreviousPageAction",
       "undoLastAction",
       "updateActiveFilterAction",
+      "changeFieldNamesAction",
     ]),
     setRowPerPage(rowsToDisplay) {
       this.setNumberOfRowsToDisplayAction(rowsToDisplay);
@@ -228,12 +262,53 @@ export default {
         }
       });
     },
-    updateFieldOrder() {
+    selectFieldForRemoval(field) {
+      let index = this.fieldList.indexOf(field);
+      if (index > -1) {
+        this.fieldList.splice(index, 1);
+      }
+    },
+    fieldNameToDisplay(field) {
+      if (this.nameMap[field]) {
+        return this.nameMap[field];
+      }
+      return field;
+    },
+    editFieldName(field) {
+      this.editingName = field;
+    },
+    setNewName(field) {
+      if (this.$refs.editedField[0].value.length > 0) {
+        this.nameMap[field] = this.$refs.editedField[0].value;
+      }
+      this.editingName = "";
+    },
+    cancelNameChange(field) {
+      delete this.nameMap[field];
+      this.editingName = "";
+    },
+    updateFieldChanges() {
+      // !! IMPORTANT !!
+      // Change order of the fields before trying to change their names
+      // As the field list will contain reference to the old field name
+
+      // Change field order
       this.setSelectedFieldsAction(this.fieldList);
+      console.log(this.fieldList);
+      // Rename fields
+      if (
+        Object.keys(this.nameMap).length !== 0 &&
+        this.nameMap.constructor === Object
+      ) {
+        this.changeFieldNamesAction(this.nameMap);
+      }
+      console.log(this.fieldList);
+
       this.showSortField = !this.showSortField;
     },
-    cancelFieldOrderChange() {
-      this.fieldList = this.dataSelectedFieldNames;
+    cancelFieldChanges() {
+      this.fieldList = [...this.dataSelectedFieldNames];
+      this.nameMap = {};
       this.showSortField = !this.showSortField;
     },
     removeFilterItems(filterField, filterValue) {
@@ -243,6 +318,8 @@ export default {
       if (index > -1) {
         fieldValues.splice(index, 1);
       }
+      // If no filters values left for a field remove the field key from object
+      // This upddates the visual filter icon
       if (!fieldValues.length) {
         delete this.selectedFilters[filterField];
       }
@@ -418,6 +495,60 @@ export default {
   border-left: 10px;
   border-left-style: solid;
   border-left-color: var(--field-grey);
+  vertical-align: middle;
+}
+
+.column-name {
+  display: inline-block;
+  width: 80%;
+  vertical-align: middle;
+}
+
+.remove-column {
+  display: inline-block;
+  width: 10%;
+  vertical-align: middle;
+  text-align: right;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--field-label);
+}
+
+.edit-column {
+  display: inline-block;
+  width: 10%;
+  vertical-align: middle;
+  text-align: right;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--field-label);
+  transform: rotate(135deg);
+}
+
+.edit-field-name {
+  width: 80%;
+  margin-bottom: 0px;
+}
+
+.apply-change {
+  display: inline-block;
+  width: 10%;
+  vertical-align: middle;
+  text-align: right;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--field-label);
+  transform: rotate(45deg);
+}
+
+.cancel-change {
+  display: inline-block;
+  width: 10%;
+  vertical-align: middle;
+  text-align: right;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--field-label);
 }
 
 .filter-box-search > h3 {
