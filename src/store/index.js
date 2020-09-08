@@ -29,7 +29,10 @@ import {
   determineIfConsistentDataType,
 } from "./schema-helper-functions";
 
-import { renameKeys } from "./general-helper-functions";
+import {
+  renameKeys,
+  getFilteredOutDataRowIndexes,
+} from "./general-helper-functions";
 
 const DATATYPES = ["null", "number", "text", "date"];
 
@@ -396,6 +399,25 @@ const actions = {
     commit(SET_FILTERED_ROWS, filteredDataRows);
     commit(SET_FILTERED_ROW_INDEXES, filteredRowIndexes);
     commit(SET_ACTIVE_FILTER_VALUES, filterValues);
+  },
+  deleteRowsAction({ commit, dispatch }, deleteAction) {
+    let dataRowsToKeep;
+    if (deleteAction === "keep") {
+      dataRowsToKeep = cloneDeep(state.filteredDataRows);
+    } else if (deleteAction === "delete") {
+      let dataRowsIndexesToKeep = getFilteredOutDataRowIndexes(
+        state.dataRows,
+        state.filteredDataRowIndexes
+      );
+      let clonedDataRows = cloneDeep(state.dataRows);
+      dataRowsToKeep = dataRowsIndexesToKeep.map((i) => clonedDataRows[i]);
+    }
+    commit(UPDATE_DATA_ROWS, dataRowsToKeep);
+    dispatch("_createSchema");
+    commit(SET_FILTERED_ROWS, []);
+    commit(SET_FILTERED_ROW_INDEXES, []);
+    commit(SET_ACTIVE_FILTER_VALUES, {});
+    commit(SET_NEW_ROW_START_SLICE_INDEX, 0);
   },
 };
 const getters = {

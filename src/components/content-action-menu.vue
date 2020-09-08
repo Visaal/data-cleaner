@@ -135,7 +135,7 @@
             <div
               v-for="filterValue in filterValues"
               :key="filterValue.index"
-              class="active-filter"
+              class="active-filter-row"
             >
               <div class="filter-detail">
                 <div class="filter-field-name">{{ filterField }}:</div>
@@ -165,6 +165,10 @@
       <button class="action-bar-button" @click="downloadData()">
         <strong>DL</strong>
       </button>
+
+      <div class="action-bar-divider"></div>
+
+      <DeleteRows />
     </div>
 
     <div class="data-row-info">
@@ -184,11 +188,13 @@ import { mapState, mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
 import { cloneDeep } from "lodash";
 import Papa from "papaparse";
+import DeleteRows from "@/components/delete-rows.vue";
 
 export default {
   name: "ContentActionMenu",
   components: {
     draggable,
+    DeleteRows,
   },
   data() {
     return {
@@ -360,7 +366,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .action-top {
   width: 100%;
   height: 3.6rem;
@@ -572,7 +578,7 @@ export default {
   box-sizing: border-box;
 }
 
-.active-filter {
+.active-filter-row {
   font-size: 0.8rem;
   padding-top: 0.4rem;
   padding-bottom: 0.4rem;
