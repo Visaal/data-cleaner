@@ -1,12 +1,20 @@
 <template>
   <div class="delete-action">
-    <button class="action-bar-button" @click="showDeleteActions()">
+    <button
+      ref="deleteButton"
+      class="action-bar-button"
+      @click="
+        showDeleteActions();
+        calculatePosition();
+      "
+    >
       <strong>DELETE</strong>
     </button>
     <fieldset
       v-if="showDeleteOptions"
       class="active-filters"
-      ref="activeFileterBox"
+      :style="positionStyle"
+      ref="deleteOptionBox"
     >
       <div class="filter-box-search">
         <h3>Select Action</h3>
@@ -67,6 +75,10 @@ export default {
     return {
       showDeleteOptions: false,
       selectedOption: null,
+      positionStyle: {
+        top: "0px",
+        left: "0px",
+      },
     };
   },
   methods: {
@@ -80,6 +92,19 @@ export default {
     },
     cancelDelete() {
       this.showDeleteOptions = !this.showDeleteOptions;
+    },
+    calculatePosition() {
+      this.$nextTick(() => {
+        if (this.showDeleteOptions) {
+          let leftAdjustment = this.$refs.deleteOptionBox.clientWidth;
+          let rightPosition = this.$refs.deleteButton.getBoundingClientRect()
+            .right;
+          let topPosition = this.$refs.deleteButton.getBoundingClientRect()
+            .bottom;
+          this.positionStyle.left = `${rightPosition - leftAdjustment}px`;
+          this.positionStyle.top = `${topPosition}px`;
+        }
+      });
     },
   },
   computed: {
