@@ -128,27 +128,32 @@
         </div>
 
         <div class="filter-value-list expanded">
-          <div
-            v-for="(filterValues, filterField) in selectedFilters"
-            :key="filterField.index"
-          >
+          <div v-if="Object.keys(activeFilterValues).length">
             <div
-              v-for="filterValue in filterValues"
-              :key="filterValue.index"
-              class="active-filter-row"
+              v-for="(filterValues, filterField) in selectedFilters"
+              :key="filterField.index"
             >
-              <div class="filter-detail">
-                <div class="filter-field-name">{{ filterField }}:</div>
-                <div class="filter-field-value">{{ filterValue }}</div>
-              </div>
-
               <div
-                class="remove-filter"
-                @click="removeFilterItems(filterField, filterValue)"
+                v-for="filterValue in filterValues"
+                :key="filterValue.index"
+                class="active-filter-row"
               >
-                &#x2716;
+                <div class="filter-detail">
+                  <div class="filter-field-name">{{ filterField }}:</div>
+                  <div class="filter-field-value">{{ filterValue }}</div>
+                </div>
+
+                <div
+                  class="remove-filter"
+                  @click="removeFilterItems(filterField, filterValue)"
+                >
+                  &#x2716;
+                </div>
               </div>
             </div>
+          </div>
+          <div v-else>
+            No current filters in place
           </div>
         </div>
 
@@ -300,7 +305,6 @@ export default {
 
       // Change field order
       this.setSelectedFieldsAction(this.fieldList);
-      console.log(this.fieldList);
       // Rename fields
       if (
         Object.keys(this.nameMap).length !== 0 &&
@@ -308,7 +312,6 @@ export default {
       ) {
         this.changeFieldNamesAction(this.nameMap);
       }
-      console.log(this.fieldList);
 
       this.showSortField = !this.showSortField;
     },
