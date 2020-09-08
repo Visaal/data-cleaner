@@ -303,7 +303,7 @@ export default {
       // Change order of the fields before trying to change their names
       // As the field list will contain reference to the old field name
 
-      // Change field order
+      // Change field order and selected fields
       this.setSelectedFieldsAction(this.fieldList);
       // Rename fields
       if (
@@ -313,6 +313,9 @@ export default {
         this.changeFieldNamesAction(this.nameMap);
       }
 
+      // set fieldlist back to the state value to prevent subsequent...
+      // ...field deletions happening straight away
+      this.fieldList = [...this.dataSelectedFieldNames];
       this.showSortField = !this.showSortField;
     },
     cancelFieldChanges() {
