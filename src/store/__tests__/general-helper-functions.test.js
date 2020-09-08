@@ -28,3 +28,27 @@ describe("Test Rename Of Keys", () => {
     });
   });
 });
+
+describe("Test Index Filtering", () => {
+  test("1. Filtering in place", () => {
+    let data = ["a", "b", "c", "d", "e", "f"];
+    let filteredDataRowIndexes = [0, 2, 4];
+    expect(
+      helperFunctions.getFilteredOutDataRowIndexes(data, filteredDataRowIndexes)
+    ).toStrictEqual([1, 3, 5]);
+  });
+  test("2. No filtering in place", () => {
+    let data = ["a", "b", "c", "d", "e", "f"];
+    let filteredDataRowIndexes = [];
+    expect(
+      helperFunctions.getFilteredOutDataRowIndexes(data, filteredDataRowIndexes)
+    ).toStrictEqual([0, 1, 2, 3, 4, 5]);
+  });
+  test("3. Everything selected in filter", () => {
+    let data = ["a", "b", "c", "d", "e", "f"];
+    let filteredDataRowIndexes = [0, 1, 2, 3, 4, 5];
+    expect(
+      helperFunctions.getFilteredOutDataRowIndexes(data, filteredDataRowIndexes)
+    ).toStrictEqual([]);
+  });
+});
