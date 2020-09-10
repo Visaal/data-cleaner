@@ -512,13 +512,13 @@ export default {
 
 .column-name {
   display: inline-block;
-  width: 80%;
+  width: 90%;
   vertical-align: middle;
 }
 
 .remove-column {
   display: inline-block;
-  width: 10%;
+  width: 5%;
   vertical-align: middle;
   text-align: right;
   cursor: pointer;
@@ -528,7 +528,7 @@ export default {
 
 .edit-column {
   display: inline-block;
-  width: 10%;
+  width: 5%;
   vertical-align: middle;
   text-align: right;
   cursor: pointer;
@@ -538,13 +538,13 @@ export default {
 }
 
 .edit-field-name {
-  width: 80%;
+  width: 90%;
   margin-bottom: 0px;
 }
 
 .apply-change {
   display: inline-block;
-  width: 10%;
+  width: 5%;
   vertical-align: middle;
   text-align: right;
   cursor: pointer;
@@ -555,7 +555,7 @@ export default {
 
 .cancel-change {
   display: inline-block;
-  width: 10%;
+  width: 5%;
   vertical-align: middle;
   text-align: right;
   cursor: pointer;
