@@ -151,6 +151,7 @@
 
       <!-- ACTIVE FILTERS -->
       <button
+        id="filter-icon"
         ref="activeFiltersButton"
         class="action-bar-button"
         @click="
@@ -260,6 +261,8 @@ import draggable from "vuedraggable";
 import { cloneDeep } from "lodash";
 import Papa from "papaparse";
 import DeleteRows from "@/components/delete-rows.vue";
+import tippy from "tippy.js";
+import "tippy.js/dist/tippy.css";
 
 export default {
   name: "ContentActionMenu",
@@ -282,6 +285,11 @@ export default {
       // newFieldName: {},
       nameMap: {},
     };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.initToolTips();
+    });
   },
   created() {
     this.rowsToDisplay = this.numberOfRowsToDisplay;
@@ -418,6 +426,12 @@ export default {
       let fileName = `CLEANED_${this.dataFileName}`;
       tempLink.setAttribute("download", fileName);
       tempLink.click();
+    },
+    initToolTips() {
+      tippy("#filter-icon", {
+        content: "filter",
+        theme: "tomato",
+      });
     },
   },
   computed: {
@@ -670,5 +684,25 @@ input[type="select"] + .records-to-display {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   vertical-align: middle;
+}
+
+.tippy-box[data-theme~="tomato"] {
+  background-color: tomato;
+  color: yellow;
+}
+.tippy-box[data-theme~="tomato"][data-placement^="top"] > .tippy-arrow::before {
+  border-top-color: tomato;
+}
+.tippy-box[data-theme~="tomato"][data-placement^="bottom"]
+  > .tippy-arrow::before {
+  border-bottom-color: tomato;
+}
+.tippy-box[data-theme~="tomato"][data-placement^="left"]
+  > .tippy-arrow::before {
+  border-left-color: tomato;
+}
+.tippy-box[data-theme~="tomato"][data-placement^="right"]
+  > .tippy-arrow::before {
+  border-right-color: tomato;
 }
 </style>
