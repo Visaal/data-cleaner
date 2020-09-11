@@ -450,13 +450,15 @@ export default {
 .action-bar-divider {
   display: inline-block;
   position: relative;
-  height: 30px;
+  height: 24px;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
   border-left: 2px solid var(--field-grey);
   margin-top: 10px;
   margin-bottom: 10px;
   vertical-align: bottom; /* important to have this or other elements around it will be displaced */
-  margin-left: 8px;
-  margin-right: 8px;
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
 }
 
 .data-row-info {
