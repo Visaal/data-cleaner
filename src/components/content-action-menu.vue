@@ -651,9 +651,7 @@ export default {
 
 .records-to-display {
   display: inline-block;
-  /* margin-bottom: 0px; */
-  /* margin-top: 10px; */
-  /* vertical-align: 100%; */
+  vertical-align: 50%;
 }
 
 input[type="select"] + .records-to-display {
@@ -661,10 +659,14 @@ input[type="select"] + .records-to-display {
 }
 
 .records-to-display > span {
-  /* vertical-align: 0%; */
 }
 
 .record-options {
   width: 65px;
+  height: auto;
+  margin-bottom: 0px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  vertical-align: middle;
 }
 </style>
