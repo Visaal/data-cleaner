@@ -105,7 +105,7 @@
         ref="sortFieldBox"
       >
         <div class="filter-box-search">
-          <h3>Set Field Order</h3>
+          <h3>Manage Fields</h3>
         </div>
 
         <div class="filter-value-list expanded">
@@ -115,19 +115,39 @@
               <div v-if="editingName !== field">
                 <div class="column-name">{{ fieldNameToDisplay(field) }}</div>
                 <div class="edit-column" @click="editFieldName(field)">
-                  &#9999;
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                  >
+                    <path fill="none" d="M0 0h24v24H0z" />
+                    <path
+                      d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+                    />
+                  </svg>
                 </div>
                 <div
                   class="remove-column"
                   @click="selectFieldForRemoval(field)"
                 >
-                  &#x2716;
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                  >
+                    <path fill="none" d="M0 0h24v24H0z" />
+                    <path
+                      d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-9.414l2.828-2.829 1.415 1.415L13.414 12l2.829 2.828-1.415 1.415L12 13.414l-2.828 2.829-1.415-1.415L10.586 12 7.757 9.172l1.415-1.415L12 10.586z"
+                    />
+                  </svg>
                 </div>
               </div>
 
               <!-- EDITING FIELD NAME -->
               <div>
-                <div v-if="editingName === field">
+                <div v-if="editingName === field" class="editing-box">
                   <input
                     ref="editedField"
                     class="edit-field-name"
@@ -136,10 +156,30 @@
                     @keyup.enter="setNewName(field)"
                   />
                   <div class="apply-change" @click="setNewName(field)">
-                    &#x2716;
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      height="24"
+                    >
+                      <path fill="none" d="M0 0h24v24H0z" />
+                      <path
+                        d="M11 11V7h2v4h4v2h-4v4h-2v-4H7v-2h4zm1 11C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"
+                      />
+                    </svg>
                   </div>
                   <div class="cancel-change" @click="cancelNameChange(field)">
-                    &#8634;
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      height="24"
+                    >
+                      <path fill="none" d="M0 0h24v24H0z" />
+                      <path
+                        d="M5.828 7l2.536 2.536L6.95 10.95 2 6l4.95-4.95 1.414 1.414L5.828 5H13a8 8 0 1 1 0 16H4v-2h9a6 6 0 1 0 0-12H5.828z"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
@@ -409,6 +449,7 @@ export default {
     cancelFieldChanges() {
       this.fieldList = [...this.dataSelectedFieldNames];
       this.nameMap = {};
+      this.editingName = "";
       this.showSortField = !this.showSortField;
     },
     removeFilterItems(filterField, filterValue) {
@@ -596,55 +637,54 @@ export default {
 
 .column-name {
   display: inline-block;
-  width: 90%;
+  width: 80%;
   vertical-align: middle;
 }
 
 .remove-column {
   display: inline-block;
-  width: 5%;
+  width: 10%;
   vertical-align: middle;
   text-align: right;
   cursor: pointer;
-  font-size: 1.5rem;
-  color: var(--field-label);
+  fill: var(--field-label);
 }
 
 .edit-column {
   display: inline-block;
-  width: 5%;
+  width: 10%;
   vertical-align: middle;
   text-align: right;
   cursor: pointer;
-  font-size: 1.5rem;
-  color: var(--field-label);
-  transform: rotate(135deg);
+  fill: var(--field-label);
 }
 
-.edit-field-name {
-  width: 90%;
+.editing-box {
+  height: 30px;
+}
+
+input[type="text"].edit-field-name {
+  width: 80%;
   margin-bottom: 0px;
+  vertical-align: 50%;
 }
 
 .apply-change {
   display: inline-block;
-  width: 5%;
-  vertical-align: middle;
+  width: 10%;
+  vertical-align: 50%;
   text-align: right;
   cursor: pointer;
-  font-size: 1.5rem;
-  color: var(--field-label);
-  transform: rotate(45deg);
+  fill: var(--field-label);
 }
 
 .cancel-change {
   display: inline-block;
-  width: 5%;
-  vertical-align: middle;
+  width: 10%;
+  vertical-align: 50%;
   text-align: right;
   cursor: pointer;
-  font-size: 1.5rem;
-  color: var(--field-label);
+  fill: var(--field-label);
 }
 
 .filter-box-search > h3 {
