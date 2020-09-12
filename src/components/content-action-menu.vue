@@ -2,32 +2,65 @@
   <div>
     <div class="action-top">
       <button class="action-bar-button first" @click="previousPage()">
-        <div class="backward">❮</div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+        >
+          <path fill="none" d="M0 0h24v24H0z" />
+          <path
+            d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"
+            fill="#000"
+          />
+        </svg>
       </button>
 
       <button class="action-bar-button" @click="nextPage()">
-        <div class="forward">❯</div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+        >
+          <path fill="none" d="M0 0h24v24H0z" />
+          <path
+            d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"
+            fill="#000"
+          />
+        </svg>
       </button>
 
       <div class="action-bar-divider"></div>
 
-      <span>show </span>
-      <select
-        class="action-bar-option"
-        v-model="rowsToDisplay"
-        @change="setRowPerPage(rowsToDisplay)"
-      >
-        <option v-for="rowOption in rowOptions" :key="rowOption">{{
-          rowOption
-        }}</option>
-      </select>
-      <span> records per page</span>
+      <div class="records-to-display">
+        <span>show </span>
+        <select
+          class="record-options"
+          v-model="rowsToDisplay"
+          @change="setRowPerPage(rowsToDisplay)"
+        >
+          <option v-for="rowOption in rowOptions" :key="rowOption">{{
+            rowOption
+          }}</option>
+        </select>
+        <span> records per page</span>
+      </div>
 
       <div class="action-bar-divider"></div>
 
       <button class="action-bar-button" @click="undo()">
-        <div class="undo">↺</div>
-        undo
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+        >
+          <path fill="none" d="M0 0h24v24H0z" />
+          <path
+            d="M5.828 7l2.536 2.536L6.95 10.95 2 6l4.95-4.95 1.414 1.414L5.828 5H13a8 8 0 1 1 0 16H4v-2h9a6 6 0 1 0 0-12H5.828z"
+          />
+        </svg>
       </button>
 
       <div class="action-bar-divider"></div>
@@ -41,7 +74,18 @@
           calculatePosition();
         "
       >
-        <strong>SORT</strong>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+        >
+          <path fill="none" d="M0 0h24v24H0z" />
+          <path
+            d="M4 8h16V5H4v3zm10 11v-9h-4v9h4zm2 0h4v-9h-4v9zm-8 0v-9H4v9h4zM3 3h18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"
+            fill="#000"
+          />
+        </svg>
       </button>
 
       <fieldset
@@ -107,6 +151,7 @@
 
       <!-- ACTIVE FILTERS -->
       <button
+        id="filter-icon"
         ref="activeFiltersButton"
         class="action-bar-button"
         @click="
@@ -114,7 +159,18 @@
           calculateFilterBoxPosition();
         "
       >
-        <strong>FILTERS</strong>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+        >
+          <path fill="none" d="M0 0h24v24H0z" />
+          <path
+            d="M14 14v6l-4 2v-8L4 5V3h16v2l-6 9zM6.404 5L12 13.394 17.596 5H6.404z"
+            fill="#000"
+          />
+        </svg>
       </button>
 
       <fieldset
@@ -168,7 +224,18 @@
       <div class="action-bar-divider"></div>
 
       <button class="action-bar-button" @click="downloadData()">
-        <strong>DL</strong>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+        >
+          <path fill="none" d="M0 0h24v24H0z" />
+          <path
+            d="M13 10h5l-6 6-6-6h5V3h2v7zm-9 9h16v-7h2v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8h2v7z"
+            fill="#000"
+          />
+        </svg>
       </button>
 
       <div class="action-bar-divider"></div>
@@ -194,6 +261,8 @@ import draggable from "vuedraggable";
 import { cloneDeep } from "lodash";
 import Papa from "papaparse";
 import DeleteRows from "@/components/delete-rows.vue";
+import tippy from "tippy.js";
+import "tippy.js/dist/tippy.css";
 
 export default {
   name: "ContentActionMenu",
@@ -216,6 +285,11 @@ export default {
       // newFieldName: {},
       nameMap: {},
     };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.initToolTips();
+    });
   },
   created() {
     this.rowsToDisplay = this.numberOfRowsToDisplay;
@@ -356,6 +430,12 @@ export default {
       tempLink.setAttribute("download", fileName);
       tempLink.click();
     },
+    initToolTips() {
+      tippy("#filter-icon", {
+        content: "filter",
+        theme: "tomato",
+      });
+    },
   },
   computed: {
     ...mapState([
@@ -387,23 +467,20 @@ export default {
 .action-bar-divider {
   display: inline-block;
   position: relative;
-  height: 30px;
+  height: 24px;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
   border-left: 2px solid var(--field-grey);
   margin-top: 10px;
   margin-bottom: 10px;
   vertical-align: bottom; /* important to have this or other elements around it will be displaced */
-  margin-left: 8px;
-  margin-right: 8px;
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
 }
 
 .data-row-info {
   font-size: 0.8rem;
   color: var(--field-label);
-}
-
-.action-bar-option {
-  width: 50px;
-  vertical-align: 0%;
 }
 
 .action-bar-button {
@@ -422,7 +499,7 @@ export default {
   justify-content: center;
   cursor: pointer;
   outline: none;
-  padding: 0.55rem 0.55rem;
+  padding: 0.3rem 0.3rem;
   font-size: 1rem;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -437,37 +514,6 @@ export default {
 
 .action-bar-button.first {
   margin-right: 0.5rem;
-}
-
-/* UNDO BUTTON */
-.action-bar-button > .undo {
-  margin-right: 3px;
-  transition: 0.3s;
-  font-weight: 900;
-  overflow: hidden;
-}
-.action-bar-button:hover > .undo {
-  transform: rotate(-90deg);
-  -webkit-transform: rotate(-90deg);
-  -ms-transform: rotate(-90deg);
-}
-
-.action-bar-button > .backward {
-  transition: 0.3s;
-}
-.action-bar-button:hover > .backward {
-  transform: translateX(-3px);
-  -webkit-transform: translateX(-3px);
-  -ms-transform: translateX(-3px);
-}
-
-.action-bar-button > .forward {
-  transition: 0.3s;
-}
-.action-bar-button:hover > .forward {
-  transform: translateX(3px);
-  -webkit-transform: translateX(3px);
-  -ms-transform: translateX(3px);
 }
 
 .data-row-info {
@@ -620,5 +666,46 @@ export default {
   height: 100%;
   vertical-align: top;
   color: var(--field-label);
+}
+
+.records-to-display {
+  display: inline-block;
+  vertical-align: 50%;
+}
+
+input[type="select"] + .records-to-display {
+  margin-bottom: 0px;
+}
+
+.records-to-display > span {
+}
+
+.record-options {
+  width: 65px;
+  height: auto;
+  margin-bottom: 0px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  vertical-align: middle;
+}
+
+.tippy-box[data-theme~="tomato"] {
+  background-color: tomato;
+  color: yellow;
+}
+.tippy-box[data-theme~="tomato"][data-placement^="top"] > .tippy-arrow::before {
+  border-top-color: tomato;
+}
+.tippy-box[data-theme~="tomato"][data-placement^="bottom"]
+  > .tippy-arrow::before {
+  border-bottom-color: tomato;
+}
+.tippy-box[data-theme~="tomato"][data-placement^="left"]
+  > .tippy-arrow::before {
+  border-left-color: tomato;
+}
+.tippy-box[data-theme~="tomato"][data-placement^="right"]
+  > .tippy-arrow::before {
+  border-right-color: tomato;
 }
 </style>
