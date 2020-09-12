@@ -105,7 +105,7 @@
         ref="sortFieldBox"
       >
         <div class="filter-box-search">
-          <h3>Set Field Order</h3>
+          <h3>Manage Fields</h3>
         </div>
 
         <div class="filter-value-list expanded">
