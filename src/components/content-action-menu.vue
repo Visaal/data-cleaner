@@ -449,6 +449,7 @@ export default {
     cancelFieldChanges() {
       this.fieldList = [...this.dataSelectedFieldNames];
       this.nameMap = {};
+      this.editingName = "";
       this.showSortField = !this.showSortField;
     },
     removeFilterItems(filterField, filterValue) {
