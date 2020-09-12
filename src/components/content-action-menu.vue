@@ -1,32 +1,40 @@
 <template>
   <div>
     <div class="action-top">
-      <button class="action-bar-button first" @click="previousPage()">
+      <button
+        class="action-bar-button first"
+        @click="previousPage()"
+        id="page-back-icon"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           width="24"
           height="24"
+          class="action-icon"
         >
           <path fill="none" d="M0 0h24v24H0z" />
           <path
             d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"
-            fill="#000"
           />
         </svg>
       </button>
 
-      <button class="action-bar-button" @click="nextPage()">
+      <button
+        class="action-bar-button"
+        @click="nextPage()"
+        id="page-forward-icon"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           width="24"
           height="24"
+          class="action-icon"
         >
           <path fill="none" d="M0 0h24v24H0z" />
           <path
             d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"
-            fill="#000"
           />
         </svg>
       </button>
@@ -49,12 +57,13 @@
 
       <div class="action-bar-divider"></div>
 
-      <button class="action-bar-button" @click="undo()">
+      <button class="action-bar-button" @click="undo()" id="undo-icon">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           width="24"
           height="24"
+          class="action-icon"
         >
           <path fill="none" d="M0 0h24v24H0z" />
           <path
@@ -73,17 +82,18 @@
           showSortField = true;
           calculatePosition();
         "
+        id="fields-icon"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           width="24"
           height="24"
+          class="action-icon"
         >
           <path fill="none" d="M0 0h24v24H0z" />
           <path
             d="M4 8h16V5H4v3zm10 11v-9h-4v9h4zm2 0h4v-9h-4v9zm-8 0v-9H4v9h4zM3 3h18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"
-            fill="#000"
           />
         </svg>
       </button>
@@ -164,11 +174,11 @@
           viewBox="0 0 24 24"
           width="24"
           height="24"
+          class="action-icon"
         >
           <path fill="none" d="M0 0h24v24H0z" />
           <path
             d="M14 14v6l-4 2v-8L4 5V3h16v2l-6 9zM6.404 5L12 13.394 17.596 5H6.404z"
-            fill="#000"
           />
         </svg>
       </button>
@@ -223,24 +233,28 @@
 
       <div class="action-bar-divider"></div>
 
-      <button class="action-bar-button" @click="downloadData()">
+      <button
+        class="action-bar-button"
+        @click="downloadData()"
+        id="download-icon"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           width="24"
           height="24"
+          class="action-icon"
         >
           <path fill="none" d="M0 0h24v24H0z" />
           <path
             d="M13 10h5l-6 6-6-6h5V3h2v7zm-9 9h16v-7h2v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8h2v7z"
-            fill="#000"
           />
         </svg>
       </button>
 
       <div class="action-bar-divider"></div>
 
-      <DeleteRows />
+      <DeleteRows fieldID="delete-icon" />
     </div>
 
     <div class="data-row-info">
@@ -431,9 +445,33 @@ export default {
       tempLink.click();
     },
     initToolTips() {
+      tippy("#page-back-icon", {
+        content: "page back",
+        theme: "grey-scale",
+      });
+      tippy("#page-forward-icon", {
+        content: "page forward",
+        theme: "grey-scale",
+      });
+      tippy("#undo-icon", {
+        content: "undo last action",
+        theme: "grey-scale",
+      });
+      tippy("#fields-icon", {
+        content: "manage fields",
+        theme: "grey-scale",
+      });
       tippy("#filter-icon", {
-        content: "filter",
-        theme: "tomato",
+        content: "manage filters",
+        theme: "grey-scale",
+      });
+      tippy("#download-icon", {
+        content: "download data",
+        theme: "grey-scale",
+      });
+      tippy("#delete-icon", {
+        content: "delete data rows",
+        theme: "grey-scale",
       });
     },
   },
@@ -689,23 +727,29 @@ input[type="select"] + .records-to-display {
   vertical-align: middle;
 }
 
-.tippy-box[data-theme~="tomato"] {
-  background-color: tomato;
-  color: yellow;
+.tippy-box[data-theme~="grey-scale"] {
+  background-color: var(--field-label);
+  color: var(--field-grey);
+  font-size: 0.9rem;
 }
-.tippy-box[data-theme~="tomato"][data-placement^="top"] > .tippy-arrow::before {
-  border-top-color: tomato;
-}
-.tippy-box[data-theme~="tomato"][data-placement^="bottom"]
+.tippy-box[data-theme~="grey-scale"][data-placement^="top"]
   > .tippy-arrow::before {
-  border-bottom-color: tomato;
+  border-top-color: var(--field-label);
 }
-.tippy-box[data-theme~="tomato"][data-placement^="left"]
+.tippy-box[data-theme~="grey-scale"][data-placement^="bottom"]
   > .tippy-arrow::before {
-  border-left-color: tomato;
+  border-bottom-color: var(--field-label);
 }
-.tippy-box[data-theme~="tomato"][data-placement^="right"]
+.tippy-box[data-theme~="grey-scale"][data-placement^="left"]
   > .tippy-arrow::before {
-  border-right-color: tomato;
+  border-left-color: var(--field-label);
+}
+.tippy-box[data-theme~="grey-scale"][data-placement^="right"]
+  > .tippy-arrow::before {
+  border-right-color: var(--field-label);
+}
+
+.action-icon {
+  fill: var(--stroke);
 }
 </style>
