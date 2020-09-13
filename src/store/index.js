@@ -15,6 +15,7 @@ import {
   SET_FILTERED_ROWS,
   SET_FILTERED_ROW_INDEXES,
   SET_ACTIVE_FILTER_VALUES,
+  SET_LAST_ACTION_TEXT,
 } from "./mutation-types";
 
 import {
@@ -63,6 +64,7 @@ const state = {
   previousDataFieldNames: [],
   previousDataSelectedFieldNames: [],
   activeFilterValues: {},
+  lastActionText: "",
 };
 
 const mutations = {
@@ -115,6 +117,9 @@ const mutations = {
   },
   [SET_ACTIVE_FILTER_VALUES](state, filterValues) {
     state.activeFilterValues = filterValues;
+  },
+  [SET_LAST_ACTION_TEXT](state, latestText) {
+    state.lastActionText = latestText;
   },
 };
 
