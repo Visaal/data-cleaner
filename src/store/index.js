@@ -140,6 +140,7 @@ const actions = {
     commit(UPDATE_DATA_ROWS, dataObject["data"]);
     commit(UPDATE_FIELD_NAMES, dataObject["fieldNames"]);
     dispatch("_createSchema");
+    commit(SET_LAST_ACTION_TEXT, "Data successfully imported");
   },
   setSelectedFieldsAction({ commit }, selectedFieldNames) {
     commit(SET_SELECTED_FIELD_NAMES, selectedFieldNames);
@@ -186,6 +187,7 @@ const actions = {
     if (Object.keys(state.activeFilterValues).length > 0) {
       dispatch("updateActiveFilterAction", state.activeFilterValues);
     }
+    commit(SET_LAST_ACTION_TEXT, `"${field}" set to upper case`);
   },
   setDataTypeAction({ commit }, ruleParameters) {
     let clonedDataRows = cloneDeep(state.dataRows);
@@ -268,6 +270,10 @@ const actions = {
     if (Object.keys(state.activeFilterValues).length > 0) {
       dispatch("updateActiveFilterAction", state.activeFilterValues);
     }
+    commit(
+      SET_LAST_ACTION_TEXT,
+      `Keyword search applied to "${fieldToSearch}" with matches shown in "${fieldToAdd}"`
+    );
   },
   extractCharactersAction({ commit, dispatch }, ruleParameters) {
     let selectedOption = ruleParameters["selectedOption"];
@@ -320,6 +326,10 @@ const actions = {
     if (Object.keys(state.activeFilterValues).length > 0) {
       dispatch("updateActiveFilterAction", state.activeFilterValues);
     }
+    commit(
+      SET_LAST_ACTION_TEXT,
+      `Characters extracted from "${fieldToExtractFrom}" into "${fieldToAdd}"`
+    );
   },
   //
   // ACTION BAR ACTIONS
