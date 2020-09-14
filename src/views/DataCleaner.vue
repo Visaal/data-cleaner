@@ -24,7 +24,9 @@
       <DataView />
     </div>
 
-    <div class="footer">This is the footer</div>
+    <div class="footer">
+      <Footer />
+    </div>
   </div>
 </template>
 
@@ -33,6 +35,7 @@
 import RuleSelector from "@/components/rule-selector.vue";
 import DataView from "@/components/data-view.vue";
 import ContentActionMenu from "@/components/content-action-menu.vue";
+import Footer from "@/components/footer.vue";
 import { mapState } from "vuex";
 import router from "../router";
 
@@ -42,6 +45,7 @@ export default {
     RuleSelector,
     DataView,
     ContentActionMenu,
+    Footer,
   },
   methods: {
     navigateHome() {
