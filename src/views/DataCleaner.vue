@@ -84,7 +84,7 @@ export default {
     grid-gap: 0px;
     /* grid-template-columns: repeat(12, 1fr); */
     background-color: var(--background);
-    grid-template-columns: 2fr 10fr;
+    grid-template-columns: 3fr 9fr;
     grid-template-areas:
       "header header"
       "sidebar  action-bar"
