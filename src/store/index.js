@@ -331,6 +331,35 @@ const actions = {
       `Characters extracted from "${fieldToExtractFrom}" into "${fieldToAdd}"`
     );
   },
+  //RULE: JOIN FIELDS
+  mergeFieldsAction({ commit, dispatch }, ruleParameters) {
+    let fieldToAdd = ruleParameters["newField"];
+    let fieldsToJoin = ruleParameters["fieldsToJoin"];
+    let delimiter = ruleParameters["delimiter"];
+    let clonedDataRows = cloneDeep(state.dataRows);
+    let fieldDetailObject = {
+      fieldToAdd: fieldToAdd,
+      fieldToPlaceNextTo: fieldsToJoin[fieldsToJoin.length - 1],
+    };
+
+    for (let i = 0; i < clonedDataRows.length; i++) {
+      let newFieldValue = fieldsToJoin
+        .map((field) => clonedDataRows[i][field])
+        .join(delimiter);
+      clonedDataRows[i][fieldToAdd] = newFieldValue;
+    }
+
+    commit(UPDATE_DATA_ROWS, clonedDataRows);
+    dispatch("_addNewField", fieldDetailObject);
+    dispatch("_createSchema");
+    if (Object.keys(state.activeFilterValues).length > 0) {
+      dispatch("updateActiveFilterAction", state.activeFilterValues);
+    }
+    commit(
+      SET_LAST_ACTION_TEXT,
+      `"${fieldsToJoin}" joined into "${fieldToAdd}"`
+    );
+  },
   //
   // ACTION BAR ACTIONS
   setNumberOfRowsToDisplayAction({ commit }, numberSelected) {
