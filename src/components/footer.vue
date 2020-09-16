@@ -59,7 +59,7 @@ export default {
   display: inline-block;
   vertical-align: middle;
   white-space: nowrap;
-  overflow: hidden;
+  overflow-x: scroll;
   position: relative;
   max-width: 90%;
 }
