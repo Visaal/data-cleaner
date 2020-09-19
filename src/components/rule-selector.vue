@@ -5,6 +5,7 @@
       <label for="rule_name">Select Option:</label>
       <select v-model="rule_name">
         <option value="JoinFields">Join Fields</option>
+        <option value="LookUps">Create LookUp</option>
         <option value="Capitalise">Capitalise</option>
         <option value="FixDataType">Fix Inconsistent Data Type</option>
         <option value="StringSearch">Extract Sub Strings</option>
@@ -24,6 +25,7 @@ export default {
   name: "RuleSelector",
   components: {
     JoinFields: () => import("@/components/join-fields.vue"),
+    LookUps: () => import("@/components/lookups.vue"),
     Capitalise: () => import("@/components/capitalise.vue"),
     ChangeValue: () => import("@/components/change-value.vue"),
     FixDataType: () => import("@/components/fix-data-type.vue"),

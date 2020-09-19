@@ -1,0 +1,101 @@
+<template>
+  <div>
+    <fieldset>
+      <label for="fieldName">Select Field:</label>
+      <select v-model="fieldName">
+        <option v-for="field in dataSelectedFieldNames" :key="field">
+          {{ field }}
+        </option>
+      </select>
+
+      <div>
+        <label for="newField">New Field Name:</label>
+        <input type="text" v-model="newField" />
+      </div>
+
+      <label for="">Enter LookUp Values:</label>
+      <div v-for="(value, index) in orderedValues" :key="index">
+        <div class="lookup-pair">
+          <div class="raw-value">{{ value[0] }}</div>
+          <input
+            class="lookup-value"
+            type="text"
+            v-model="valueMap[value[0]]"
+          />
+        </div>
+      </div>
+      <button v-on:click="createLookup" type="button">Apply</button>
+    </fieldset>
+  </div>
+</template>
+
+<script>
+import { mapState } from "vuex";
+
+export default {
+  data() {
+    return {
+      fieldName: "",
+      newField: "",
+      valueMap: {},
+    };
+  },
+  methods: {
+    createLookup() {
+      console.log(this.valueMap);
+    },
+  },
+  watch: {
+    fieldName: function() {
+      this.valueMap = {};
+      for (let i = 0; i < this.orderedValues.length; i++) {
+        this.valueMap[this.orderedValues[i][0]] = "";
+      }
+    },
+  },
+  computed: {
+    ...mapState(["dataSelectedFieldNames", "dataSchema"]),
+    orderedValues: function() {
+      let allDistinctValues = {};
+      for (const [key] of Object.entries(
+        this.dataSchema[this.fieldName]["distinctValues"]
+      )) {
+        Object.assign(
+          allDistinctValues,
+          this.dataSchema[this.fieldName]["distinctValues"][key]
+        );
+      }
+      let entries = Object.entries(allDistinctValues);
+      let sorted = entries.sort((a, b) => b[1].length - a[1].length);
+      return sorted;
+    },
+  },
+};
+</script>
+
+<style>
+.lookup-pair {
+  width: 100%;
+  height: 100%;
+  display: table;
+  /* border-top: 1px solid var(--field-grey); */
+  border-bottom: 1px solid var(--table-border);
+}
+
+.raw-value {
+  display: inline-block;
+  width: 50%;
+  font-size: 0.8rem;
+  display: table-cell;
+  vertical-align: middle;
+  word-break: break-all;
+}
+
+input[type="text"].lookup-value {
+  width: 100%;
+  margin-bottom: 0px;
+  display: table-cell;
+  vertical-align: middle;
+  border-radius: 0;
+}
+</style>
