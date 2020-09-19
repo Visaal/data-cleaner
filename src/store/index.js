@@ -360,6 +360,39 @@ const actions = {
       `"${fieldsToJoin}" joined into "${fieldToAdd}"`
     );
   },
+  // RULE: CREATE LOOKUP
+  createLookupAction({ commit, dispatch }, ruleParameters) {
+    let fieldToAdd = ruleParameters["newField"];
+    let baseField = ruleParameters["baseField"];
+    let lookupMap = ruleParameters["valueMap"];
+    let clonedDataRows = cloneDeep(state.dataRows);
+    let fieldDetailObject = {
+      fieldToAdd: fieldToAdd,
+      fieldToPlaceNextTo: baseField,
+    };
+
+    console.log(fieldToAdd);
+    console.log(baseField);
+    console.log(lookupMap);
+
+    for (let i = 0; i < clonedDataRows.length; i++) {
+      let baseFieldValue = clonedDataRows[i][baseField];
+      if (!baseFieldValue.length) {
+        baseFieldValue = "null";
+      }
+      clonedDataRows[i][fieldToAdd] = lookupMap[baseFieldValue];
+    }
+    commit(UPDATE_DATA_ROWS, clonedDataRows);
+    dispatch("_addNewField", fieldDetailObject);
+    dispatch("_createSchema");
+    if (Object.keys(state.activeFilterValues).length > 0) {
+      dispatch("updateActiveFilterAction", state.activeFilterValues);
+    }
+    commit(
+      SET_LAST_ACTION_TEXT,
+      `"${fieldToAdd}" created based on lookup of "${baseField} values"`
+    );
+  },
   //
   // ACTION BAR ACTIONS
   setNumberOfRowsToDisplayAction({ commit }, numberSelected) {

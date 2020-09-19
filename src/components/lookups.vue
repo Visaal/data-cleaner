@@ -13,7 +13,7 @@
         <input type="text" v-model="newField" />
       </div>
 
-      <label for="">Enter LookUp Values:</label>
+      <label for="">Enter Lookup Values:</label>
       <div v-for="(value, index) in orderedValues" :key="index">
         <div class="lookup-pair">
           <div class="raw-value">{{ value[0] }}</div>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
@@ -41,8 +41,14 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["createLookupAction"]),
     createLookup() {
       console.log(this.valueMap);
+      this.createLookupAction({
+        baseField: this.fieldName,
+        newField: this.newField,
+        valueMap: this.valueMap,
+      });
     },
   },
   watch: {
