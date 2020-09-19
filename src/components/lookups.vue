@@ -43,7 +43,6 @@ export default {
   methods: {
     ...mapActions(["createLookupAction"]),
     createLookup() {
-      console.log(this.valueMap);
       this.createLookupAction({
         baseField: this.fieldName,
         newField: this.newField,
@@ -52,11 +51,18 @@ export default {
     },
   },
   watch: {
-    fieldName: function() {
+    fieldName: function(fieldValue) {
+      // create blank value map based on distinct values
       this.valueMap = {};
       for (let i = 0; i < this.orderedValues.length; i++) {
         this.valueMap[this.orderedValues[i][0]] = "";
       }
+      let selectedField = document.getElementById(fieldValue);
+      selectedField.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "center",
+      });
     },
   },
   computed: {
