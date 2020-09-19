@@ -390,7 +390,7 @@ const actions = {
     }
     commit(
       SET_LAST_ACTION_TEXT,
-      `"${fieldToAdd}" created based on lookup of "${baseField} values"`
+      `"${fieldToAdd}" created based on lookup of "${baseField}" values`
     );
   },
   //
