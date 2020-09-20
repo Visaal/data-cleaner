@@ -9,8 +9,9 @@
       </select>
 
       <div>
-        <label for="newField">New Field Name:</label>
-        <input type="text" v-model="newField" />
+        <label for="newField" v-if="existingMap">Existing Lookup Name:</label>
+        <label for="newField" v-else>New Field Name:</label>
+        <input type="text" v-model="newField" :disabled="existingMap" />
       </div>
 
       <label for="">Enter Lookup Values:</label>
@@ -38,6 +39,7 @@ export default {
       fieldName: "",
       newField: "",
       valueMap: {},
+      existingMap: false,
     };
   },
   methods: {
@@ -52,11 +54,22 @@ export default {
   },
   watch: {
     fieldName: function(fieldValue) {
-      // create blank value map based on distinct values
-      this.valueMap = {};
-      for (let i = 0; i < this.orderedValues.length; i++) {
-        this.valueMap[this.orderedValues[i][0]] = "";
+      // load existing lookup maps
+      // TODO: ALLOW FOR MULTIPLE LOOKUPS ON A SINGLE FIELD
+      if (this.lookupMaps[fieldValue]) {
+        this.existingMap = true;
+        this.newField = Object.keys(this.lookupMaps[fieldValue][0])[0];
+        this.valueMap = this.lookupMaps[fieldValue][0][this.newField];
+      } else {
+        // create blank value map based on distinct values
+        this.existingMap = false;
+        this.newField = "";
+        this.valueMap = {};
+        for (let i = 0; i < this.orderedValues.length; i++) {
+          this.valueMap[this.orderedValues[i][0]] = "";
+        }
       }
+      // scroll to field selected
       let selectedField = document.getElementById(fieldValue);
       selectedField.scrollIntoView({
         behavior: "smooth",
@@ -66,7 +79,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["dataSelectedFieldNames", "dataSchema"]),
+    ...mapState(["dataSelectedFieldNames", "dataSchema", "lookupMaps"]),
     orderedValues: function() {
       let allDistinctValues = {};
       for (const [key] of Object.entries(

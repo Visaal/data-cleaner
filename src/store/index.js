@@ -16,6 +16,7 @@ import {
   SET_FILTERED_ROW_INDEXES,
   SET_ACTIVE_FILTER_VALUES,
   SET_LAST_ACTION_TEXT,
+  UPDATE_LOOKUP_MAPS,
 } from "./mutation-types";
 
 import {
@@ -65,6 +66,7 @@ const state = {
   previousDataSelectedFieldNames: [],
   activeFilterValues: {},
   lastActionText: "",
+  lookupMaps: {},
 };
 
 const mutations = {
@@ -120,6 +122,9 @@ const mutations = {
   },
   [SET_LAST_ACTION_TEXT](state, latestText) {
     state.lastActionText = latestText;
+  },
+  [UPDATE_LOOKUP_MAPS](state, lookupMap) {
+    state.lookupMaps = lookupMap;
   },
 };
 
@@ -366,14 +371,11 @@ const actions = {
     let baseField = ruleParameters["baseField"];
     let lookupMap = ruleParameters["valueMap"];
     let clonedDataRows = cloneDeep(state.dataRows);
+    let clonedLookupMaps = cloneDeep(state.lookupMaps);
     let fieldDetailObject = {
       fieldToAdd: fieldToAdd,
       fieldToPlaceNextTo: baseField,
     };
-
-    console.log(fieldToAdd);
-    console.log(baseField);
-    console.log(lookupMap);
 
     for (let i = 0; i < clonedDataRows.length; i++) {
       let baseFieldValue = clonedDataRows[i][baseField];
@@ -382,12 +384,17 @@ const actions = {
       }
       clonedDataRows[i][fieldToAdd] = lookupMap[baseFieldValue];
     }
+
+    // Add lookup map for field to state
+    clonedLookupMaps[baseField] = [{ [fieldToAdd]: lookupMap }];
+
     commit(UPDATE_DATA_ROWS, clonedDataRows);
     dispatch("_addNewField", fieldDetailObject);
     dispatch("_createSchema");
     if (Object.keys(state.activeFilterValues).length > 0) {
       dispatch("updateActiveFilterAction", state.activeFilterValues);
     }
+    commit(UPDATE_LOOKUP_MAPS, clonedLookupMaps);
     commit(
       SET_LAST_ACTION_TEXT,
       `"${fieldToAdd}" created based on lookup of "${baseField}" values`

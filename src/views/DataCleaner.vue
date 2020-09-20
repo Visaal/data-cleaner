@@ -196,6 +196,11 @@ input:focus {
 input[type="date"] {
   padding-right: 0px;
 }
+input[type="text"]:disabled {
+  /* background-color: var(--secondary); */
+  filter: brightness(105%);
+  color: var(--field-label);
+}
 
 label {
   /* padding-top: 8px; */

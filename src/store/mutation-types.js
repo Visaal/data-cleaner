@@ -10,3 +10,4 @@ export const SET_FILTERED_ROWS = "setFilteredRows";
 export const SET_FILTERED_ROW_INDEXES = "setFilteredRowIndexes";
 export const SET_ACTIVE_FILTER_VALUES = "setActiveFilterValues";
 export const SET_LAST_ACTION_TEXT = "setLastActionText";
+export const UPDATE_LOOKUP_MAPS = "updateLookupMaps";
