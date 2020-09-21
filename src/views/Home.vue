@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="particles-js"></div>
+    <!-- <div id="particles-js"></div> -->
     <fieldset
       :class="{ 'display-from-left': fileName }"
       class="hidden-left field-list-fieldset"
