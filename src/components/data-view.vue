@@ -23,7 +23,7 @@
           )"
           :key="index"
         >
-          <td>{{ index + 1 }}</td>
+          <td>{{ rowStartSliceIndex + index + 1 }}</td>
           <td v-for="field in dataSelectedFieldNames" :key="field.id">
             {{ row[field] }}
           </td>
