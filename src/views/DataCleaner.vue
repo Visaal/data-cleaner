@@ -1,14 +1,23 @@
 <template>
   <div class="container">
     <div class="header">
-      <div class="logo-container">
-        <img
-          src="../assets/dc_logo.svg"
-          alt=""
-          class="logo"
-          @click="navigateHome"
-        />
+      <div class="logo-container" @click="navigateHome">
+        <div class="logo-background">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            class="logo"
+          >
+            <path fill="none" d="M0 0h24v24H0z" />
+            <path
+              d="M6 12h12V8h-4V4H6v8zm-2 0V2.995c0-.55.445-.995.996-.995H15l5 5v5h2v2H2v-2h2zm-1 4h2v6H3v-6zm16 0h2v6h-2v-6zm-4 0h2v6h-2v-6zm-4 0h2v6h-2v-6zm-4 0h2v6H7v-6z"
+            />
+          </svg>
+        </div>
       </div>
+
       <div class="file-name">{{ dataFileName }}</div>
     </div>
 
@@ -106,29 +115,36 @@ export default {
 }
 
 .logo-container {
-  padding-left: 10px;
-  padding-right: 10px;
   display: inline-block;
-  position: absolute;
-  vertical-align: middle;
   height: var(--header-height);
   overflow: hidden;
   border-right-color: var(--teritary);
   border-right-style: solid;
-  border-width: 2px;
+  border-right-width: 2px;
   box-sizing: border-box;
+  cursor: pointer;
+}
+
+.logo-background {
+  position: relative;
+  background-color: var(--button);
+  width: 38px;
+  height: 38px;
+  vertical-align: middle;
+  line-height: var(--header-height);
 }
 
 .logo {
+  position: absolute;
+  top: 7px;
+  left: 7px;
   cursor: pointer;
-  padding-top: 3px;
-  height: 34px;
-  width: 34px;
+  fill: var(--paragraph);
 }
 
 .file-name {
   position: absolute;
-  left: 70px;
+  left: 50px;
   vertical-align: middle;
   display: inline-block;
 }
@@ -146,7 +162,6 @@ export default {
 .content-action-menu {
   margin-left: 10px;
   grid-area: action-bar;
-  /* border-bottom: 2px solid var(--field-grey); */
 }
 
 .content {
