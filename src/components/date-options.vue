@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import { DateTime } from "luxon";
 import { mapActions, mapState } from "vuex";
 
 export default {
@@ -76,7 +75,6 @@ export default {
         currentDateFormat: this.currentDateFormat,
         newDateFormat: this.newDateFormat,
       });
-      DateTime.fromFormat("May 25 1982", this.currentDateFormat);
     },
   },
   computed: {
