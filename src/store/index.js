@@ -400,6 +400,47 @@ const actions = {
       `"${fieldToAdd}" created based on lookup of "${baseField}" values`
     );
   },
+  // RULE: CHANGE DATE FORMAT
+  changeDateFormatAction({ commit, dispatch }, dateFormatParams) {
+    let field = dateFormatParams["fieldName"];
+    let currentFormat = dateFormatParams["currentDateFormat"];
+    let newFormat = dateFormatParams["newDateFormat"];
+    let clonedDataRows = cloneDeep(state.dataRows);
+    let failedConversions = 0;
+
+    for (let i = 0; i < clonedDataRows.length; i++) {
+      let currentDate = DateTime.fromFormat(
+        clonedDataRows[i][field],
+        currentFormat
+      );
+
+      if (!currentDate.invalid) {
+        let newFormatDate = currentDate.toFormat(newFormat);
+        clonedDataRows[i][field] = newFormatDate;
+      } else {
+        failedConversions++;
+      }
+    }
+
+    commit(UPDATE_DATA_ROWS, clonedDataRows);
+    dispatch("_createSchema");
+    if (Object.keys(state.activeFilterValues).length > 0) {
+      dispatch("updateActiveFilterAction", state.activeFilterValues);
+    }
+    if (failedConversions === clonedDataRows.length) {
+      commit(
+        SET_LAST_ACTION_TEXT,
+        `Attempt to amend date format changed on ${field} failed`
+      );
+    } else if (failedConversions > 0) {
+      commit(
+        SET_LAST_ACTION_TEXT,
+        `Date format changed on ${field} partially succeeded - ${failedConversions} records failed `
+      );
+    } else {
+      commit(SET_LAST_ACTION_TEXT, `Date format changed on ${field}`);
+    }
+  },
   //
   // ACTION BAR ACTIONS
   setNumberOfRowsToDisplayAction({ commit }, numberSelected) {
