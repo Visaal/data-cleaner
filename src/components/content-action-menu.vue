@@ -52,7 +52,7 @@
             rowOption
           }}</option>
         </select>
-        <span> records per page</span>
+        <span> records</span>
       </div>
 
       <div class="action-bar-divider"></div>
@@ -295,6 +295,10 @@
       <div class="action-bar-divider"></div>
 
       <DeleteRows fieldID="delete-icon" />
+
+      <div class="action-bar-divider"></div>
+
+      <ChartData fieldID="chart-icon" />
     </div>
 
     <div class="data-row-info">
@@ -315,6 +319,7 @@ import draggable from "vuedraggable";
 import { cloneDeep } from "lodash";
 import Papa from "papaparse";
 import DeleteRows from "@/components/delete-rows.vue";
+import ChartData from "@/components/chart-data.vue";
 import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";
 
@@ -323,6 +328,7 @@ export default {
   components: {
     draggable,
     DeleteRows,
+    ChartData,
   },
   data() {
     return {
@@ -512,6 +518,10 @@ export default {
       });
       tippy("#delete-icon", {
         content: "delete data rows",
+        theme: "grey-scale",
+      });
+      tippy("#chart-icon", {
+        content: "Visualise Data",
         theme: "grey-scale",
       });
     },
