@@ -7,6 +7,7 @@
       @click="
         showChartActions();
         calculatePosition();
+        calculateSize();
       "
     >
       <svg
@@ -25,11 +26,11 @@
 
     <fieldset
       v-if="showChartOptions"
-      class="active-filters"
+      class="chart-container"
       :style="positionStyle"
       ref="chartOptionBox"
     >
-      <!-- <svg
+      <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         width="48"
@@ -92,15 +93,37 @@
         <path
           d="M11 2.05v3.02C7.608 5.557 5 8.475 5 12c0 3.866 3.134 7 7 7 1.572 0 3.024-.518 4.192-1.394l2.137 2.137C16.605 21.153 14.4 22 12 22 6.477 22 2 17.523 2 12c0-5.185 3.947-9.449 9-9.95zM21.95 13c-.2 2.011-.994 3.847-2.207 5.328l-2.137-2.136c.687-.916 1.153-2.006 1.323-3.192h3.022zM13.002 2.05c4.724.469 8.48 4.226 8.95 8.95h-3.022c-.438-3.065-2.863-5.49-5.928-5.929V2.049z"
         />
-      </svg> -->
-      <bar-chart :data="chartData" />
+      </svg>
+      <div>
+        <label for="fieldName">Select x-axis</label>
+        <select v-model="xFieldName">
+          <option v-for="field in dataSelectedFieldNames" :key="field">
+            {{ field }}
+          </option>
+        </select>
+      </div>
+      <div>
+        <label for="fieldName">Select y-axis</label>
+        <select v-model="yFieldName">
+          <option v-for="field in dataSelectedFieldNames" :key="field">
+            {{ field }}
+          </option>
+        </select>
+      </div>
+      <button @click="generateChart()">
+        Chart Data
+      </button>
+      <div v-if="showChart">
+        <column-chart :data="columnData" :options="chartOptions" />
+      </div>
     </fieldset>
   </div>
 </template>
 
 <script>
 import "tui-chart/dist/tui-chart.css";
-import { barChart } from "@toast-ui/vue-chart";
+import { columnChart } from "@toast-ui/vue-chart";
+import { mapState } from "vuex";
 
 export default {
   name: "ChartRows",
@@ -108,29 +131,23 @@ export default {
     fieldID: String,
   },
   components: {
-    "bar-chart": barChart,
+    "column-chart": columnChart,
   },
   data() {
     return {
       showChartOptions: false,
+      showChart: false,
       positionStyle: {
         top: "0px",
         left: "0px",
       },
-      chartData: {
-        // for 'data' prop of 'bar-chart'
-        categories: ["July", "Aug", "Sep", "Oct", "Nov"],
-        series: [
-          {
-            name: "Budget",
-            data: [3000, 5000, 7000, 6000, 4000],
-          },
-          {
-            name: "Income",
-            data: [1000, 7000, 2000, 5000, 3000],
-          },
-        ],
-      },
+      xFieldName: "",
+      yFieldName: "",
+      chartTitle: "Placeholder",
+      columnData: {},
+      chartOptions: {},
+      containerWidth: 0,
+      containerHeight: 0,
     };
   },
   created() {},
@@ -141,21 +158,160 @@ export default {
     calculatePosition() {
       this.$nextTick(() => {
         if (this.showChartOptions) {
-          let leftAdjustment = this.$refs.chartOptionBox.clientWidth;
-          let rightPosition = this.$refs.chartButton.getBoundingClientRect()
-            .right;
+          let screenWidth = window.innerWidth;
+          let chartAreaWidth = this.$refs.chartOptionBox.clientWidth;
           let topPosition = this.$refs.chartButton.getBoundingClientRect()
             .bottom;
-          this.positionStyle.left = `${rightPosition - leftAdjustment}px`;
+          this.positionStyle.left = `${screenWidth / 2 - chartAreaWidth / 2}px`;
           this.positionStyle.top = `${topPosition}px`;
         }
       });
     },
+    calculateSize() {
+      if (this.showChartOptions) {
+        this.$nextTick(() => {
+          this.containerWidth = this.$refs.chartOptionBox.clientWidth;
+          this.containerHeight = this.$refs.chartOptionBox.clientHeight;
+        });
+      }
+    },
+    generateChartOptions() {
+      this.chartOptions = {
+        chart: {
+          width: this.containerWidth * 0.95,
+          height: this.containerHeight * 0.7,
+          title: this.chartTitle,
+        },
+        yAxis: {
+          title: "Temperature (Celsius)",
+          pointOnColumn: true,
+        },
+        xAxis: {
+          title: "Years",
+        },
+        series: {
+          showDot: true,
+          zoomable: true,
+        },
+        tooltip: {
+          suffix: "°C",
+        },
+      };
+    },
+    generateChart() {
+      this.showChart = false;
+      // Determine x-axis values
+      let allDistinctXValues = {};
+      for (const [key] of Object.entries(
+        this.dataSchema[this.xFieldName]["distinctValues"]
+      )) {
+        Object.assign(
+          allDistinctXValues,
+          this.dataSchema[this.xFieldName]["distinctValues"][key]
+        );
+      }
+      let categories = Object.keys(allDistinctXValues);
+
+      let series;
+      // If y-axis selection is equal to x-axis selection or empty then display count of categories
+      if (this.xFieldName === this.yFieldName || this.yFieldName === "") {
+        this.chartTitle = `Count of ${this.xFieldName}`;
+        let valueRows = Object.values(allDistinctXValues);
+        let categoryCounts = [];
+        for (let i = 0; i < valueRows.length; i++) {
+          categoryCounts.push(valueRows[i].length);
+        }
+        series = [
+          {
+            name: "Count",
+            data: categoryCounts,
+          },
+        ];
+      } else {
+        // If y-aixs field is different then multiple series need to be generated
+        this.chartTitle = `${this.yFieldName} by ${this.xFieldName}`;
+
+        let allDistinctYValues = {};
+        for (const [key] of Object.entries(
+          this.dataSchema[this.yFieldName]["distinctValues"]
+        )) {
+          Object.assign(
+            allDistinctYValues,
+            this.dataSchema[this.yFieldName]["distinctValues"][key]
+          );
+        }
+
+        let seriesNames = Object.keys(allDistinctYValues);
+        // Series data structure
+        // series: [
+        //   {
+        //     name: "Budget",
+        //     data: [3000, 5000, 7000, 6000, 4000],
+        //   },
+        //   {
+        //     name: "Income",
+        //     data: [1000, 7000, 2000, 5000, 3000],
+        //   },
+        // ],
+        series = [];
+        seriesNames.forEach((seriesName) =>
+          series.push({ name: seriesName, data: [] })
+        );
+
+        // For each category (x axis) value get the instersection of the series (y axis) values
+        for (let i = 0; i < categories.length; i++) {
+          // Row indexes of distinct x fields
+          let array1 = allDistinctXValues[categories[i]];
+
+          for (let j = 0; j < seriesNames.length; j++) {
+            // Row indexes of distinct Y fields
+            let array2 = allDistinctYValues[seriesNames[j]];
+
+            let instersectionRowIndexes = array1.filter((value) =>
+              array2.includes(value)
+            );
+            series[j]["data"].push(instersectionRowIndexes.length);
+          }
+        }
+      }
+      this.columnData = {
+        categories: categories,
+        series,
+      };
+      this.$nextTick(() => {
+        this.generateChartOptions();
+        this.showChart = true;
+      });
+    },
+  },
+  computed: {
+    ...mapState([
+      "dataRows",
+      "dataFieldNames",
+      "dataSelectedFieldNames",
+      "dataSchema",
+    ]),
   },
 };
 </script>
 
 <style>
+.chart-container {
+  z-index: 1;
+  min-width: 90%;
+  max-width: 90%;
+  min-height: 80%;
+  max-height: 80%;
+  position: absolute;
+  background: var(--background);
+  -webkit-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
+  -moz-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
+  box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.5);
+  overflow: auto;
+  width: auto;
+  box-sizing: border-box;
+}
+
 .chart-action {
   display: inline-block;
 }
