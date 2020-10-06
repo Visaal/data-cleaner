@@ -117,7 +117,7 @@
           </div>
           <div class="chart-option-action">
             <button @click="generateChart()">
-              Chart Data
+              Plot Data
             </button>
           </div>
         </div>
@@ -326,8 +326,6 @@ export default {
 
 .chart-option-button {
   margin: 0.2rem;
-  /* height: 30px; */
-  /* line-height: 30px; */
   background-color: var(--field-grey);
   border-color: var(--field-grey);
   color: var(--button-text);
@@ -371,10 +369,12 @@ export default {
   margin-right: 1%;
 }
 .chart-option-container .chart-option-section {
-  width: 44%;
+  width: 40%;
 }
 
-.chart-option-container .chart-option-action {
-  /* width: 10%; */
+.chart-option-action > button {
+  margin: 0px;
+  line-height: 38px;
+  height: 38px;
 }
 </style>
