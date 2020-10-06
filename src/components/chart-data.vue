@@ -30,7 +30,7 @@
       :style="positionStyle"
       ref="chartOptionBox"
     >
-      <div class="chart-icons">
+      <div class="chart-icons" ref="chartIconBox">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -97,7 +97,7 @@
         </svg>
       </div>
 
-      <fieldset>
+      <fieldset ref="chartFormBox">
         <div class="chart-option-container">
           <div class="chart-option-section">
             <label for="fieldName">Select x-axis</label>
@@ -158,6 +158,8 @@ export default {
       chartOptions: {},
       containerWidth: 0,
       containerHeight: 0,
+      chartIconHeight: 0,
+      chartFormHeight: 0,
     };
   },
   created() {},
@@ -182,6 +184,9 @@ export default {
         this.$nextTick(() => {
           this.containerWidth = this.$refs.chartOptionBox.clientWidth;
           this.containerHeight = this.$refs.chartOptionBox.clientHeight;
+          this.chartIconHeight = this.$refs.chartIconBox.clientHeight;
+          this.chartFormHeight = this.$refs.chartFormBox.clientHeight;
+          console.log(this.chartIconHeight, this.chartFormHeight);
         });
       }
     },
@@ -189,7 +194,11 @@ export default {
       this.chartOptions = {
         chart: {
           width: this.containerWidth * 0.95,
-          height: this.containerHeight * 0.7,
+          height:
+            (this.containerHeight -
+              this.chartIconHeight -
+              this.chartFormHeight) *
+            0.95,
           title: this.chartTitle,
         },
         yAxis: {
