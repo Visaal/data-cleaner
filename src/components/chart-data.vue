@@ -334,6 +334,7 @@ export default {
 }
 
 .chart-option-button {
+  width: 20%;
   margin: 0.2rem;
   background-color: var(--field-grey);
   border-color: var(--field-grey);
@@ -353,6 +354,10 @@ export default {
   -ms-user-select: none;
   user-select: none;
   position: relative;
+}
+
+.chart-option-button:hover {
+  filter: brightness(93%);
 }
 
 .chart-icons {
