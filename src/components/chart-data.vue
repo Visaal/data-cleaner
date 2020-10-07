@@ -187,7 +187,6 @@ export default {
           this.containerHeight = this.$refs.chartOptionBox.clientHeight;
           this.chartIconHeight = this.$refs.chartIconBox.clientHeight;
           this.chartFormHeight = this.$refs.chartFormBox.clientHeight;
-          console.log(this.chartIconHeight, this.chartFormHeight);
         });
       }
     },
