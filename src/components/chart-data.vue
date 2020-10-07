@@ -30,7 +30,7 @@
       :style="positionStyle"
       ref="chartOptionBox"
     >
-      <div @click="showChartActions()" class="close">&#x2716;</div>
+      <div @click="showChartActions()" class="chart-close">&#x2716;</div>
       <div class="chart-icons" ref="chartIconBox">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -313,7 +313,7 @@ export default {
 </script>
 
 <style>
-.close {
+.chart-close {
   display: inline;
   cursor: pointer;
   position: absolute;
