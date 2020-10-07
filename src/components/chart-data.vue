@@ -30,6 +30,7 @@
       :style="positionStyle"
       ref="chartOptionBox"
     >
+      <div @click="showChartActions()" class="close">&#x2716;</div>
       <div class="chart-icons" ref="chartIconBox">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -313,6 +314,21 @@ export default {
 </script>
 
 <style>
+.close {
+  display: inline;
+  cursor: pointer;
+  position: absolute;
+  padding: 0.2rem 0.2rem;
+  background-color: var(--background);
+  top: 0.1rem;
+  right: 0.1rem;
+  font-size: 1.5rem;
+  width: 1.5rem;
+  z-index: 1;
+  text-align: center;
+  border-radius: 50%;
+}
+
 .chart-container {
   z-index: 1;
   min-width: 90%;
