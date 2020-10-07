@@ -38,6 +38,8 @@
           width="48"
           height="48"
           class="chart-option-button"
+          :class="{ 'active-chart': chartType === 'lineChart' }"
+          @click="setChartType('lineChart')"
         >
           <path fill="none" d="M0 0H24V24H0z" />
           <path
@@ -51,6 +53,8 @@
           width="48"
           height="48"
           class="chart-option-button"
+          :class="{ 'active-chart': chartType === 'pieChart' }"
+          @click="setChartType('pieChart')"
         >
           <path fill="none" d="M0 0h24v24H0z" />
           <path
@@ -64,6 +68,8 @@
           width="48"
           height="48"
           class="chart-option-button"
+          :class="{ 'active-chart': chartType === 'columnChart' }"
+          @click="setChartType('columnChart')"
         >
           <path fill="none" d="M0 0h24v24H0z" />
           <path
@@ -77,6 +83,8 @@
           width="48"
           height="48"
           class="chart-option-button"
+          :class="{ 'active-chart': chartType === 'bubbleChart' }"
+          @click="setChartType('bubbleChart')"
         >
           <path fill="none" d="M0 0L24 0 24 24 0 24z" />
           <path
@@ -90,6 +98,8 @@
           width="48"
           height="48"
           class="chart-option-button"
+          :class="{ 'active-chart': chartType === 'donutChart' }"
+          @click="setChartType('donutChart')"
         >
           <path fill="none" d="M0 0H24V24H0z" />
           <path
@@ -98,34 +108,36 @@
         </svg>
       </div>
 
-      <fieldset ref="chartFormBox">
-        <div class="chart-option-container">
-          <div class="chart-option-section">
-            <label for="fieldName">Select x-axis</label>
-            <select v-model="xFieldName">
-              <option v-for="field in dataSelectedFieldNames" :key="field">
-                {{ field }}
-              </option>
-            </select>
+      <div v-if="chartType === 'columnChart'">
+        <fieldset ref="chartFormBox">
+          <div class="chart-option-container">
+            <div class="chart-option-section">
+              <label for="fieldName">Select x-axis</label>
+              <select v-model="xFieldName">
+                <option v-for="field in dataSelectedFieldNames" :key="field">
+                  {{ field }}
+                </option>
+              </select>
+            </div>
+            <div class="chart-option-section">
+              <label for="fieldName">Select y-axis</label>
+              <select v-model="yFieldName">
+                <option v-for="field in dataSelectedFieldNames" :key="field">
+                  {{ field }}
+                </option>
+              </select>
+            </div>
+            <div class="chart-option-action">
+              <button @click="generateChart()">
+                Plot Data
+              </button>
+            </div>
           </div>
-          <div class="chart-option-section">
-            <label for="fieldName">Select y-axis</label>
-            <select v-model="yFieldName">
-              <option v-for="field in dataSelectedFieldNames" :key="field">
-                {{ field }}
-              </option>
-            </select>
-          </div>
-          <div class="chart-option-action">
-            <button @click="generateChart()">
-              Plot Data
-            </button>
-          </div>
-        </div>
-      </fieldset>
+        </fieldset>
 
-      <div v-if="showChart">
-        <column-chart :data="columnData" :options="chartOptions" />
+        <div v-if="showChart">
+          <column-chart :data="columnData" :options="chartOptions" />
+        </div>
       </div>
     </fieldset>
   </div>
@@ -152,6 +164,7 @@ export default {
         top: "0px",
         left: "0px",
       },
+      chartType: "columnChart",
       xFieldName: "",
       yFieldName: "",
       chartTitle: "Placeholder",
@@ -167,6 +180,9 @@ export default {
   methods: {
     showChartActions() {
       this.showChartOptions = !this.showChartOptions;
+    },
+    setChartType(type) {
+      this.chartType = type;
     },
     calculatePosition() {
       this.$nextTick(() => {
@@ -373,6 +389,10 @@ export default {
 
 .chart-option-button:hover {
   filter: brightness(93%);
+}
+
+.active-chart {
+  background-color: var(--button);
 }
 
 .chart-icons {
