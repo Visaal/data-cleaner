@@ -441,6 +441,39 @@ const actions = {
       commit(SET_LAST_ACTION_TEXT, `Date format changed on ${field}`);
     }
   },
+  // RULE: FIND AND REPLACE
+  findAndReplaceAction({ commit, dispatch }, ruleParameters) {
+    let field = ruleParameters["fieldName"];
+    let searchValue = ruleParameters["searchValue"];
+    let replaceValue = ruleParameters["replaceValue"];
+    let caseSensitive = ruleParameters["caseSensitive"];
+    let clonedDataRows = cloneDeep(state.dataRows);
+    let regex;
+
+    if (caseSensitive) {
+      regex = new RegExp(searchValue, "g");
+    } else {
+      regex = new RegExp(searchValue, "gi");
+    }
+
+    for (let i = 0; i < clonedDataRows.length; i++) {
+      if (clonedDataRows[i][field]) {
+        clonedDataRows[i][field] = clonedDataRows[i][field].replace(
+          regex,
+          replaceValue
+        );
+      }
+    }
+    commit(UPDATE_DATA_ROWS, clonedDataRows);
+    dispatch("_createSchema");
+    if (Object.keys(state.activeFilterValues).length > 0) {
+      dispatch("updateActiveFilterAction", state.activeFilterValues);
+    }
+    commit(
+      SET_LAST_ACTION_TEXT,
+      `"${searchValue}" replaced with ${replaceValue} in field "${field}"`
+    );
+  },
   //
   // ACTION BAR ACTIONS
   setNumberOfRowsToDisplayAction({ commit }, numberSelected) {
