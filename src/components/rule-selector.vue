@@ -4,6 +4,7 @@
       <h4>Data Cleaners</h4>
       <label for="rule_name">Select Option:</label>
       <select v-model="rule_name">
+        <option value="FindReplace">Find and Replace</option>
         <option value="DateOptions">Format Dates</option>
         <option value="JoinFields">Join Fields</option>
         <option value="Lookups">Create Lookup</option>
@@ -25,6 +26,7 @@
 export default {
   name: "RuleSelector",
   components: {
+    FindReplace: () => import("@/components/find-and-replace.vue"),
     DateOptions: () => import("@/components/date-options.vue"),
     JoinFields: () => import("@/components/join-fields.vue"),
     Lookups: () => import("@/components/lookups.vue"),
