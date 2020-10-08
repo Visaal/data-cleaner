@@ -14,18 +14,20 @@
         <input type="text" v-model="newField" :disabled="existingMap" />
       </div>
 
-      <label for="">Enter Lookup Values:</label>
-      <div v-for="(value, index) in orderedValues" :key="index">
-        <div class="lookup-pair">
-          <div class="raw-value">{{ value[0] }}</div>
-          <input
-            class="lookup-value"
-            type="text"
-            v-model="valueMap[value[0]]"
-          />
+      <div v-if="fieldName">
+        <label for="">Enter Lookup Values:</label>
+        <div v-for="(value, index) in orderedValues" :key="index">
+          <div class="lookup-pair">
+            <div class="raw-value">{{ value[0] }}</div>
+            <input
+              class="lookup-value"
+              type="text"
+              v-model="valueMap[value[0]]"
+            />
+          </div>
         </div>
+        <button v-on:click="createLookup" type="button">Apply</button>
       </div>
-      <button v-on:click="createLookup" type="button">Apply</button>
     </fieldset>
   </div>
 </template>
