@@ -14,7 +14,6 @@
     "loadash": "^1.0.0",
     "luxon": "^1.24.1",
     "papaparse": "^5.2.0",
-    "particles.js": "^2.0.0",
     "tippy.js": "^6.2.6",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <div id="particles-js"></div> -->
     <fieldset
       :class="{ 'display-from-left': fileName }"
       class="hidden-left field-list-fieldset"
@@ -53,7 +52,6 @@
 import Papa from "papaparse";
 import { mapState, mapActions } from "vuex";
 import router from "../router";
-import "particles.js";
 
 export default {
   name: "Home",
@@ -70,11 +68,6 @@ export default {
       message: "",
     };
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.initParticles();
-    });
-  },
   watch: {
     data: function() {
       if (this.data.length) {
@@ -85,10 +78,6 @@ export default {
     },
   },
   methods: {
-    initParticles() {
-      let particleConfig = require("../assets/particles.json");
-      window.particlesJS("particles-js", particleConfig);
-    },
     ...mapActions([
       "setFieldNamesAction",
       "setDataAction",
@@ -154,17 +143,6 @@ export default {
 </script>
 
 <style>
-/* ---- particles.js container ---- */
-#particles-js {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: #fffffe;
-  background-image: url("");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 50% 50%;
-}
 
 .landing-page-form {
   /* https://css-tricks.com/centering-css-complete-guide/ */
