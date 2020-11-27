@@ -31,7 +31,7 @@
       <fieldset>
         <h2>Data Cleaner</h2>
         <label for="fileItem" class="custom-file-input-label"
-          >Select File To Clean</label
+          >Select csv File To Clean</label
         >
         <input
           id="fileItem"
