@@ -75,6 +75,7 @@ npm run lint
 # Roadmap
 - Optimise to handle larger data sets
 - Additonal file types
+- Save datasets in local storage to make them available later from the app
 - Undo previous actions (rather than last one only)
 - Additonal charting options
 - Additional cleaner functions (emails, web urls, calculations)
