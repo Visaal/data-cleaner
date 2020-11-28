@@ -60,17 +60,13 @@ npm run lint
 
 # Usage
 
-- Uploading File
-- Viewing Data
-  - paging
-  - undo
-  - field edits
-  - filtering
-  - data breakdown
-- Delete
-- Basic Chart
-- Actions
+Simply select your data (**making sure you select a CSV file with headers**), explore your data and apply the needed cleaning functions. Once done just export your cleaned data.
 
+![](images/get_started.png)
+
+![](images/screen_overview.png)
+
+![](images/data_breakdown.png)
 
 # Roadmap
 - Optimise to handle larger data sets
