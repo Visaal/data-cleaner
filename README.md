@@ -35,7 +35,7 @@ This application was built to expand on the knowledge of the framework vue.js in
 # Demo
 Live demo can be found [here]()
 
-A test dataset can be downloaded <a href="src/assets/5000 Sales Records.csv" download="file.csv">download this</a>
+A test dataset can be downloaded from <a href="src/assets/5000 Sales Records.csv">here</a>
 
 # Install and Running
 ## Project setup
