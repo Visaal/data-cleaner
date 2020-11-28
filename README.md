@@ -11,27 +11,31 @@
 | ![](images/screen_05.png) | ![](images/screen_06.png) | ![](images/screen_08.png) |
 
 
-A simple application to make it easier to clean .csv files.
+A simple application to make it easier to clean csv files.
 
 The friendly interface lets you easily apply common functions. 
 
 The application works locally, no data leaves your machine and results can be exported out.
 
 # Project Aim
-Save time by providing simple interface to apply common functions used to clean data in .csv files and to provide some insight into the data.
 
-Basic proof of concept to build a propotype app and to expand on knowledge of the framework vue.js including state managment with vuex.
+Inital proof of concept application to provide an easy to use interface for applying common data cleaning functions for csv files quickly as well as some providing some features to gain some insight from the data. 
+
+This application was built to expand on the knowledge of the framework vue.js including state managment with vuex.
 
 
 # Built With
 - Vue.js (v2)
 - Vuex
 - JavaScript
+- HTML
 - CSS
 
 
 # Demo
 Live demo can be found [here]()
+
+A test dataset can be downloaded <a href="src/assets/5000 Sales Records.csv" download="file.csv">download this</a>
 
 # Install and Running
 ## Project setup
