@@ -24,7 +24,7 @@ Basic proof of concept to build a propotype app and to expand on knowledge of th
 
 
 # Demo
-Live demo can be found [here](https://link)
+Live demo can be found [here]()
 
 # Install and Running
 ## Project setup
@@ -51,11 +51,11 @@ npm run lint
 
 - Uploading File
 - Viewing Data
--- paging
--- undo
--- field edits
--- filtering
--- data breakdown
+  - paging
+  - undo
+  - field edits
+  - filtering
+  - data breakdown
 - Delete
 - Basic Chart
 - Actions
@@ -71,11 +71,17 @@ npm run lint
 
 # Credits
 
-Extension icon from [Remix Icon](https://remixicon.com/)
+Icons from [Remix Icon](https://remixicon.com/)
 
-Charting from ...
+CSV file parsing from Papaparse [Papa Parse](https://www.papaparse.com/)
 
-Papaparse ...
+JS extras with [Lodash](https://lodash.com/)
+
+DateTime handling with [Luxon](https://moment.github.io/luxon/)
+
+Charting from [Toast UI](https://ui.toast.com/tui-chart)
+
+Tooltips with [Tippy.js](https://atomiks.github.io/tippyjs/)
 
 
 # License
