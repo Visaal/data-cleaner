@@ -4,11 +4,18 @@
 [![forthebadge](https://forthebadge.com/images/badges/uses-css.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 
-# <img align="left" width="40" height="40" src="src/assets/icon-readme.png">Data Cleaner
+# <img align="left" width="40" height="40" src="images/icon-readme.png">Data Cleaner
 
-Tool that packages basic functions in a simple to use interface to clean .csv files
+| ![](images/screen_01.png)  | ![](images/screen_02.png) | ![](images/screen_04.png) |
+|:---:|:---:|:---:|
+| ![](images/screen_05.png) | ![](images/screen_06.png) | ![](images/screen_08.png) |
 
-NOTE: Add a screen print collage here
+
+A simple application to make it easier to clean .csv files.
+
+The friendly interface lets you easily apply common functions. 
+
+The application works locally, no data leaves your machine and results can be exported out.
 
 # Project Aim
 Save time by providing simple interface to apply common functions used to clean data in .csv files and to provide some insight into the data.
@@ -62,7 +69,7 @@ npm run lint
 
 
 # Roadmap
-
+- Optimise to handle larger data sets
 - Additonal file types
 - Undo previous actions (rather than last one only)
 - Additonal charting options
