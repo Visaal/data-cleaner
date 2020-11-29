@@ -3,7 +3,7 @@
     <fieldset>
       <label for="fieldToExtractFrom">Select Field:</label>
       <select v-model="fieldToExtractFrom">
-        <option v-for="field in textFields" :key="field.id">
+        <option v-for="field in dataFieldNames" :key="field.id">
           {{ field }}
         </option>
       </select>

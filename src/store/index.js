@@ -40,16 +40,6 @@ const DATATYPES = ["null", "number", "text", "date"];
 
 Vue.use(Vuex);
 
-// Helper functions
-function _distinctValuesInArray(inputArray) {
-  let valuesCountObject = {};
-  for (let i = 0; i < inputArray.length; i++) {
-    valuesCountObject[inputArray[i]] =
-      1 + valuesCountObject[inputArray[i]] || 1;
-  }
-  return valuesCountObject;
-}
-
 const state = {
   dataFieldNames: [],
   dataRows: [],
@@ -193,62 +183,6 @@ const actions = {
       dispatch("updateActiveFilterAction", state.activeFilterValues);
     }
     commit(SET_LAST_ACTION_TEXT, `"${field}" set to upper case`);
-  },
-  setDataTypeAction({ commit }, ruleParameters) {
-    let clonedDataRows = cloneDeep(state.dataRows);
-    let clonedSchema = cloneDeep(state.dataSchema);
-
-    let fieldName = ruleParameters["fieldName"];
-    let selectedDataType = ruleParameters["dataTypeName"].toLowerCase();
-    let selectedOption = ruleParameters["selectedOption"];
-
-    clonedSchema[fieldName]["likelyDataType"] = selectedDataType;
-    clonedSchema[fieldName][selectedDataType] = clonedDataRows.length;
-    clonedSchema[fieldName]["inconsistentDataTypes"] = false;
-
-    if (selectedDataType === "number") {
-      let fieldValueArray = [];
-      for (let i = 0; i < clonedDataRows.length; i++) {
-        if (isNaN(clonedDataRows[i][fieldName])) {
-          clonedDataRows[i][fieldName] = selectedOption;
-        }
-        fieldValueArray.push(clonedDataRows[i][fieldName]);
-      }
-      clonedSchema[fieldName]["distinctValues"][
-        "number"
-      ] = _distinctValuesInArray(fieldValueArray);
-      clonedSchema[fieldName]["distinctValues"]["text"] = {};
-      clonedSchema[fieldName]["distinctValues"]["date"] = {};
-    }
-
-    if (selectedDataType === "date") {
-      let fieldValueArray = [];
-      for (let i = 0; i < clonedDataRows.length; i++) {
-        if (DateTime.fromISO(clonedDataRows[i][fieldName]).invalid) {
-          clonedDataRows[i][fieldName] = selectedOption;
-        }
-        fieldValueArray.push(clonedDataRows[i][fieldName]);
-      }
-      clonedSchema[fieldName]["distinctValues"][
-        "date"
-      ] = _distinctValuesInArray(fieldValueArray);
-      clonedSchema[fieldName]["distinctValues"]["number"] = {};
-      clonedSchema[fieldName]["distinctValues"]["text"] = {};
-    }
-
-    if (selectedDataType === "text") {
-      let mergeddistinctValues = {
-        ...clonedSchema[fieldName]["distinctValues"]["text"],
-        ...clonedSchema[fieldName]["distinctValues"]["number"],
-        ...clonedSchema[fieldName]["distinctValues"]["date"],
-      };
-      clonedSchema[fieldName]["distinctValues"]["text"] = mergeddistinctValues;
-      clonedSchema[fieldName]["distinctValues"]["number"] = {};
-      clonedSchema[fieldName]["distinctValues"]["date"] = {};
-    }
-
-    commit(UPDATE_DATA_ROWS, clonedDataRows);
-    commit(CREATE_SCHEMA, clonedSchema);
   },
   extractStringsAction({ commit, dispatch }, ruleParameters) {
     let fieldToAdd = ruleParameters["newField"];
@@ -409,16 +343,18 @@ const actions = {
     let failedConversions = 0;
 
     for (let i = 0; i < clonedDataRows.length; i++) {
-      let currentDate = DateTime.fromFormat(
-        clonedDataRows[i][field],
-        currentFormat
-      );
+      if (clonedDataRows[i][field]) {
+        let currentDate = DateTime.fromFormat(
+          clonedDataRows[i][field],
+          currentFormat
+        );
 
-      if (!currentDate.invalid) {
-        let newFormatDate = currentDate.toFormat(newFormat);
-        clonedDataRows[i][field] = newFormatDate;
-      } else {
-        failedConversions++;
+        if (!currentDate.invalid) {
+          let newFormatDate = currentDate.toFormat(newFormat);
+          clonedDataRows[i][field] = newFormatDate;
+        } else {
+          failedConversions++;
+        }
       }
     }
 
