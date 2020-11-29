@@ -58,6 +58,11 @@ npm run build
 npm run lint
 ```
 
+### Run Tests
+```
+npm run test
+```
+
 # Usage
 
 Simply select your data (**making sure you select a CSV file with headers**), explore your data and apply the needed cleaning functions. Once done just export your cleaned data.
@@ -69,12 +74,14 @@ Simply select your data (**making sure you select a CSV file with headers**), ex
 ![](images/data_breakdown.png)
 
 # Roadmap
-- Optimise to handle larger data sets
-- Additonal file types
-- Save datasets in local storage to make them available later from the app
-- Undo previous actions (rather than last one only)
+- Improved form validation when applying cleaning rules
+- Optimisations to handle larger data sets
+- Support for additonal file types such as tsv
+- Ability to save datasets in local storage to make them available later from within the app
+- Exapand undo previous action feature (rather than just being able to undo the last action only)
 - Additonal charting options
-- Additional cleaner functions (emails, web urls, calculations)
+- Additional cleaner functions (number formatting, remove duplicates, remove empty rows, emails, web urls, calculations)
+- Ability to sort data
   
 
 # Credits
@@ -91,6 +98,7 @@ Charting from [Toast UI](https://ui.toast.com/tui-chart)
 
 Tooltips with [Tippy.js](https://atomiks.github.io/tippyjs/)
 
+Testing with [Jest](https://jestjs.io/)
 
 # License
 Usage is provided under the [MIT License](http://opensource.org/licenses/mit-license.php). See LICENSE for the full details.
