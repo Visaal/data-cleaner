@@ -1,5 +1,10 @@
 <template>
   <div>
+    
+    <a :href="`${publicPath}5000 Sales Records.csv`" download class="data-download">
+      Download Sample Dataset
+    </a>
+
     <fieldset
       :class="{ 'display-from-left': fileName }"
       class="hidden-left field-list-fieldset"
@@ -66,6 +71,7 @@ export default {
       fieldNames: [],
       selectedFieldIndexes: [],
       message: "",
+      publicPath: process.env.BASE_URL
     };
   },
   watch: {
@@ -143,6 +149,22 @@ export default {
 </script>
 
 <style>
+
+.data-download {
+  position: absolute;
+  font-size: 0.8rem;
+  top: 1rem;
+  right: 1rem;
+  background-color: var(--field-grey);
+  padding: 0.8em 0.8em;
+  text-decoration: none;
+  color: var(--headline)
+}
+
+.data-download:hover {
+  filter: brightness(93%);;
+}
+
 
 .landing-page-form {
   /* https://css-tricks.com/centering-css-complete-guide/ */
