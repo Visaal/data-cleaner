@@ -30,7 +30,6 @@ export default {
     JoinFields: () => import("@/components/join-fields.vue"),
     Lookups: () => import("@/components/lookups.vue"),
     Capitalise: () => import("@/components/capitalise.vue"),
-    FixDataType: () => import("@/components/fix-data-type.vue"),
     StringSearch: () => import("@/components/string-search.vue"),
     characterExtract: () => import("@/components/extract-characters.vue"),
   },
