@@ -9,7 +9,6 @@
         <option value="JoinFields">Join Fields</option>
         <option value="Lookups">Create Lookup</option>
         <option value="Capitalise">Capitalise</option>
-        <option value="FixDataType">Fix Inconsistent Data Type</option>
         <option value="StringSearch">Extract Sub Strings</option>
         <option value="characterExtract">Extract Characters</option>
       </select>
