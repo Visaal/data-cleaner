@@ -65,6 +65,7 @@ export default {
   padding: 0px;
   background-color: var(--field-grey);
   white-space: nowrap;
+  border-color: var(--table-border);
 }
 
 .field-name {
