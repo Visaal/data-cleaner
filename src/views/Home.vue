@@ -1,6 +1,10 @@
 <template>
   <div>
-    <!-- <div id="particles-js"></div> -->
+    
+    <a :href="`${publicPath}5000 Sales Records.csv`" download class="data-download">
+      Download Sample Dataset
+    </a>
+
     <fieldset
       :class="{ 'display-from-left': fileName }"
       class="hidden-left field-list-fieldset"
@@ -32,7 +36,7 @@
       <fieldset>
         <h2>Data Cleaner</h2>
         <label for="fileItem" class="custom-file-input-label"
-          >Select File To Clean</label
+          >Select csv File To Clean</label
         >
         <input
           id="fileItem"
@@ -53,7 +57,6 @@
 import Papa from "papaparse";
 import { mapState, mapActions } from "vuex";
 import router from "../router";
-import "particles.js";
 
 export default {
   name: "Home",
@@ -68,12 +71,8 @@ export default {
       fieldNames: [],
       selectedFieldIndexes: [],
       message: "",
+      publicPath: process.env.BASE_URL
     };
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.initParticles();
-    });
   },
   watch: {
     data: function() {
@@ -85,10 +84,6 @@ export default {
     },
   },
   methods: {
-    initParticles() {
-      let particleConfig = require("../assets/particles.json");
-      window.particlesJS("particles-js", particleConfig);
-    },
     ...mapActions([
       "setFieldNamesAction",
       "setDataAction",
@@ -154,17 +149,22 @@ export default {
 </script>
 
 <style>
-/* ---- particles.js container ---- */
-#particles-js {
+
+.data-download {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: #fffffe;
-  background-image: url("");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 50% 50%;
+  font-size: 0.8rem;
+  top: 1rem;
+  right: 1rem;
+  background-color: var(--field-grey);
+  padding: 0.8em 0.8em;
+  text-decoration: none;
+  color: var(--headline)
 }
+
+.data-download:hover {
+  filter: brightness(93%);;
+}
+
 
 .landing-page-form {
   /* https://css-tricks.com/centering-css-complete-guide/ */

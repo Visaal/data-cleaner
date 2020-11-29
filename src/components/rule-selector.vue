@@ -12,7 +12,6 @@
         <option value="FixDataType">Fix Inconsistent Data Type</option>
         <option value="StringSearch">Extract Sub Strings</option>
         <option value="characterExtract">Extract Characters</option>
-        <option value="ChangeValue">Change Value</option>
       </select>
     </fieldset>
 
@@ -31,7 +30,6 @@ export default {
     JoinFields: () => import("@/components/join-fields.vue"),
     Lookups: () => import("@/components/lookups.vue"),
     Capitalise: () => import("@/components/capitalise.vue"),
-    ChangeValue: () => import("@/components/change-value.vue"),
     FixDataType: () => import("@/components/fix-data-type.vue"),
     StringSearch: () => import("@/components/string-search.vue"),
     characterExtract: () => import("@/components/extract-characters.vue"),
