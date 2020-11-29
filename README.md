@@ -33,7 +33,7 @@ This application was built to expand on the knowledge of the framework vue.js in
 
 
 # Demo
-Live demo can be found [here]()
+Live demo can be found [here](https://data-cleaner.netlify.app/)
 
 Test dataset can be downloaded from the application homepage or from <a href="http://eforexcel.com/wp/wp-content/uploads/2017/07/5000-Sales-Records.zip">here</a>
 
