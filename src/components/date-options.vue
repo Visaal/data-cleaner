@@ -51,6 +51,7 @@ export default {
         "4/03/20": "d/MM/yy",
         "4-Mar-20": "d-MMM-yy",
         "4-March-20": "d-MMMM-yy",
+        "3/4/2020": "M/d/yyyy",
         "Mar-20": "MMM-yy",
         "Mar 03 2020": "MMM dd yyyy",
         "Wednesday, 14 March 2020": "EEEE, dd MMMM yyyy",

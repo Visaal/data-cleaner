@@ -409,16 +409,18 @@ const actions = {
     let failedConversions = 0;
 
     for (let i = 0; i < clonedDataRows.length; i++) {
-      let currentDate = DateTime.fromFormat(
-        clonedDataRows[i][field],
-        currentFormat
-      );
+      if (clonedDataRows[i][field]) {
+        let currentDate = DateTime.fromFormat(
+          clonedDataRows[i][field],
+          currentFormat
+        );
 
-      if (!currentDate.invalid) {
-        let newFormatDate = currentDate.toFormat(newFormat);
-        clonedDataRows[i][field] = newFormatDate;
-      } else {
-        failedConversions++;
+        if (!currentDate.invalid) {
+          let newFormatDate = currentDate.toFormat(newFormat);
+          clonedDataRows[i][field] = newFormatDate;
+        } else {
+          failedConversions++;
+        }
       }
     }
 
